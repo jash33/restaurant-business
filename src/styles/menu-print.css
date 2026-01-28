@@ -1,0 +1,781 @@
+/**
+ * =================================================================
+ * MENU PAGE - DEDICATED PRINT STYLESHEET
+ * =================================================================
+ *
+ * Optimized print styles for the menu page to create clean, readable
+ * physical menus. This stylesheet provides:
+ *
+ * - Clean page setup with proper margins for binding
+ * - Hidden navigation and interactive elements
+ * - Black-and-white optimized colors
+ * - Readable typography with print-friendly font sizes
+ * - Proper page break handling to keep items together
+ * - Restaurant branding header
+ * - Dietary legend preservation
+ *
+ * Usage: Import this file in menu.astro for print-specific styles
+ *
+ * =================================================================
+ */
+
+@media print {
+  /* =================================================================
+   * PAGE SETUP
+   * =================================================================
+   * Configure page size, margins, and orientation for physical printing
+   */
+  @page {
+    size: letter portrait;
+    margin: 0.6in 0.5in 0.75in 0.5in; /* Top, Right, Bottom, Left */
+  }
+
+  /* First page can have smaller top margin for header */
+  @page :first {
+    margin-top: 0.5in;
+  }
+
+  /* =================================================================
+   * ROOT & BODY RESETS
+   * =================================================================
+   * Reset backgrounds and establish print-safe defaults
+   */
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove all decorative backgrounds */
+  * {
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* =================================================================
+   * HIDDEN ELEMENTS
+   * =================================================================
+   * Hide all interactive and non-essential elements from print
+   */
+
+  /* Site header and footer */
+  header:not(.menu-page__header),
+  footer,
+  .site-header,
+  .site-footer {
+    display: none !important;
+  }
+
+  /* Navigation elements */
+  .menu-page__nav,
+  nav:not(.menu-page__nav) {
+    display: none !important;
+  }
+
+  /* Interactive elements */
+  .menu-filter-panel,
+  .menu-page__back-to-top,
+  .back-to-top,
+  .skip-link,
+  .cookie-consent,
+  .cookie-settings-toggle,
+  button:not(.print-visible),
+  [role="button"]:not(.print-visible) {
+    display: none !important;
+  }
+
+  /* Scroll indicators and decorative animations */
+  .scroll-indicator,
+  .loading-spinner,
+  [data-animate],
+  .reveal {
+    display: none !important;
+  }
+
+  /* =================================================================
+   * MENU PAGE CONTAINER
+   * =================================================================
+   */
+  .menu-page {
+    background: white !important;
+    color: black !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* =================================================================
+   * MENU PAGE HEADER - RESTAURANT BRANDING
+   * =================================================================
+   * Clean, professional header for physical menus
+   */
+  .menu-page__header {
+    background: none !important;
+    color: black !important;
+    padding: 0 0 0.2in 0 !important;
+    margin: 0 0 0.15in 0 !important;
+    border-bottom: 2pt solid black !important;
+    text-align: center !important;
+  }
+
+  .menu-page__header-content {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .menu-page__title {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 28pt !important;
+    font-weight: 700 !important;
+    color: black !important;
+    margin: 0 0 0.08in 0 !important;
+    line-height: 1.1 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+  }
+
+  .menu-page__subtitle {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 10pt !important;
+    font-style: italic !important;
+    color: #333 !important;
+    margin: 0 0 0.08in 0 !important;
+    max-width: none !important;
+    line-height: 1.3 !important;
+    opacity: 1 !important;
+  }
+
+  .menu-page__hours {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 9pt !important;
+    color: #444 !important;
+    margin: 0 !important;
+  }
+
+  .menu-page__hours-label {
+    font-weight: 600 !important;
+    opacity: 1 !important;
+  }
+
+  .menu-page__hours-time {
+    font-weight: 400 !important;
+  }
+
+  /* =================================================================
+   * DIETARY LEGEND
+   * =================================================================
+   * Compact but visible legend for dietary indicators
+   */
+  .menu-page__legend {
+    background: none !important;
+    border: none !important;
+    padding: 0.1in 0 !important;
+    margin: 0 0 0.15in 0 !important;
+    border-bottom: 0.5pt solid #ccc !important;
+  }
+
+  .menu-page__legend-container {
+    padding: 0 !important;
+    gap: 0.12in !important;
+    justify-content: flex-start !important;
+  }
+
+  .menu-page__legend-label {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 8pt !important;
+    font-weight: 600 !important;
+    color: black !important;
+  }
+
+  .menu-page__legend-list {
+    gap: 0.15in !important;
+  }
+
+  .menu-page__legend-item {
+    gap: 0.04in !important;
+  }
+
+  .menu-page__legend-abbr {
+    width: auto !important;
+    height: auto !important;
+    min-width: 14pt !important;
+    padding: 1pt 3pt !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 7pt !important;
+    font-weight: 700 !important;
+    border-radius: 2pt !important;
+    border: 0.5pt solid #666 !important;
+    background: #f0f0f0 !important;
+    color: black !important;
+  }
+
+  /* Dietary tag specific colors - grayscale with different fills */
+  .menu-page__legend-abbr--v {
+    background: #e8e8e8 !important;
+    border-color: #666 !important;
+  }
+
+  .menu-page__legend-abbr--vg {
+    background: #d0d0d0 !important;
+    border-color: #555 !important;
+  }
+
+  .menu-page__legend-abbr--gf {
+    background: #f5f5f5 !important;
+    border-color: #888 !important;
+  }
+
+  .menu-page__legend-abbr--df {
+    background: #e0e0e0 !important;
+    border-color: #777 !important;
+  }
+
+  .menu-page__legend-name {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 8pt !important;
+    color: #333 !important;
+  }
+
+  .menu-page__legend-note {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 7pt !important;
+    font-style: italic !important;
+    color: #666 !important;
+    margin: 0.05in 0 0 0 !important;
+    flex-basis: 100% !important;
+  }
+
+  /* =================================================================
+   * MENU CONTENT CONTAINER
+   * =================================================================
+   */
+  .menu-page__content {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* =================================================================
+   * MENU CATEGORY SECTIONS
+   * =================================================================
+   * Each category section with proper page break handling
+   */
+  .menu-category-section {
+    padding: 0.15in 0 0.2in 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    break-inside: avoid-column !important;
+    /* Don't use page-break-inside: avoid on sections - they can be long */
+  }
+
+  .menu-category-section__container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* =================================================================
+   * SECTION HEADERS
+   * =================================================================
+   */
+  .menu-category-section__header {
+    text-align: center !important;
+    margin-bottom: 0.12in !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .menu-category-section__header-content {
+    gap: 0.1in !important;
+  }
+
+  .menu-category-section__heading {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 14pt !important;
+    font-weight: 700 !important;
+    color: black !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .menu-category-section__heading-line {
+    flex: 1 !important;
+    max-width: 1in !important;
+    height: 0.5pt !important;
+    background: linear-gradient(90deg, transparent 0%, #999 50%, transparent 100%) !important;
+  }
+
+  .menu-category-section__description {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 9pt !important;
+    font-style: italic !important;
+    color: #444 !important;
+    margin: 0.05in 0 0 0 !important;
+    max-width: none !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Hide category header images */
+  .menu-category-section__header-image {
+    display: none !important;
+  }
+
+  /* =================================================================
+   * MENU ITEMS GRID
+   * =================================================================
+   * Two-column layout for efficient use of space
+   */
+  .menu-category-section__grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.08in 0.2in !important;
+  }
+
+  /* Compact layout stays single column */
+  .menu-category-section--layout-compact .menu-category-section__grid {
+    grid-template-columns: 1fr !important;
+    max-width: 6in !important;
+    margin: 0 auto !important;
+    gap: 0.03in !important;
+  }
+
+  .menu-category-section__item {
+    animation: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* =================================================================
+   * INDIVIDUAL MENU ITEMS
+   * =================================================================
+   * Optimized for print readability
+   */
+  .menu-item {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.08in !important;
+    padding: 0.04in 0 !important;
+    border-bottom: 0.25pt solid #ddd !important;
+    background: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .menu-item:last-child {
+    border-bottom: none !important;
+  }
+
+  .menu-item:hover {
+    background: none !important;
+  }
+
+  /* =================================================================
+   * MENU ITEM IMAGES - OPTIONAL
+   * =================================================================
+   * Images are hidden by default for cleaner print, can be enabled
+   */
+  .menu-item__image-container {
+    display: none !important; /* Hide images for cleaner, faster printing */
+  }
+
+  /* Uncomment below to show images (smaller thumbnails) */
+  /*
+  .menu-item__image-container {
+    display: block !important;
+    width: 0.6in !important;
+    height: 0.45in !important;
+    flex-shrink: 0 !important;
+    border-radius: 2pt !important;
+    overflow: hidden !important;
+    border: 0.25pt solid #ccc !important;
+  }
+
+  .menu-item__image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    filter: grayscale(100%) !important;
+  }
+  */
+
+  /* =================================================================
+   * MENU ITEM CONTENT
+   * =================================================================
+   */
+  .menu-item__content {
+    flex: 1 !important;
+    min-width: 0 !important;
+    gap: 0.02in !important;
+  }
+
+  .menu-item__header {
+    gap: 0.01in !important;
+  }
+
+  .menu-item__title-row {
+    gap: 0.05in !important;
+  }
+
+  /* =================================================================
+   * ITEM NAME
+   * =================================================================
+   */
+  .menu-item__name {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+    color: black !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* =================================================================
+   * PRICE ROW WITH DOTS LEADER
+   * =================================================================
+   */
+  .menu-item__price-row {
+    gap: 0.05in !important;
+    margin-top: 0 !important;
+  }
+
+  .menu-item__dots {
+    flex: 1 !important;
+    border-bottom: 0.5pt dotted #999 !important;
+    margin-bottom: 2pt !important;
+    min-width: 0.3in !important;
+  }
+
+  .menu-item__price {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    color: black !important;
+    white-space: nowrap !important;
+  }
+
+  .menu-item__price-unit {
+    font-size: 8pt !important;
+    font-weight: 400 !important;
+    color: #444 !important;
+  }
+
+  /* =================================================================
+   * DESCRIPTION
+   * =================================================================
+   */
+  .menu-item__description {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 8pt !important;
+    color: #333 !important;
+    line-height: 1.3 !important;
+    margin: 0.02in 0 0 0 !important;
+  }
+
+  /* =================================================================
+   * BADGES
+   * =================================================================
+   * Simplified badges for print - text only, no icons
+   */
+  .menu-item__badges {
+    gap: 0.04in !important;
+  }
+
+  .menu-item__badge {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 6pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
+    padding: 1pt 3pt !important;
+    border-radius: 1pt !important;
+    background: #f0f0f0 !important;
+    color: #333 !important;
+    border: 0.25pt solid #aaa !important;
+  }
+
+  .menu-item__badge-icon {
+    display: none !important; /* Hide emoji icons in print */
+  }
+
+  /* Badge variants - use different grays for visual distinction */
+  .menu-item__badge--chef {
+    background: #e0e0e0 !important;
+    border-color: #666 !important;
+  }
+
+  .menu-item__badge--featured {
+    background: #d0d0d0 !important;
+    border-color: #555 !important;
+  }
+
+  .menu-item__badge--new {
+    background: #e8e8e8 !important;
+    border-color: #777 !important;
+  }
+
+  .menu-item__badge--seasonal {
+    background: #f0f0f0 !important;
+    border-color: #888 !important;
+  }
+
+  .menu-item__badge--signature {
+    background: #c0c0c0 !important;
+    border-color: #444 !important;
+    color: black !important;
+  }
+
+  /* =================================================================
+   * DIETARY TAGS ON ITEMS
+   * =================================================================
+   */
+  .menu-item__dietary-tags {
+    gap: 0.03in !important;
+    margin-top: 0.02in !important;
+  }
+
+  /* DietaryIndicator component styles for print */
+  .dietary-indicator,
+  [data-dietary-tag] {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 6pt !important;
+    font-weight: 700 !important;
+    min-width: 12pt !important;
+    height: auto !important;
+    padding: 1pt 2pt !important;
+    border-radius: 1pt !important;
+    background: #f0f0f0 !important;
+    color: #333 !important;
+    border: 0.25pt solid #999 !important;
+  }
+
+  /* =================================================================
+   * FEATURED & SIGNATURE ITEMS
+   * =================================================================
+   * Subtle distinction without heavy styling
+   */
+  .menu-item--featured {
+    background: #fafafa !important;
+    border: 0.5pt solid #ccc !important;
+    border-radius: 2pt !important;
+    padding: 0.05in !important;
+    margin: 0.02in 0 !important;
+  }
+
+  .menu-item--signature {
+    background: #f5f5f5 !important;
+    border: 1pt solid #999 !important;
+    border-radius: 3pt !important;
+    padding: 0.06in !important;
+    margin: 0.03in 0 !important;
+  }
+
+  .menu-item--signature::before {
+    display: none !important; /* Hide decorative top bar */
+  }
+
+  .menu-item--signature .menu-item__name {
+    font-size: 11pt !important;
+  }
+
+  .menu-item--new::before {
+    background: #666 !important;
+    width: 2pt !important;
+  }
+
+  /* =================================================================
+   * CHEF STORY (for signature dishes)
+   * =================================================================
+   */
+  .menu-item__chef-story {
+    background: #f8f8f8 !important;
+    border-left: 2pt solid #666 !important;
+    border-radius: 0 !important;
+    padding: 0.04in !important;
+    margin-top: 0.04in !important;
+  }
+
+  .menu-item__chef-story-icon {
+    display: none !important;
+  }
+
+  .menu-item__chef-story-text {
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 7pt !important;
+    font-style: italic !important;
+    color: #444 !important;
+    line-height: 1.3 !important;
+  }
+
+  .menu-item__chef-story-label {
+    font-weight: 600 !important;
+    color: #333 !important;
+  }
+
+  /* =================================================================
+   * TYPOGRAPHY OPTIMIZATION
+   * =================================================================
+   * Ensure proper text rendering for print
+   */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+    orphans: 3 !important;
+    widows: 3 !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  p {
+    orphans: 3 !important;
+    widows: 3 !important;
+  }
+
+  /* Links should appear as regular text */
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+
+  /* Don't show link URLs in print for menu */
+  a[href]::after {
+    content: none !important;
+  }
+
+  /* =================================================================
+   * PAGE BREAK CONTROL
+   * =================================================================
+   * Prevent awkward breaks in menu content
+   */
+
+  /* Keep section headers with their content */
+  .menu-category-section__header {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Prevent breaking inside menu items */
+  .menu-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Allow page breaks between sections */
+  .menu-category-section {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
+
+  /* Force page break before a specific section if needed */
+  .menu-category-section--page-break-before {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  /* =================================================================
+   * EMPTY STATE HANDLING
+   * =================================================================
+   */
+  .menu-category-section__empty {
+    display: none !important;
+  }
+
+  .menu-category-section__empty-filtered-msg {
+    display: none !important;
+  }
+
+  /* =================================================================
+   * UTILITY CLASSES FOR PRINT CONTROL
+   * =================================================================
+   * Add these classes in HTML for fine-grained print control
+   */
+
+  /* Force visibility in print */
+  .print-visible {
+    display: block !important;
+  }
+
+  /* Force hidden in print */
+  .print-hidden,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Force page break before element */
+  .print-page-break-before {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  /* Force page break after element */
+  .print-page-break-after {
+    break-after: page !important;
+    page-break-after: always !important;
+  }
+
+  /* Keep together - don't break inside */
+  .print-keep-together {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* =================================================================
+   * PRINT FOOTER (optional - add via JS or CSS)
+   * =================================================================
+   * Shows at bottom of each printed page
+   */
+  @page {
+    @bottom-center {
+      content: "Thank you for dining with us";
+      font-family: Georgia, serif;
+      font-size: 8pt;
+      font-style: italic;
+      color: #666;
+    }
+  }
+}
+
+/* =================================================================
+ * GRAYSCALE PRINT MODE (Optional)
+ * =================================================================
+ * Use this media query for pure black & white printing
+ * More economical for ink/toner usage
+ */
+@media print and (monochrome) {
+  /* Force all images to grayscale */
+  img {
+    filter: grayscale(100%) !important;
+  }
+
+  /* Ensure all colors are pure black or gray */
+  .menu-item__name,
+  .menu-item__price,
+  .menu-category-section__heading {
+    color: black !important;
+  }
+
+  .menu-item__description,
+  .menu-page__subtitle {
+    color: #333 !important;
+  }
+
+  /* Simplify all badges to uniform gray */
+  .menu-item__badge,
+  .menu-page__legend-abbr,
+  .dietary-indicator,
+  [data-dietary-tag] {
+    background: #e0e0e0 !important;
+    border-color: #666 !important;
+    color: black !important;
+  }
+}

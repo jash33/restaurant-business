@@ -1,0 +1,505 @@
+---
+/**
+ * Review CTA Component
+ * A gentle call-to-action encouraging customers to leave reviews on Google.
+ * Features encouraging messaging without being pushy.
+ *
+ * Features:
+ * - Multiple visual variants (default, inline, card)
+ * - Accessible button design
+ * - Tracking-ready with data attributes
+ * - Mobile-first responsive design
+ *
+ * @example Basic usage
+ * ```astro
+ * <ReviewCTA reviewUrl="https://search.google.com/local/writereview?placeid=..." />
+ * ```
+ *
+ * @example Card variant with custom text
+ * ```astro
+ * <ReviewCTA
+ *   heading="Share Your Experience"
+ *   description="Your feedback helps us serve you better"
+ *   buttonText="Write a Review"
+ *   reviewUrl="https://..."
+ *   variant="card"
+ * />
+ * ```
+ */
+
+import type { ReviewCTAProps } from '../types/google-business';
+import { googleBusinessConfig } from '../config/google-business.config';
+
+interface Props extends ReviewCTAProps {}
+
+const {
+  heading = 'Enjoyed Your Visit?',
+  description = "We'd love to hear about your experience! Your review helps others discover great food and helps us keep improving.",
+  buttonText = 'Leave a Review',
+  reviewUrl = googleBusinessConfig.reviewUrl,
+  variant = 'default',
+  class: className = '',
+} = Astro.props;
+
+// Build CSS classes
+const ctaClasses = [
+  'review-cta',
+  `review-cta--${variant}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Google icon
+const googleIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+
+// Star icon
+const starIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+
+// External link icon
+const externalIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
+---
+
+<div class={ctaClasses} data-component="review-cta">
+  {variant === 'card' ? (
+    <div class="review-cta__card">
+      <div class="review-cta__icon-group" aria-hidden="true">
+        <span class="review-cta__star" set:html={starIcon} />
+        <span class="review-cta__star review-cta__star--delay-1" set:html={starIcon} />
+        <span class="review-cta__star review-cta__star--delay-2" set:html={starIcon} />
+      </div>
+
+      <h3 class="review-cta__heading">{heading}</h3>
+      <p class="review-cta__description">{description}</p>
+
+      <a
+        href={reviewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="review-cta__button"
+        data-tracking="review-cta-click"
+        aria-label={`${buttonText} (opens Google in a new tab)`}
+      >
+        <span class="review-cta__button-icon" set:html={googleIcon} />
+        <span class="review-cta__button-text">{buttonText}</span>
+        <span class="review-cta__button-external" set:html={externalIcon} />
+      </a>
+    </div>
+  ) : variant === 'inline' ? (
+    <div class="review-cta__inline">
+      <span class="review-cta__inline-text">
+        {heading}
+      </span>
+      <a
+        href={reviewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="review-cta__inline-link"
+        data-tracking="review-cta-click"
+        aria-label={`${buttonText} (opens Google in a new tab)`}
+      >
+        <span class="review-cta__button-icon" set:html={googleIcon} />
+        {buttonText}
+        <span class="review-cta__button-external" set:html={externalIcon} />
+      </a>
+    </div>
+  ) : (
+    <div class="review-cta__default">
+      <div class="review-cta__content">
+        <h3 class="review-cta__heading">{heading}</h3>
+        <p class="review-cta__description">{description}</p>
+      </div>
+      <a
+        href={reviewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="review-cta__button"
+        data-tracking="review-cta-click"
+        aria-label={`${buttonText} (opens Google in a new tab)`}
+      >
+        <span class="review-cta__button-icon" set:html={googleIcon} />
+        <span class="review-cta__button-text">{buttonText}</span>
+        <span class="review-cta__button-external" set:html={externalIcon} />
+      </a>
+    </div>
+  )}
+</div>
+
+<style>
+  /* =================================================================
+   * REVIEW CTA COMPONENT STYLES
+   * =================================================================
+   */
+
+  .review-cta {
+    --review-cta-star-color: #FBBC05;
+  }
+
+  /* =================================================================
+   * CARD VARIANT
+   * =================================================================
+   */
+
+  .review-cta--card .review-cta__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-8);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-background) 50%,
+      var(--color-accent-50, var(--color-primary-50)) 100%
+    );
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .review-cta__icon-group {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .review-cta__star {
+    display: flex;
+    width: 28px;
+    height: 28px;
+    color: var(--review-cta-star-color);
+    animation: reviewStarPulse 2s ease-in-out infinite;
+  }
+
+  .review-cta__star--delay-1 {
+    animation-delay: 0.2s;
+  }
+
+  .review-cta__star--delay-2 {
+    animation-delay: 0.4s;
+  }
+
+  .review-cta__star :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  @keyframes reviewStarPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+  }
+
+  .review-cta__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2) 0;
+  }
+
+  .review-cta__description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--spacing-6) 0;
+    max-width: 40ch;
+  }
+
+  /* =================================================================
+   * BUTTON STYLES
+   * =================================================================
+   */
+
+  .review-cta__button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      border-color var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out),
+      transform var(--duration-150) var(--ease-out);
+  }
+
+  .review-cta__button:hover {
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .review-cta__button:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .review-cta__button:active {
+    transform: translateY(0);
+  }
+
+  .review-cta__button-icon {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .review-cta__button-icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .review-cta__button-text {
+    white-space: nowrap;
+  }
+
+  .review-cta__button-external {
+    display: flex;
+    width: 14px;
+    height: 14px;
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .review-cta__button-external :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* =================================================================
+   * DEFAULT VARIANT
+   * =================================================================
+   */
+
+  .review-cta--default .review-cta__default {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+  }
+
+  .review-cta--default .review-cta__content {
+    max-width: 50ch;
+  }
+
+  .review-cta--default .review-cta__heading {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-1);
+  }
+
+  .review-cta--default .review-cta__description {
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * INLINE VARIANT
+   * =================================================================
+   */
+
+  .review-cta--inline .review-cta__inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .review-cta__inline-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .review-cta__inline-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--duration-150) var(--ease-in-out);
+  }
+
+  .review-cta__inline-link:hover {
+    color: var(--color-primary-600);
+    text-decoration: underline;
+  }
+
+  .review-cta__inline-link .review-cta__button-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .review-cta__inline-link .review-cta__button-external {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES - Tablet (640px+)
+   * =================================================================
+   */
+
+  @media screen and (min-width: 640px) {
+    .review-cta--default .review-cta__default {
+      flex-direction: row;
+      text-align: left;
+      justify-content: space-between;
+      padding: var(--spacing-6) var(--spacing-8);
+    }
+
+    .review-cta--default .review-cta__content {
+      flex: 1;
+    }
+
+    .review-cta__star {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES - Desktop (1024px+)
+   * =================================================================
+   */
+
+  @media screen and (min-width: 1024px) {
+    .review-cta--card .review-cta__card {
+      padding: var(--spacing-10);
+    }
+
+    .review-cta__heading {
+      font-size: var(--font-size-2xl);
+    }
+
+    .review-cta__description {
+      font-size: var(--font-size-md);
+    }
+
+    .review-cta__button {
+      padding: var(--spacing-4) var(--spacing-8);
+      font-size: var(--font-size-md);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * =================================================================
+   */
+
+  @media (prefers-reduced-motion: reduce) {
+    .review-cta__star {
+      animation: none;
+    }
+
+    .review-cta__button {
+      transition: none;
+    }
+
+    .review-cta__button:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * =================================================================
+   */
+
+  :global(html[data-theme="dark"]) .review-cta--card .review-cta__card {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background-elevated) 50%,
+      var(--color-primary-900) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .review-cta__button {
+    background: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .review-cta__button:hover {
+    background: var(--color-background);
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   */
+
+  @media print {
+    .review-cta {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Review CTA Click Tracking
+   * Track when users click on review CTA buttons for analytics
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    const reviewCTAs = document.querySelectorAll('[data-tracking="review-cta-click"]');
+
+    reviewCTAs.forEach((cta) => {
+      cta.addEventListener('click', () => {
+        // Push to dataLayer if available (Google Tag Manager)
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          (window as any).dataLayer.push({
+            event: 'review_cta_click',
+            cta_destination: cta.getAttribute('href'),
+            cta_text: cta.textContent?.trim(),
+          });
+        }
+
+        // Custom event for other analytics integrations
+        window.dispatchEvent(new CustomEvent('review-cta-click', {
+          detail: {
+            destination: cta.getAttribute('href'),
+            text: cta.textContent?.trim(),
+            timestamp: new Date().toISOString(),
+          }
+        }));
+
+        // Console log for development
+        if (import.meta.env.DEV) {
+          console.log('[ReviewCTA] Review CTA clicked:', {
+            destination: cta.getAttribute('href'),
+          });
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,462 @@
+---
+/**
+ * Contact Info Component
+ * Displays phone, email, and office hours for callbacks.
+ *
+ * Features:
+ * - Phone number with click-to-call
+ * - Email with mailto link
+ * - Office hours for callbacks display
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design
+ *
+ * @example
+ * ```astro
+ * <ContactInfo />
+ * ```
+ */
+
+import { OFFICE_HOURS } from '../types/restaurant-contact';
+import { LOCATION_CONFIG } from '../config/location.config';
+
+interface Props {
+  /** Custom heading */
+  heading?: string;
+  /** Custom subheading */
+  subheading?: string;
+  /** Phone number override */
+  phone?: string;
+  /** Email address */
+  email?: string;
+  /** Show office hours */
+  showOfficeHours?: boolean;
+  /** Custom ID for the section */
+  id?: string;
+  /** Custom class name */
+  class?: string;
+}
+
+const {
+  heading = 'Contact Information',
+  subheading = 'Reach out to us directly or let us call you back.',
+  phone = LOCATION_CONFIG.phone,
+  email = 'info@restaurant.com',
+  showOfficeHours = true,
+  id = 'contact-info',
+  class: className = '',
+} = Astro.props;
+
+const sectionClasses = ['contact-info-section', className].filter(Boolean).join(' ');
+
+// Get current day for highlighting
+const currentDayIndex = new Date().getDay();
+const daysOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const currentDay = daysOrder[currentDayIndex];
+---
+
+<section class={sectionClasses} id={id} aria-labelledby={`${id}-heading`}>
+  <div class="contact-info-container">
+    <header class="contact-info-header">
+      <h2 id={`${id}-heading`} class="contact-info-title">{heading}</h2>
+      {subheading && <p class="contact-info-description">{subheading}</p>}
+    </header>
+
+    <div class="contact-info-grid">
+      <!-- Phone Card -->
+      <div class="contact-info-card">
+        <div class="contact-info-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="contact-info-card__content">
+          <h3 class="contact-info-card__title">Call Us</h3>
+          <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} class="contact-info-card__link contact-info-card__link--phone">
+            {phone}
+          </a>
+          <p class="contact-info-card__note">For reservations and general inquiries</p>
+        </div>
+      </div>
+
+      <!-- Email Card -->
+      <div class="contact-info-card">
+        <div class="contact-info-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+        </div>
+        <div class="contact-info-card__content">
+          <h3 class="contact-info-card__title">Email Us</h3>
+          <a href={`mailto:${email}`} class="contact-info-card__link contact-info-card__link--email">
+            {email}
+          </a>
+          <p class="contact-info-card__note">We'll respond within 24 hours</p>
+        </div>
+      </div>
+
+      <!-- Office Hours Card -->
+      {showOfficeHours && (
+        <div class="contact-info-card contact-info-card--office-hours">
+          <div class="contact-info-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div class="contact-info-card__content">
+            <h3 class="contact-info-card__title">Office Hours</h3>
+            <p class="contact-info-card__subtitle">For phone callbacks</p>
+            <ul class="office-hours-list" role="list">
+              {OFFICE_HOURS.map((item) => (
+                <li
+                  class={`office-hours-item ${item.day === currentDay ? 'office-hours-item--current' : ''} ${!item.isOfficeDay ? 'office-hours-item--closed' : ''}`}
+                  aria-current={item.day === currentDay ? 'true' : undefined}
+                >
+                  <span class="office-hours-item__day">
+                    {item.day}
+                    {item.day === currentDay && (
+                      <span class="office-hours-item__today" aria-label="(Today)">Today</span>
+                    )}
+                  </span>
+                  <span class="office-hours-item__hours">{item.hours}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Quick Response Badge -->
+    <div class="quick-response">
+      <svg class="quick-response__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+      <span class="quick-response__text">
+        <strong>Quick Response:</strong> We typically respond to all inquiries within 24 hours during business days.
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * SECTION CONTAINER
+   * ================================================================= */
+  .contact-info-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+  }
+
+  .contact-info-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  .contact-info-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .contact-info-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .contact-info-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * CARDS GRID
+   * ================================================================= */
+  .contact-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+  }
+
+  @media (min-width: 768px) {
+    .contact-info-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * CONTACT CARD
+   * ================================================================= */
+  .contact-info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-8);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--duration-200) var(--ease-in-out),
+                transform var(--duration-200) var(--ease-in-out);
+  }
+
+  .contact-info-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .contact-info-card--office-hours {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 768px) {
+    .contact-info-card--office-hours {
+      grid-column: auto;
+    }
+  }
+
+  .contact-info-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--spacing-4);
+    padding: var(--spacing-3);
+    background-color: var(--color-primary-50);
+    border-radius: var(--radius-full);
+    color: var(--color-primary);
+  }
+
+  .contact-info-card__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .contact-info-card__content {
+    width: 100%;
+  }
+
+  .contact-info-card__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .contact-info-card__subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .contact-info-card__link {
+    display: inline-block;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-bottom: var(--spacing-2);
+    transition: color var(--duration-150) var(--ease-in-out);
+  }
+
+  .contact-info-card__link:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .contact-info-card__link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  .contact-info-card__link--phone {
+    font-size: var(--font-size-2xl);
+    letter-spacing: 0.02em;
+  }
+
+  .contact-info-card__link--email {
+    font-size: var(--font-size-base);
+    word-break: break-all;
+  }
+
+  .contact-info-card__note {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * OFFICE HOURS LIST
+   * ================================================================= */
+  .office-hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .office-hours-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .office-hours-item:not(:last-child) {
+    margin-bottom: var(--spacing-1);
+  }
+
+  .office-hours-item--current {
+    background-color: var(--color-primary-50);
+  }
+
+  .office-hours-item--closed {
+    opacity: 0.6;
+  }
+
+  .office-hours-item__day {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  .office-hours-item__today {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    background-color: var(--color-primary-100);
+    padding: var(--spacing-px) var(--spacing-2);
+    border-radius: var(--radius-full);
+  }
+
+  .office-hours-item__hours {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .office-hours-item--closed .office-hours-item__hours {
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * QUICK RESPONSE BADGE
+   * ================================================================= */
+  .quick-response {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-6);
+    background-color: var(--color-success-50);
+    border: 1px solid var(--color-success-200);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .quick-response__icon {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-success);
+  }
+
+  .quick-response__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-success-700);
+  }
+
+  .quick-response__text strong {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .contact-info-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .contact-info-card {
+      padding: var(--spacing-6);
+    }
+
+    .contact-info-card__link--phone {
+      font-size: var(--font-size-xl);
+    }
+
+    .quick-response {
+      flex-direction: column;
+      gap: var(--spacing-2);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .contact-info-section {
+    background-color: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .contact-info-card {
+    background-color: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .quick-response {
+    background-color: var(--color-success-900);
+    border-color: var(--color-success-700);
+  }
+
+  :global(html[data-theme="dark"]) .quick-response__text {
+    color: var(--color-success-200);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .contact-info-card {
+      transition: none;
+    }
+
+    .contact-info-card:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .contact-info-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .contact-info-card {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .contact-info-card__link {
+      color: var(--color-text-primary);
+    }
+
+    .contact-info-card__link::after {
+      content: ' (' attr(href) ')';
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-normal);
+    }
+  }
+</style>

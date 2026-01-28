@@ -1,0 +1,258 @@
+---
+/**
+ * Menu PDF Header Component
+ * Restaurant branding header for printer-friendly PDF menu.
+ * Displays logo, restaurant name, tagline, and contact information.
+ * Optimized for print with clean, professional formatting.
+ */
+
+import { restaurantSchema } from '../config/restaurant.config';
+
+interface Props {
+  /** Menu title to display */
+  menuTitle?: string;
+  /** Menu description/subtitle */
+  menuDescription?: string;
+  /** Hours the menu is available */
+  availableHours?: string;
+  /** Whether to show the logo */
+  showLogo?: boolean;
+  /** Whether to show contact info */
+  showContactInfo?: boolean;
+}
+
+const {
+  menuTitle = 'Our Menu',
+  menuDescription,
+  availableHours,
+  showLogo = true,
+  showContactInfo = true,
+} = Astro.props;
+
+// Get restaurant info from config
+const {
+  name: restaurantName,
+  slogan,
+  telephone,
+  address,
+  url,
+} = restaurantSchema;
+
+// Format address for display
+const formattedAddress = `${address.streetAddress}, ${address.addressLocality}, ${address.addressRegion} ${address.postalCode}`;
+---
+
+<header class="menu-pdf-header">
+  <div class="menu-pdf-header__container">
+    {showLogo && (
+      <div class="menu-pdf-header__logo-section">
+        <img
+          src="/images/logo.png"
+          alt={`${restaurantName} logo`}
+          class="menu-pdf-header__logo"
+          width="80"
+          height="80"
+        />
+      </div>
+    )}
+
+    <div class="menu-pdf-header__content">
+      <h1 class="menu-pdf-header__restaurant-name">{restaurantName}</h1>
+      {slogan && (
+        <p class="menu-pdf-header__tagline">{slogan}</p>
+      )}
+    </div>
+  </div>
+
+  <div class="menu-pdf-header__menu-info">
+    <h2 class="menu-pdf-header__menu-title">{menuTitle}</h2>
+    {menuDescription && (
+      <p class="menu-pdf-header__menu-description">{menuDescription}</p>
+    )}
+    {availableHours && (
+      <p class="menu-pdf-header__hours">
+        <span class="menu-pdf-header__hours-label">Available:</span>
+        <span class="menu-pdf-header__hours-time">{availableHours}</span>
+      </p>
+    )}
+  </div>
+
+  {showContactInfo && (
+    <div class="menu-pdf-header__contact">
+      <span class="menu-pdf-header__contact-item">{formattedAddress}</span>
+      <span class="menu-pdf-header__contact-divider">|</span>
+      <span class="menu-pdf-header__contact-item">{telephone}</span>
+      <span class="menu-pdf-header__contact-divider">|</span>
+      <span class="menu-pdf-header__contact-item">{url?.replace('https://', '')}</span>
+    </div>
+  )}
+</header>
+
+<style>
+  .menu-pdf-header {
+    text-align: center;
+    padding: 0 0 1rem 0;
+    margin: 0 0 1.5rem 0;
+    border-bottom: 2px solid var(--color-espresso, #3c2415);
+    background: none;
+  }
+
+  .menu-pdf-header__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .menu-pdf-header__logo-section {
+    flex-shrink: 0;
+  }
+
+  .menu-pdf-header__logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  .menu-pdf-header__content {
+    text-align: center;
+  }
+
+  .menu-pdf-header__restaurant-name {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-espresso, #3c2415);
+    margin: 0;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-pdf-header__tagline {
+    font-family: var(--font-accent, Georgia, serif);
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--color-text-secondary, #666);
+    margin: 0.25rem 0 0 0;
+  }
+
+  .menu-pdf-header__menu-info {
+    margin-bottom: 0.75rem;
+  }
+
+  .menu-pdf-header__menu-title {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1a1a1a);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .menu-pdf-header__menu-description {
+    font-family: var(--font-body, Arial, sans-serif);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #666);
+    margin: 0.25rem 0 0 0;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .menu-pdf-header__hours {
+    font-family: var(--font-body, Arial, sans-serif);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #666);
+    margin: 0.25rem 0 0 0;
+  }
+
+  .menu-pdf-header__hours-label {
+    font-weight: 600;
+  }
+
+  .menu-pdf-header__contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body, Arial, sans-serif);
+    font-size: 0.625rem;
+    color: var(--color-text-secondary, #666);
+  }
+
+  .menu-pdf-header__contact-item {
+    white-space: nowrap;
+  }
+
+  .menu-pdf-header__contact-divider {
+    color: var(--color-border, #ccc);
+  }
+
+  /* Print-specific styles */
+  @media print {
+    .menu-pdf-header {
+      padding: 0 0 0.2in 0;
+      margin: 0 0 0.15in 0;
+      border-bottom: 2pt solid black;
+    }
+
+    .menu-pdf-header__container {
+      gap: 0.15in;
+      margin-bottom: 0.08in;
+    }
+
+    .menu-pdf-header__logo {
+      width: 0.6in;
+      height: 0.6in;
+    }
+
+    .menu-pdf-header__restaurant-name {
+      font-family: Georgia, 'Times New Roman', serif !important;
+      font-size: 24pt !important;
+      color: black !important;
+    }
+
+    .menu-pdf-header__tagline {
+      font-family: Georgia, 'Times New Roman', serif !important;
+      font-size: 9pt !important;
+      color: #333 !important;
+    }
+
+    .menu-pdf-header__menu-info {
+      margin-bottom: 0.08in;
+    }
+
+    .menu-pdf-header__menu-title {
+      font-family: Georgia, 'Times New Roman', serif !important;
+      font-size: 12pt !important;
+      color: black !important;
+    }
+
+    .menu-pdf-header__menu-description {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 8pt !important;
+      color: #444 !important;
+    }
+
+    .menu-pdf-header__hours {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 8pt !important;
+      color: #444 !important;
+    }
+
+    .menu-pdf-header__contact {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 7pt !important;
+      color: #666 !important;
+      gap: 0.08in;
+    }
+
+    .menu-pdf-header__contact-divider {
+      color: #999 !important;
+    }
+  }
+</style>

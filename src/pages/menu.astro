@@ -1,0 +1,955 @@
+---
+/**
+ * Full Menu Page
+ * Displays the complete restaurant menu with category sections, navigation jump links,
+ * PDF download button, and print-optimized stylesheet.
+ *
+ * Features:
+ * - Navigation jump links to each category section
+ * - PDF download functionality (browser print-to-PDF)
+ * - Print-optimized stylesheet for readability without images
+ * - Proper heading hierarchy for screen readers
+ * - Semantic HTML structure for accessibility
+ * - Responsive design with mobile-first approach
+ * - WCAG 2.1 AA compliant
+ * - Menu and MenuItem schema markup for rich snippets
+ */
+
+import Layout from '../layouts/Layout.astro';
+import MenuCategorySection from '../components/MenuCategorySection.astro';
+import MenuFilterPanel from '../components/MenuFilterPanel.astro';
+
+// Import dedicated print stylesheet for menu page
+// Provides clean formatting, proper page breaks, hidden navigation,
+// black-and-white optimization, and readable typography for physical menus
+import '../styles/menu-print.css';
+
+import {
+  DINNER_MENU,
+  buildMenuSections,
+} from '../config/menu.config';
+import type { MenuSection, MenuCategory } from '../types/menu';
+import type { MenuSchema } from '../types/seo';
+import { buildMenuSchemaFromData } from '../utils/menu-jsonld';
+import { seoConfig } from '../config/seo.config';
+
+// Build complete menu sections for the dinner menu (most comprehensive)
+const menuSections: MenuSection[] = DINNER_MENU.sections;
+
+// Define category order for navigation
+const navCategories = menuSections.map(section => ({
+  id: `menu-${section.category}`,
+  label: section.title,
+  category: section.category,
+}));
+
+// Build Menu schema for structured data (rich snippets)
+const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.siteUrl);
+---
+
+<Layout
+  title="Our Menu | Houston Restaurant"
+  description="Explore our full menu featuring appetizers, soups & salads, main courses, seafood, steaks, pasta, desserts, and beverages. Dietary options available."
+  jsonLd={menuSchema}
+>
+  <slot name="head">
+    <meta name="robots" content="index, follow" />
+  </slot>
+
+  <main class="menu-page" id="menu-page">
+    <!-- Page Header -->
+    <header class="menu-page__header">
+      <div class="menu-page__header-content">
+        <h1 class="menu-page__title">Our Menu</h1>
+        <p class="menu-page__subtitle">
+          Experience culinary excellence with our carefully crafted dishes,
+          featuring fresh ingredients and time-honored recipes.
+        </p>
+        <p class="menu-page__hours">
+          <span class="menu-page__hours-label">Dinner Hours:</span>
+          <span class="menu-page__hours-time">{DINNER_MENU.availableHours}</span>
+        </p>
+      </div>
+    </header>
+
+    <!-- Navigation & Actions Bar -->
+    <nav class="menu-page__nav" aria-label="Menu categories">
+      <div class="menu-page__nav-container">
+        <!-- Jump Links -->
+        <div class="menu-page__nav-links" role="navigation" aria-label="Jump to category">
+          <span class="menu-page__nav-label" id="jump-to-label">Jump to:</span>
+          <ul class="menu-page__nav-list" aria-labelledby="jump-to-label">
+            {navCategories.map((cat) => (
+              <li class="menu-page__nav-item">
+                <a
+                  href={`#${cat.id}`}
+                  class="menu-page__nav-link"
+                  data-category={cat.category}
+                >
+                  {cat.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Actions - PDF Download Dropdown -->
+        <div class="menu-page__actions">
+          <div class="menu-page__dropdown" id="pdf-dropdown">
+            <button
+              type="button"
+              class="menu-page__action-btn menu-page__action-btn--print"
+              id="pdf-dropdown-btn"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="pdf-dropdown-menu"
+              aria-label="Download menu as PDF"
+            >
+              <svg
+                class="menu-page__action-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7,10 12,15 17,10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span class="menu-page__action-text">Download PDF</span>
+              <svg
+                class="menu-page__dropdown-arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <polyline points="6,9 12,15 18,9" />
+              </svg>
+            </button>
+            <ul
+              class="menu-page__dropdown-menu"
+              id="pdf-dropdown-menu"
+              role="menu"
+              aria-labelledby="pdf-dropdown-btn"
+            >
+              <li role="none">
+                <a
+                  href="/menu-print?type=dinner"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Dinner Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=lunch"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Lunch Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=brunch"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Brunch Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=kids"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Kids Menu
+                </a>
+              </li>
+              <li role="none" class="menu-page__dropdown-divider"></li>
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  class="menu-page__dropdown-item menu-page__dropdown-item--action"
+                  id="print-current-btn"
+                >
+                  Print Current Page
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Filter Panel -->
+    <MenuFilterPanel />
+
+    <!-- Dietary Legend -->
+    <section class="menu-page__legend" aria-labelledby="legend-heading">
+      <h2 id="legend-heading" class="visually-hidden">Dietary Information Legend</h2>
+      <div class="menu-page__legend-container">
+        <span class="menu-page__legend-label">Dietary Key:</span>
+        <ul class="menu-page__legend-list" role="list">
+          <li class="menu-page__legend-item">
+            <span class="menu-page__legend-abbr menu-page__legend-abbr--v" aria-hidden="true">V</span>
+            <span class="menu-page__legend-name">Vegetarian</span>
+          </li>
+          <li class="menu-page__legend-item">
+            <span class="menu-page__legend-abbr menu-page__legend-abbr--vg" aria-hidden="true">VG</span>
+            <span class="menu-page__legend-name">Vegan</span>
+          </li>
+          <li class="menu-page__legend-item">
+            <span class="menu-page__legend-abbr menu-page__legend-abbr--gf" aria-hidden="true">GF</span>
+            <span class="menu-page__legend-name">Gluten-Free</span>
+          </li>
+          <li class="menu-page__legend-item">
+            <span class="menu-page__legend-abbr menu-page__legend-abbr--df" aria-hidden="true">DF</span>
+            <span class="menu-page__legend-name">Dairy-Free</span>
+          </li>
+        </ul>
+        <p class="menu-page__legend-note">
+          Please inform your server of any allergies or dietary restrictions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Menu Sections -->
+    <div class="menu-page__content">
+      {menuSections.map((section) => (
+        <MenuCategorySection
+          category={section.category}
+          title={section.title}
+          description={section.description}
+          items={section.items}
+          layout="compact"
+          columns={2}
+          showImages={false}
+          showPrices={true}
+          showDietaryTags={true}
+          decoratedHeading={true}
+          id={`menu-${section.category}`}
+        />
+      ))}
+    </div>
+
+    <!-- Back to Top -->
+    <div class="menu-page__back-to-top">
+      <a href="#menu-page" class="menu-page__back-to-top-link" aria-label="Back to top of menu">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="18,15 12,9 6,15" />
+        </svg>
+        <span>Back to Top</span>
+      </a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // PDF Download Dropdown functionality
+  function initPDFDropdown() {
+    const dropdown = document.getElementById('pdf-dropdown');
+    const dropdownBtn = document.getElementById('pdf-dropdown-btn');
+    const dropdownMenu = document.getElementById('pdf-dropdown-menu');
+    const printCurrentBtn = document.getElementById('print-current-btn');
+
+    if (!dropdown || !dropdownBtn || !dropdownMenu) return;
+
+    let isOpen = false;
+
+    // Toggle dropdown
+    function toggleDropdown(open?: boolean) {
+      isOpen = open !== undefined ? open : !isOpen;
+      dropdownBtn.setAttribute('aria-expanded', String(isOpen));
+      dropdown.classList.toggle('menu-page__dropdown--open', isOpen);
+
+      if (isOpen) {
+        // Focus first menu item
+        const firstItem = dropdownMenu.querySelector('a, button');
+        if (firstItem) (firstItem as HTMLElement).focus();
+      }
+    }
+
+    // Close dropdown when clicking outside
+    function handleClickOutside(e: MouseEvent) {
+      if (!dropdown.contains(e.target as Node)) {
+        toggleDropdown(false);
+      }
+    }
+
+    // Keyboard navigation
+    function handleKeydown(e: KeyboardEvent) {
+      const items = Array.from(dropdownMenu.querySelectorAll('a, button')) as HTMLElement[];
+      const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+
+      switch (e.key) {
+        case 'Escape':
+          toggleDropdown(false);
+          dropdownBtn.focus();
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (!isOpen) {
+            toggleDropdown(true);
+          } else {
+            const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            items[nextIndex].focus();
+          }
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (isOpen) {
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            items[prevIndex].focus();
+          }
+          break;
+        case 'Tab':
+          if (isOpen) {
+            toggleDropdown(false);
+          }
+          break;
+      }
+    }
+
+    // Event listeners
+    dropdownBtn.addEventListener('click', () => toggleDropdown());
+    dropdown.addEventListener('keydown', handleKeydown);
+    document.addEventListener('click', handleClickOutside);
+
+    // Print current page button
+    if (printCurrentBtn) {
+      printCurrentBtn.addEventListener('click', () => {
+        toggleDropdown(false);
+        window.print();
+      });
+    }
+
+    // Close dropdown when menu item is clicked (for links)
+    dropdownMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        toggleDropdown(false);
+      });
+    });
+  }
+
+  // Legacy print button support (fallback)
+  function initPrintButton() {
+    const printBtn = document.getElementById('print-menu-btn');
+    if (printBtn) {
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+    }
+  }
+
+  // Smooth scroll for navigation links
+  function initSmoothScroll() {
+    const navLinks = document.querySelectorAll('.menu-page__nav-link, .menu-page__back-to-top-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+            // Update URL without triggering scroll
+            history.pushState(null, '', href);
+            // Set focus for accessibility
+            (target as HTMLElement).setAttribute('tabindex', '-1');
+            (target as HTMLElement).focus({ preventScroll: true });
+          }
+        }
+      });
+    });
+  }
+
+  // Highlight active section in navigation
+  function initScrollSpy() {
+    const sections = document.querySelectorAll('.menu-category-section');
+    const navLinks = document.querySelectorAll('.menu-page__nav-link');
+
+    if (sections.length === 0 || navLinks.length === 0) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${sectionId}`) {
+              link.classList.add('menu-page__nav-link--active');
+              link.setAttribute('aria-current', 'true');
+            } else {
+              link.classList.remove('menu-page__nav-link--active');
+              link.removeAttribute('aria-current');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initPDFDropdown();
+      initPrintButton();
+      initSmoothScroll();
+      initScrollSpy();
+    });
+  } else {
+    initPDFDropdown();
+    initPrintButton();
+    initSmoothScroll();
+    initScrollSpy();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    initPDFDropdown();
+    initPrintButton();
+    initSmoothScroll();
+    initScrollSpy();
+  });
+</script>
+
+<style>
+  /* =================================================================
+   * MENU PAGE STYLES
+   * =================================================================
+   * Full menu page with navigation, print optimization, and accessibility
+   */
+
+  .menu-page {
+    background-color: var(--color-background);
+    min-height: 100vh;
+  }
+
+  /* =================================================================
+   * HEADER STYLES
+   * ================================================================= */
+  .menu-page__header {
+    background: linear-gradient(
+      135deg,
+      var(--color-burgundy) 0%,
+      var(--color-espresso) 100%
+    );
+    padding: var(--spacing-16) var(--spacing-4);
+    text-align: center;
+    color: var(--color-cream);
+  }
+
+  .menu-page__header-content {
+    max-width: var(--container-3xl);
+    margin: 0 auto;
+  }
+
+  .menu-page__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-4);
+    line-height: var(--line-height-tight);
+    color: var(--color-cream);
+  }
+
+  .menu-page__subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    max-width: 36rem;
+    margin: 0 auto var(--spacing-6);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-cream-light);
+    opacity: 0.9;
+  }
+
+  .menu-page__hours {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    margin: 0;
+  }
+
+  .menu-page__hours-label {
+    opacity: 0.8;
+  }
+
+  .menu-page__hours-time {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* =================================================================
+   * NAVIGATION STYLES
+   * ================================================================= */
+  .menu-page__nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-background-elevated);
+    border-bottom: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .menu-page__nav-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+    padding: var(--spacing-3) var(--spacing-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .menu-page__nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .menu-page__nav-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .menu-page__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .menu-page__nav-item {
+    margin: 0;
+  }
+
+  .menu-page__nav-link {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-3);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out),
+      border-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-page__nav-link:hover,
+  .menu-page__nav-link:focus {
+    background-color: var(--color-primary-50);
+    color: var(--color-primary-700);
+    border-color: var(--color-primary-200);
+    outline: none;
+  }
+
+  .menu-page__nav-link:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-500);
+  }
+
+  .menu-page__nav-link--active {
+    background-color: var(--color-primary-600);
+    color: var(--color-cream);
+    border-color: var(--color-primary-600);
+  }
+
+  .menu-page__nav-link--active:hover,
+  .menu-page__nav-link--active:focus {
+    background-color: var(--color-primary-700);
+    color: var(--color-cream);
+    border-color: var(--color-primary-700);
+  }
+
+  /* Actions */
+  .menu-page__actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .menu-page__action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      border-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-page__action-btn:hover,
+  .menu-page__action-btn:focus {
+    background-color: var(--color-background-muted);
+    border-color: var(--color-primary-300);
+    outline: none;
+  }
+
+  .menu-page__action-btn:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-500);
+  }
+
+  .menu-page__action-icon {
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * PDF DROPDOWN STYLES
+   * ================================================================= */
+  .menu-page__dropdown {
+    position: relative;
+  }
+
+  .menu-page__dropdown-arrow {
+    transition: transform var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-page__dropdown--open .menu-page__dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  .menu-page__dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 180px;
+    background-color: var(--color-background-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-2) 0;
+    list-style: none;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity var(--duration-150) var(--ease-in-out),
+      transform var(--duration-150) var(--ease-in-out),
+      visibility var(--duration-150) var(--ease-in-out);
+    z-index: 200;
+  }
+
+  .menu-page__dropdown--open .menu-page__dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .menu-page__dropdown-item {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-page__dropdown-item:hover,
+  .menu-page__dropdown-item:focus {
+    background-color: var(--color-background-muted);
+    outline: none;
+  }
+
+  .menu-page__dropdown-item:focus-visible {
+    background-color: var(--color-primary-50);
+    color: var(--color-primary-700);
+  }
+
+  .menu-page__dropdown-item--action {
+    color: var(--color-primary-600);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .menu-page__dropdown-divider {
+    height: 1px;
+    margin: var(--spacing-2) 0;
+    background-color: var(--color-border-light);
+  }
+
+  .menu-page__action-text {
+    white-space: nowrap;
+  }
+
+  /* =================================================================
+   * DIETARY LEGEND STYLES
+   * ================================================================= */
+  .menu-page__legend {
+    background-color: var(--color-background-muted);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .menu-page__legend-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+    padding: var(--spacing-4);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  .menu-page__legend-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+  }
+
+  .menu-page__legend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+  }
+
+  .menu-page__legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+  }
+
+  .menu-page__legend-abbr {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-sm);
+    color: white;
+  }
+
+  .menu-page__legend-abbr--v {
+    background-color: #22c55e;
+  }
+
+  .menu-page__legend-abbr--vg {
+    background-color: #16a34a;
+  }
+
+  .menu-page__legend-abbr--gf {
+    background-color: #eab308;
+    color: #1a1a1a;
+  }
+
+  .menu-page__legend-abbr--df {
+    background-color: #3b82f6;
+  }
+
+  .menu-page__legend-name {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .menu-page__legend-note {
+    flex-basis: 100%;
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    margin: var(--spacing-2) 0 0;
+  }
+
+  /* =================================================================
+   * CONTENT STYLES
+   * ================================================================= */
+  .menu-page__content {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * BACK TO TOP
+   * ================================================================= */
+  .menu-page__back-to-top {
+    padding: var(--spacing-8) var(--spacing-4);
+    text-align: center;
+    border-top: 1px solid var(--color-border-light);
+    background-color: var(--color-background-muted);
+  }
+
+  .menu-page__back-to-top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-page__back-to-top-link:hover,
+  .menu-page__back-to-top-link:focus {
+    background-color: var(--color-background-elevated);
+    color: var(--color-text-primary);
+  }
+
+  /* =================================================================
+   * UTILITY CLASSES
+   * ================================================================= */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+
+  /* Tablet (640px) */
+  @media screen and (min-width: 640px) {
+    .menu-page__header {
+      padding: var(--spacing-20) var(--spacing-6);
+    }
+
+    .menu-page__title {
+      font-size: var(--font-size-5xl);
+    }
+
+    .menu-page__nav-container {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .menu-page__nav-links {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-3);
+    }
+
+    .menu-page__legend-note {
+      flex-basis: auto;
+      margin: 0;
+      margin-left: auto;
+    }
+  }
+
+  /* Desktop (1024px) */
+  @media screen and (min-width: 1024px) {
+    .menu-page__header {
+      padding: var(--spacing-24) var(--spacing-8);
+    }
+
+    .menu-page__title {
+      font-size: var(--font-size-6xl);
+    }
+
+    .menu-page__subtitle {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .menu-page__nav-link,
+    .menu-page__action-btn,
+    .menu-page__back-to-top-link {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .menu-page__header {
+    background: linear-gradient(
+      135deg,
+      var(--color-espresso) 0%,
+      #1a1a1a 100%
+    );
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   * Print styles are handled by the dedicated menu-print.css stylesheet
+   * imported at the top of this file. That stylesheet provides:
+   * - Clean page setup with proper margins for binding
+   * - Hidden navigation and interactive elements
+   * - Black-and-white optimized colors
+   * - Readable typography with print-friendly font sizes (pt units)
+   * - Proper page break handling to keep items together
+   * - Restaurant branding header
+   * - Dietary legend preservation
+   * - Two-column layout for efficient space usage
+   * - Grayscale mode support for monochrome printing
+   *
+   * See: src/styles/menu-print.css for full implementation
+   */
+</style>

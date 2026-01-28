@@ -1,0 +1,659 @@
+---
+/**
+ * Instagram Feed Component
+ *
+ * Displays the restaurant's Instagram feed with food and atmosphere posts.
+ * Features:
+ * - Supports both native embed and Behold service integration
+ * - Responsive grid layout with customizable columns
+ * - Loading states with shimmer animation
+ * - Graceful error handling with fallback content
+ * - Hover effects showing captions
+ * - Accessibility-compliant with ARIA labels and keyboard navigation
+ * - Dark mode support
+ *
+ * @example Basic usage:
+ * ```astro
+ * <InstagramFeed />
+ * ```
+ *
+ * @example With custom configuration:
+ * ```astro
+ * <InstagramFeed
+ *   heading="Our Instagram"
+ *   maxPosts={9}
+ *   columns={3}
+ *   showCaptions={true}
+ * />
+ * ```
+ *
+ * @example Using Behold service:
+ * ```astro
+ * <InstagramFeed
+ *   useBehold={true}
+ *   beholdFeedId="your-behold-feed-id"
+ * />
+ * ```
+ */
+
+import type { InstagramPost, InstagramFeedProps } from '../types/instagram';
+import { DEFAULT_INSTAGRAM_FEED_PROPS } from '../types/instagram';
+import {
+  INSTAGRAM_CONFIG,
+  INSTAGRAM_PROFILE,
+  INSTAGRAM_SEO,
+  INSTAGRAM_ERROR_MESSAGES,
+  FALLBACK_INSTAGRAM_POSTS,
+  isInstagramConfigured,
+} from '../config/instagram.config';
+
+interface Props extends InstagramFeedProps {}
+
+const {
+  id = 'instagram-feed',
+  heading = INSTAGRAM_SEO.heading,
+  subheading = INSTAGRAM_SEO.subheading,
+  maxPosts = DEFAULT_INSTAGRAM_FEED_PROPS.maxPosts,
+  columns = DEFAULT_INSTAGRAM_FEED_PROPS.columns,
+  layout = DEFAULT_INSTAGRAM_FEED_PROPS.layout,
+  showCaptions = DEFAULT_INSTAGRAM_FEED_PROPS.showCaptions,
+  showViewOnInstagram = DEFAULT_INSTAGRAM_FEED_PROPS.showViewOnInstagram,
+  profileUrl = INSTAGRAM_PROFILE.profileUrl,
+  handle = INSTAGRAM_PROFILE.handle,
+  useBehold = INSTAGRAM_CONFIG.useBehold,
+  beholdFeedId = INSTAGRAM_CONFIG.beholdFeedId,
+} = Astro.props;
+
+// Determine if component should render
+const isConfigured = isInstagramConfigured();
+
+// Get posts to display (fallback posts for now, can be replaced with API call)
+const posts: InstagramPost[] = FALLBACK_INSTAGRAM_POSTS.slice(0, maxPosts);
+
+// Generate unique ID for this instance
+const instanceId = `instagram-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+{isConfigured && (
+  <section
+    id={id}
+    class="instagram-feed"
+    aria-label={INSTAGRAM_SEO.ariaLabel}
+    data-instance-id={instanceId}
+  >
+    <div class="instagram-feed__container">
+      {/* Section Header */}
+      <header class="instagram-feed__header">
+        <h2 class="instagram-feed__heading">{heading}</h2>
+        {subheading && (
+          <p class="instagram-feed__subheading">{subheading}</p>
+        )}
+      </header>
+
+      {/* Behold Widget Integration */}
+      {useBehold && beholdFeedId ? (
+        <div
+          class="instagram-feed__behold"
+          data-behold-feed-id={beholdFeedId}
+        >
+          {/* Behold widget will be injected here */}
+          <div class="instagram-feed__loading" aria-live="polite">
+            <div class="instagram-feed__grid" style={`--columns: ${columns}`}>
+              {Array.from({ length: maxPosts }).map((_, i) => (
+                <div class="instagram-post instagram-post--skeleton" key={i}>
+                  <div class="shimmer"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Native Grid Layout */
+        <div
+          class="instagram-feed__grid"
+          style={`--columns: ${columns}`}
+          role="list"
+          aria-label="Instagram posts"
+        >
+          {posts.map((post) => (
+            <article
+              class="instagram-post"
+              role="listitem"
+              data-post-id={post.id}
+            >
+              <a
+                href={post.permalink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="instagram-post__link"
+                aria-label={`View Instagram post: ${post.alt}`}
+              >
+                <div class="instagram-post__image-wrapper">
+                  <img
+                    src={post.mediaUrl}
+                    alt={post.alt}
+                    class="instagram-post__image"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="400"
+                  />
+                  {post.mediaType === 'VIDEO' && (
+                    <div class="instagram-post__video-icon" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  )}
+                  {post.mediaType === 'CAROUSEL_ALBUM' && (
+                    <div class="instagram-post__carousel-icon" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                {showCaptions && post.caption && (
+                  <div class="instagram-post__overlay">
+                    <p class="instagram-post__caption">{post.caption}</p>
+                  </div>
+                )}
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {/* Error State (hidden by default, shown via JS) */}
+      <div class="instagram-feed__error" hidden aria-live="polite">
+        <div class="instagram-feed__error-content">
+          <svg class="instagram-feed__error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <p class="instagram-feed__error-message">{INSTAGRAM_ERROR_MESSAGES.unknown}</p>
+          <button class="instagram-feed__retry-btn" type="button">
+            Try Again
+          </button>
+        </div>
+      </div>
+
+      {/* View on Instagram Link */}
+      {showViewOnInstagram && (
+        <footer class="instagram-feed__footer">
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="instagram-feed__follow-link"
+            aria-label={`Follow @${handle} on Instagram`}
+          >
+            <svg class="instagram-feed__instagram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+            <span>Follow @{handle} on Instagram</span>
+          </a>
+        </footer>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  /* =================================================================
+   * Instagram Feed Section
+   * ================================================================= */
+  .instagram-feed {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+  }
+
+  .instagram-feed__container {
+    max-width: var(--container-7xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * Section Header
+   * ================================================================= */
+  .instagram-feed__header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .instagram-feed__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-3) 0;
+    line-height: var(--line-height-tight);
+  }
+
+  .instagram-feed__subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  /* =================================================================
+   * Grid Layout
+   * ================================================================= */
+  .instagram-feed__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 3), 1fr);
+    gap: var(--spacing-4);
+  }
+
+  @media (max-width: 768px) {
+    .instagram-feed__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-3);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .instagram-feed__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-2);
+    }
+  }
+
+  /* =================================================================
+   * Individual Post
+   * ================================================================= */
+  .instagram-post {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--color-background-muted);
+  }
+
+  .instagram-post__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .instagram-post__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .instagram-post__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-300) var(--ease-out);
+  }
+
+  .instagram-post:hover .instagram-post__image {
+    transform: scale(1.05);
+  }
+
+  /* Video/Carousel Icons */
+  .instagram-post__video-icon,
+  .instagram-post__carousel-icon {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    color: white;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  /* =================================================================
+   * Caption Overlay
+   * ================================================================= */
+  .instagram-post__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      transparent 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: var(--spacing-4);
+    opacity: 0;
+    transition: opacity var(--duration-300) var(--ease-out);
+  }
+
+  .instagram-post:hover .instagram-post__overlay,
+  .instagram-post:focus-within .instagram-post__overlay {
+    opacity: 1;
+  }
+
+  .instagram-post__caption {
+    color: white;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-snug);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* =================================================================
+   * Loading Skeleton
+   * ================================================================= */
+  .instagram-post--skeleton {
+    background-color: var(--color-background-muted);
+    animation: none;
+  }
+
+  .instagram-post--skeleton .shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* =================================================================
+   * Error State
+   * ================================================================= */
+  .instagram-feed__error {
+    text-align: center;
+    padding: var(--spacing-12) var(--spacing-4);
+  }
+
+  .instagram-feed__error-content {
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+
+  .instagram-feed__error-icon {
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .instagram-feed__error-message {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-6);
+  }
+
+  .instagram-feed__retry-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3) var(--spacing-6);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition-hover);
+  }
+
+  .instagram-feed__retry-btn:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .instagram-feed__retry-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* =================================================================
+   * Footer / Follow Link
+   * ================================================================= */
+  .instagram-feed__footer {
+    margin-top: var(--spacing-8);
+    text-align: center;
+  }
+
+  .instagram-feed__follow-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    transition: var(--transition-hover);
+  }
+
+  .instagram-feed__follow-link:hover {
+    background-color: var(--color-background-muted);
+    border-color: var(--color-border-dark);
+    transform: var(--transform-hover-lift-sm);
+  }
+
+  .instagram-feed__follow-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .instagram-feed__instagram-icon {
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * Behold Widget Container
+   * ================================================================= */
+  .instagram-feed__behold {
+    min-height: 300px;
+  }
+
+  .instagram-feed__loading {
+    /* Shown while Behold loads */
+  }
+
+  /* =================================================================
+   * Accessibility
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-post__image {
+      transition: none;
+    }
+
+    .instagram-post__overlay {
+      transition: none;
+    }
+
+    .instagram-post--skeleton .shimmer {
+      animation: none;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .instagram-feed__follow-link {
+      transition: none;
+    }
+
+    .instagram-feed__follow-link:hover {
+      transform: none;
+    }
+  }
+
+  /* High Contrast Mode */
+  @media (forced-colors: active) {
+    .instagram-post {
+      border: 2px solid CanvasText;
+    }
+
+    .instagram-post__overlay {
+      background: Canvas;
+      opacity: 1;
+    }
+
+    .instagram-post__caption {
+      color: CanvasText;
+    }
+
+    .instagram-feed__follow-link {
+      border: 2px solid CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * Dark Mode
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .instagram-feed {
+    background-color: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .instagram-post {
+    background-color: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .instagram-post--skeleton .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+  }
+
+  :global(html[data-theme="dark"]) .instagram-feed__follow-link {
+    background-color: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .instagram-feed__follow-link:hover {
+    background-color: var(--color-background-muted);
+  }
+</style>
+
+<script>
+  /**
+   * Instagram Feed Client-Side Script
+   * Handles Behold widget initialization, error states, and retry functionality
+   */
+
+  interface InstagramFeedElement extends HTMLElement {
+    dataset: {
+      instanceId: string;
+    };
+  }
+
+  function initInstagramFeed() {
+    const feeds = document.querySelectorAll<InstagramFeedElement>('.instagram-feed');
+
+    feeds.forEach((feed) => {
+      const beholdContainer = feed.querySelector<HTMLDivElement>('[data-behold-feed-id]');
+      const errorContainer = feed.querySelector<HTMLDivElement>('.instagram-feed__error');
+      const loadingContainer = feed.querySelector<HTMLDivElement>('.instagram-feed__loading');
+      const retryBtn = feed.querySelector<HTMLButtonElement>('.instagram-feed__retry-btn');
+
+      // Initialize Behold widget if using Behold service
+      if (beholdContainer) {
+        const feedId = beholdContainer.dataset.beholdFeedId;
+        if (feedId) {
+          loadBeholdWidget(feedId, beholdContainer, loadingContainer, errorContainer);
+        }
+      }
+
+      // Setup retry button
+      if (retryBtn && errorContainer && beholdContainer) {
+        retryBtn.addEventListener('click', () => {
+          const feedId = beholdContainer.dataset.beholdFeedId;
+          if (feedId) {
+            errorContainer.hidden = true;
+            if (loadingContainer) loadingContainer.hidden = false;
+            loadBeholdWidget(feedId, beholdContainer, loadingContainer, errorContainer);
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Load Behold widget dynamically
+   */
+  async function loadBeholdWidget(
+    feedId: string,
+    container: HTMLDivElement,
+    loadingContainer: HTMLDivElement | null,
+    errorContainer: HTMLDivElement | null
+  ) {
+    try {
+      // Check if Behold script is already loaded
+      if (!document.querySelector('script[src*="behold.so"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://w.behold.so/widget.js';
+        script.type = 'module';
+        script.async = true;
+
+        await new Promise<void>((resolve, reject) => {
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load Behold widget'));
+          document.head.appendChild(script);
+        });
+      }
+
+      // Create Behold widget element
+      const widget = document.createElement('behold-widget');
+      widget.setAttribute('feed-id', feedId);
+
+      // Replace loading state with widget
+      if (loadingContainer) {
+        loadingContainer.hidden = true;
+      }
+
+      // Clear container and add widget
+      const existingWidget = container.querySelector('behold-widget');
+      if (existingWidget) {
+        existingWidget.remove();
+      }
+      container.appendChild(widget);
+
+    } catch (error) {
+      console.error('Failed to load Instagram feed:', error);
+      showError(loadingContainer, errorContainer);
+    }
+  }
+
+  /**
+   * Show error state
+   */
+  function showError(
+    loadingContainer: HTMLDivElement | null,
+    errorContainer: HTMLDivElement | null
+  ) {
+    if (loadingContainer) {
+      loadingContainer.hidden = true;
+    }
+    if (errorContainer) {
+      errorContainer.hidden = false;
+    }
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initInstagramFeed);
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initInstagramFeed);
+</script>

@@ -1,0 +1,849 @@
+---
+/**
+ * MenuFilterPanel Component
+ * Client-side filtering panel for menu items by dietary restrictions and allergens.
+ * Shows/hides menu items based on selected filters and displays count of available options.
+ *
+ * Features:
+ * - Dietary restriction filters (vegetarian, vegan, gluten-free, etc.)
+ * - Allergen exclusion filters (milk, eggs, nuts, etc.)
+ * - Real-time item count display
+ * - Persistent filter state via URL parameters
+ * - Accessible with proper ARIA labels
+ * - Responsive design
+ * - Clear all filters functionality
+ *
+ * @example Basic usage
+ * ```astro
+ * <MenuFilterPanel />
+ * ```
+ */
+
+import { DIETARY_TAG_OPTIONS, ALLERGEN_TAG_OPTIONS } from '../types/menu';
+import type { DietaryTag, AllergenTag } from '../types/menu';
+
+interface Props {
+  /** Initial dietary filters to apply */
+  initialDietaryFilters?: DietaryTag[];
+  /** Initial allergens to exclude */
+  initialExcludeAllergens?: AllergenTag[];
+  /** Additional CSS class names */
+  class?: string;
+}
+
+const {
+  initialDietaryFilters = [],
+  initialExcludeAllergens = [],
+  class: className = '',
+} = Astro.props;
+
+// Filter to only show commonly used dietary options
+const displayDietaryOptions = DIETARY_TAG_OPTIONS.filter(opt =>
+  ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-free'].includes(opt.value)
+);
+
+// Filter to only show major allergens
+const displayAllergenOptions = ALLERGEN_TAG_OPTIONS.filter(opt =>
+  ['milk', 'eggs', 'fish', 'shellfish', 'tree-nuts', 'peanuts', 'wheat', 'soy', 'sesame'].includes(opt.value)
+);
+
+const panelClasses = ['menu-filter-panel', className].filter(Boolean).join(' ');
+---
+
+<section
+  class={panelClasses}
+  id="menu-filter-panel"
+  aria-labelledby="filter-panel-heading"
+  data-initial-dietary={JSON.stringify(initialDietaryFilters)}
+  data-initial-allergens={JSON.stringify(initialExcludeAllergens)}
+>
+  <div class="menu-filter-panel__container">
+    <!-- Header with toggle -->
+    <div class="menu-filter-panel__header">
+      <button
+        type="button"
+        class="menu-filter-panel__toggle"
+        id="filter-toggle-btn"
+        aria-expanded="false"
+        aria-controls="filter-content"
+      >
+        <span class="menu-filter-panel__toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+        </span>
+        <span class="menu-filter-panel__toggle-text" id="filter-panel-heading">
+          Filter by Dietary Needs & Allergens
+        </span>
+        <span class="menu-filter-panel__toggle-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Active filters count badge -->
+      <span class="menu-filter-panel__active-count" id="active-filter-count" aria-live="polite" hidden>
+        <span class="menu-filter-panel__active-count-number">0</span> active
+      </span>
+    </div>
+
+    <!-- Filter content (collapsible) -->
+    <div class="menu-filter-panel__content" id="filter-content" hidden>
+      <!-- Results summary -->
+      <div class="menu-filter-panel__results" aria-live="polite" aria-atomic="true">
+        <span class="menu-filter-panel__results-text">
+          Showing <strong id="visible-items-count">all</strong> menu items
+        </span>
+        <button
+          type="button"
+          class="menu-filter-panel__clear-btn"
+          id="clear-filters-btn"
+          hidden
+        >
+          Clear all filters
+        </button>
+      </div>
+
+      <div class="menu-filter-panel__sections">
+        <!-- Dietary Restrictions Section -->
+        <fieldset class="menu-filter-panel__section">
+          <legend class="menu-filter-panel__section-title">
+            <span class="menu-filter-panel__section-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+            </span>
+            Show items that are
+          </legend>
+          <p class="menu-filter-panel__section-hint">Select dietary preferences to show matching items</p>
+          <div class="menu-filter-panel__options" role="group">
+            {displayDietaryOptions.map((option) => (
+              <label class="menu-filter-panel__option menu-filter-panel__option--dietary">
+                <input
+                  type="checkbox"
+                  name="dietary"
+                  value={option.value}
+                  class="menu-filter-panel__checkbox"
+                  data-filter-type="dietary"
+                  checked={initialDietaryFilters.includes(option.value as DietaryTag)}
+                />
+                <span class="menu-filter-panel__option-content">
+                  <span class={`menu-filter-panel__option-badge menu-filter-panel__option-badge--${option.value}`}>
+                    {option.abbreviation}
+                  </span>
+                  <span class="menu-filter-panel__option-label">{option.label}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <!-- Allergen Exclusion Section -->
+        <fieldset class="menu-filter-panel__section">
+          <legend class="menu-filter-panel__section-title">
+            <span class="menu-filter-panel__section-icon menu-filter-panel__section-icon--warning" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </span>
+            Hide items containing
+          </legend>
+          <p class="menu-filter-panel__section-hint">Select allergens to hide items that contain them</p>
+          <div class="menu-filter-panel__options menu-filter-panel__options--allergens" role="group">
+            {displayAllergenOptions.map((option) => (
+              <label class={`menu-filter-panel__option menu-filter-panel__option--allergen menu-filter-panel__option--${option.severity}`}>
+                <input
+                  type="checkbox"
+                  name="allergen"
+                  value={option.value}
+                  class="menu-filter-panel__checkbox"
+                  data-filter-type="allergen"
+                  checked={initialExcludeAllergens.includes(option.value as AllergenTag)}
+                />
+                <span class="menu-filter-panel__option-content">
+                  <span class="menu-filter-panel__option-label">{option.label}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Menu Filter Panel - Client-side filtering logic
+   * Filters menu items based on dietary restrictions and allergen exclusions
+   */
+
+  interface MenuItem {
+    element: HTMLElement;
+    dietaryTags: string[];
+    allergens: string[];
+  }
+
+  class MenuFilterController {
+    private panel: HTMLElement;
+    private toggleBtn: HTMLElement;
+    private content: HTMLElement;
+    private clearBtn: HTMLElement;
+    private countDisplay: HTMLElement;
+    private activeCountBadge: HTMLElement;
+    private activeCountNumber: HTMLElement;
+    private dietaryCheckboxes: NodeListOf<HTMLInputElement>;
+    private allergenCheckboxes: NodeListOf<HTMLInputElement>;
+    private menuItems: MenuItem[] = [];
+    private totalItems: number = 0;
+
+    constructor() {
+      this.panel = document.getElementById('menu-filter-panel')!;
+      this.toggleBtn = document.getElementById('filter-toggle-btn')!;
+      this.content = document.getElementById('filter-content')!;
+      this.clearBtn = document.getElementById('clear-filters-btn')!;
+      this.countDisplay = document.getElementById('visible-items-count')!;
+      this.activeCountBadge = document.getElementById('active-filter-count')!;
+      this.activeCountNumber = this.activeCountBadge.querySelector('.menu-filter-panel__active-count-number')!;
+      this.dietaryCheckboxes = this.panel.querySelectorAll('input[data-filter-type="dietary"]');
+      this.allergenCheckboxes = this.panel.querySelectorAll('input[data-filter-type="allergen"]');
+
+      this.init();
+    }
+
+    private init(): void {
+      this.collectMenuItems();
+      this.bindEvents();
+      this.loadFiltersFromURL();
+      this.applyFilters();
+    }
+
+    private collectMenuItems(): void {
+      // Find all menu item articles on the page
+      const itemElements = document.querySelectorAll('.menu-item');
+
+      itemElements.forEach((el) => {
+        const element = el as HTMLElement;
+
+        // Extract dietary tags from the DietaryIndicator components within the item
+        const dietaryIndicators = element.querySelectorAll('[data-dietary-tag]');
+        const dietaryTags: string[] = [];
+        dietaryIndicators.forEach((indicator) => {
+          const tag = indicator.getAttribute('data-dietary-tag');
+          if (tag) dietaryTags.push(tag);
+        });
+
+        // Extract allergens from data attribute or parse from content
+        const allergensAttr = element.getAttribute('data-allergens');
+        const allergens: string[] = allergensAttr ? JSON.parse(allergensAttr) : [];
+
+        this.menuItems.push({
+          element,
+          dietaryTags,
+          allergens,
+        });
+      });
+
+      this.totalItems = this.menuItems.length;
+    }
+
+    private bindEvents(): void {
+      // Toggle panel open/close
+      this.toggleBtn.addEventListener('click', () => this.togglePanel());
+
+      // Filter changes
+      this.dietaryCheckboxes.forEach((cb) => {
+        cb.addEventListener('change', () => this.onFilterChange());
+      });
+
+      this.allergenCheckboxes.forEach((cb) => {
+        cb.addEventListener('change', () => this.onFilterChange());
+      });
+
+      // Clear all filters
+      this.clearBtn.addEventListener('click', () => this.clearFilters());
+
+      // Keyboard navigation
+      this.panel.addEventListener('keydown', (e) => this.handleKeyboard(e));
+    }
+
+    private togglePanel(): void {
+      const isExpanded = this.toggleBtn.getAttribute('aria-expanded') === 'true';
+      this.toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+      this.content.hidden = isExpanded;
+      this.panel.classList.toggle('menu-filter-panel--expanded', !isExpanded);
+    }
+
+    private onFilterChange(): void {
+      this.applyFilters();
+      this.updateURL();
+      this.updateActiveCount();
+    }
+
+    private getSelectedDietaryFilters(): string[] {
+      const selected: string[] = [];
+      this.dietaryCheckboxes.forEach((cb) => {
+        if (cb.checked) selected.push(cb.value);
+      });
+      return selected;
+    }
+
+    private getSelectedAllergenFilters(): string[] {
+      const selected: string[] = [];
+      this.allergenCheckboxes.forEach((cb) => {
+        if (cb.checked) selected.push(cb.value);
+      });
+      return selected;
+    }
+
+    private applyFilters(): void {
+      const selectedDietary = this.getSelectedDietaryFilters();
+      const selectedAllergens = this.getSelectedAllergenFilters();
+
+      let visibleCount = 0;
+
+      this.menuItems.forEach((item) => {
+        let isVisible = true;
+
+        // Check dietary filters (item must have ALL selected dietary tags)
+        if (selectedDietary.length > 0) {
+          const hasAllDietaryTags = selectedDietary.every((tag) =>
+            item.dietaryTags.includes(tag)
+          );
+          if (!hasAllDietaryTags) {
+            isVisible = false;
+          }
+        }
+
+        // Check allergen filters (item must NOT contain any selected allergens)
+        if (isVisible && selectedAllergens.length > 0) {
+          const containsAllergen = selectedAllergens.some((allergen) =>
+            item.allergens.includes(allergen)
+          );
+          if (containsAllergen) {
+            isVisible = false;
+          }
+        }
+
+        // Show/hide the item
+        item.element.classList.toggle('menu-item--hidden', !isVisible);
+        item.element.setAttribute('aria-hidden', String(!isVisible));
+
+        // Also hide/show the parent wrapper if it exists
+        const wrapper = item.element.closest('.menu-category-section__item');
+        if (wrapper) {
+          (wrapper as HTMLElement).classList.toggle('menu-category-section__item--hidden', !isVisible);
+        }
+
+        if (isVisible) visibleCount++;
+      });
+
+      // Update count display
+      this.updateCountDisplay(visibleCount);
+
+      // Show/hide empty category sections
+      this.updateEmptySections();
+
+      // Show/hide clear button
+      const hasActiveFilters = selectedDietary.length > 0 || selectedAllergens.length > 0;
+      this.clearBtn.hidden = !hasActiveFilters;
+    }
+
+    private updateCountDisplay(visibleCount: number): void {
+      if (visibleCount === this.totalItems) {
+        this.countDisplay.innerHTML = 'all';
+      } else {
+        this.countDisplay.innerHTML = `<strong>${visibleCount}</strong> of ${this.totalItems}`;
+      }
+    }
+
+    private updateActiveCount(): void {
+      const selectedDietary = this.getSelectedDietaryFilters();
+      const selectedAllergens = this.getSelectedAllergenFilters();
+      const totalActive = selectedDietary.length + selectedAllergens.length;
+
+      if (totalActive > 0) {
+        this.activeCountNumber.textContent = String(totalActive);
+        this.activeCountBadge.hidden = false;
+      } else {
+        this.activeCountBadge.hidden = true;
+      }
+    }
+
+    private updateEmptySections(): void {
+      const sections = document.querySelectorAll('.menu-category-section');
+
+      sections.forEach((section) => {
+        const visibleItems = section.querySelectorAll('.menu-item:not(.menu-item--hidden)');
+        const isEmpty = visibleItems.length === 0;
+
+        section.classList.toggle('menu-category-section--empty-filtered', isEmpty);
+
+        // Add "no items" message if empty
+        let emptyMsg = section.querySelector('.menu-category-section__empty-filtered-msg');
+        if (isEmpty && !emptyMsg) {
+          emptyMsg = document.createElement('p');
+          emptyMsg.className = 'menu-category-section__empty-filtered-msg';
+          emptyMsg.textContent = 'No items match your current filters in this category.';
+          emptyMsg.setAttribute('role', 'status');
+          const grid = section.querySelector('.menu-category-section__grid');
+          if (grid) {
+            grid.appendChild(emptyMsg);
+          }
+        } else if (!isEmpty && emptyMsg) {
+          emptyMsg.remove();
+        }
+      });
+    }
+
+    private clearFilters(): void {
+      this.dietaryCheckboxes.forEach((cb) => (cb.checked = false));
+      this.allergenCheckboxes.forEach((cb) => (cb.checked = false));
+      this.applyFilters();
+      this.updateURL();
+      this.updateActiveCount();
+    }
+
+    private updateURL(): void {
+      const selectedDietary = this.getSelectedDietaryFilters();
+      const selectedAllergens = this.getSelectedAllergenFilters();
+      const url = new URL(window.location.href);
+
+      if (selectedDietary.length > 0) {
+        url.searchParams.set('dietary', selectedDietary.join(','));
+      } else {
+        url.searchParams.delete('dietary');
+      }
+
+      if (selectedAllergens.length > 0) {
+        url.searchParams.set('allergens', selectedAllergens.join(','));
+      } else {
+        url.searchParams.delete('allergens');
+      }
+
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    private loadFiltersFromURL(): void {
+      const url = new URL(window.location.href);
+
+      const dietaryParam = url.searchParams.get('dietary');
+      if (dietaryParam) {
+        const dietaryFilters = dietaryParam.split(',');
+        this.dietaryCheckboxes.forEach((cb) => {
+          if (dietaryFilters.includes(cb.value)) {
+            cb.checked = true;
+          }
+        });
+      }
+
+      const allergensParam = url.searchParams.get('allergens');
+      if (allergensParam) {
+        const allergenFilters = allergensParam.split(',');
+        this.allergenCheckboxes.forEach((cb) => {
+          if (allergenFilters.includes(cb.value)) {
+            cb.checked = true;
+          }
+        });
+      }
+
+      // If URL has filters, expand the panel
+      if (dietaryParam || allergensParam) {
+        this.toggleBtn.setAttribute('aria-expanded', 'true');
+        this.content.hidden = false;
+        this.panel.classList.add('menu-filter-panel--expanded');
+      }
+
+      this.updateActiveCount();
+    }
+
+    private handleKeyboard(e: KeyboardEvent): void {
+      if (e.key === 'Escape' && !this.content.hidden) {
+        this.togglePanel();
+        this.toggleBtn.focus();
+      }
+    }
+  }
+
+  // Initialize on DOM ready
+  function initMenuFilter() {
+    const panel = document.getElementById('menu-filter-panel');
+    if (panel) {
+      new MenuFilterController();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMenuFilter);
+  } else {
+    initMenuFilter();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initMenuFilter);
+</script>
+
+<style>
+  /* =================================================================
+   * MENU FILTER PANEL STYLES
+   * =================================================================
+   * Collapsible filter panel for dietary restrictions and allergens
+   */
+
+  .menu-filter-panel {
+    background-color: var(--color-background-elevated);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .menu-filter-panel__container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+    padding: 0 var(--spacing-4);
+  }
+
+  /* =================================================================
+   * HEADER / TOGGLE STYLES
+   * ================================================================= */
+  .menu-filter-panel__header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) 0;
+  }
+
+  .menu-filter-panel__toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: var(--color-background-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      border-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-filter-panel__toggle:hover {
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+  }
+
+  .menu-filter-panel__toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-500);
+  }
+
+  .menu-filter-panel__toggle-icon {
+    display: flex;
+    color: var(--color-primary);
+  }
+
+  .menu-filter-panel__toggle-chevron {
+    display: flex;
+    transition: transform var(--duration-200) var(--ease-in-out);
+  }
+
+  .menu-filter-panel--expanded .menu-filter-panel__toggle-chevron {
+    transform: rotate(180deg);
+  }
+
+  .menu-filter-panel__active-count {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-full);
+  }
+
+  /* =================================================================
+   * CONTENT STYLES
+   * ================================================================= */
+  .menu-filter-panel__content {
+    padding: var(--spacing-4) 0 var(--spacing-6);
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  .menu-filter-panel__results {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+    padding: var(--spacing-3);
+    background-color: var(--color-background-muted);
+    border-radius: var(--radius-md);
+  }
+
+  .menu-filter-panel__results-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .menu-filter-panel__results-text strong {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .menu-filter-panel__clear-btn {
+    padding: var(--spacing-1-5) var(--spacing-3);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-filter-panel__clear-btn:hover {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+    color: white;
+  }
+
+  .menu-filter-panel__clear-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-500);
+  }
+
+  /* =================================================================
+   * SECTIONS STYLES
+   * ================================================================= */
+  .menu-filter-panel__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  .menu-filter-panel__section {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu-filter-panel__section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-1);
+  }
+
+  .menu-filter-panel__section-icon {
+    display: flex;
+    color: var(--color-primary);
+  }
+
+  .menu-filter-panel__section-icon--warning {
+    color: var(--color-warning-dark);
+  }
+
+  .menu-filter-panel__section-hint {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin: 0 0 var(--spacing-3);
+  }
+
+  /* =================================================================
+   * OPTIONS GRID STYLES
+   * ================================================================= */
+  .menu-filter-panel__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .menu-filter-panel__option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .menu-filter-panel__checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .menu-filter-panel__option-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1-5);
+    padding: var(--spacing-1-5) var(--spacing-3);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      border-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-filter-panel__option:hover .menu-filter-panel__option-content {
+    background-color: var(--color-background-muted);
+    border-color: var(--color-primary-200);
+  }
+
+  .menu-filter-panel__checkbox:checked + .menu-filter-panel__option-content {
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary);
+    color: var(--color-primary-700);
+  }
+
+  .menu-filter-panel__checkbox:focus-visible + .menu-filter-panel__option-content {
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-500);
+  }
+
+  /* =================================================================
+   * DIETARY BADGE STYLES
+   * ================================================================= */
+  .menu-filter-panel__option-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 var(--spacing-1);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+  }
+
+  .menu-filter-panel__option-badge--vegetarian {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .menu-filter-panel__option-badge--vegan {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+
+  .menu-filter-panel__option-badge--gluten-free {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  .menu-filter-panel__option-badge--dairy-free {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  .menu-filter-panel__option-badge--nut-free {
+    background-color: #ffedd5;
+    color: #9a3412;
+  }
+
+  /* =================================================================
+   * ALLERGEN OPTION STYLES
+   * ================================================================= */
+  .menu-filter-panel__option--allergen .menu-filter-panel__option-content {
+    border-style: dashed;
+  }
+
+  .menu-filter-panel__option--allergen.menu-filter-panel__option--danger .menu-filter-panel__checkbox:checked + .menu-filter-panel__option-content {
+    background-color: #fef2f2;
+    border-color: var(--color-error);
+    border-style: solid;
+    color: #991b1b;
+  }
+
+  .menu-filter-panel__option--allergen.menu-filter-panel__option--warning .menu-filter-panel__checkbox:checked + .menu-filter-panel__option-content {
+    background-color: #fffbeb;
+    border-color: var(--color-warning);
+    border-style: solid;
+    color: #92400e;
+  }
+
+  /* =================================================================
+   * HIDDEN ITEM STYLES (applied by JS)
+   * ================================================================= */
+  :global(.menu-item--hidden) {
+    display: none !important;
+  }
+
+  :global(.menu-category-section__item--hidden) {
+    display: none !important;
+  }
+
+  :global(.menu-category-section__empty-filtered-msg) {
+    grid-column: 1 / -1;
+    padding: var(--spacing-8);
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media screen and (min-width: 640px) {
+    .menu-filter-panel__sections {
+      flex-direction: row;
+      gap: var(--spacing-8);
+    }
+
+    .menu-filter-panel__section {
+      flex: 1;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .menu-filter-panel__container {
+      padding: 0 var(--spacing-8);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .menu-filter-panel__toggle,
+    .menu-filter-panel__toggle-chevron,
+    .menu-filter-panel__option-content,
+    .menu-filter-panel__clear-btn {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .menu-filter-panel {
+      display: none !important;
+    }
+  }
+</style>

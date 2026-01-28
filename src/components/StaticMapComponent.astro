@@ -1,0 +1,734 @@
+---
+/**
+ * Static Map Component
+ * Displays a static map image showing restaurant location with custom marker.
+ *
+ * Features:
+ * - Static map image (no JavaScript required for basic display)
+ * - Custom branded marker styling
+ * - Performance optimized (lazy loading, proper dimensions)
+ * - Graceful fallback to address text if image fails
+ * - Stylized illustrated map option
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design with multiple sizes
+ * - Dark mode support
+ *
+ * @example Basic usage:
+ * ```astro
+ * <StaticMapComponent />
+ * ```
+ *
+ * @example With custom styling:
+ * ```astro
+ * <StaticMapComponent
+ *   mapStyle="illustrated"
+ *   markerColor="primary"
+ *   showAddressCard={true}
+ * />
+ * ```
+ */
+
+import { LOCATION_CONFIG, COORDINATES, BUSINESS_ADDRESS } from '../config/location.config';
+
+export interface StaticMapProps {
+  /** Map display style */
+  mapStyle?: 'standard' | 'satellite' | 'terrain' | 'illustrated';
+  /** Map zoom level (1-20) */
+  zoom?: number;
+  /** Map width in pixels */
+  width?: number;
+  /** Map height in pixels */
+  height?: number;
+  /** Marker color theme */
+  markerColor?: 'primary' | 'red' | 'blue' | 'green' | 'custom';
+  /** Custom marker color (hex, requires markerColor='custom') */
+  customMarkerColor?: string;
+  /** Show address overlay card */
+  showAddressCard?: boolean;
+  /** Show link to interactive map */
+  showMapLink?: boolean;
+  /** Custom illustrated map image URL */
+  illustratedMapUrl?: string;
+  /** Loading strategy */
+  loading?: 'lazy' | 'eager';
+  /** Custom ID for the component */
+  id?: string;
+  /** Custom class name */
+  class?: string;
+}
+
+interface Props extends StaticMapProps {}
+
+const {
+  mapStyle = 'standard',
+  zoom = 15,
+  width = 600,
+  height = 400,
+  markerColor = 'primary',
+  customMarkerColor,
+  showAddressCard = true,
+  showMapLink = true,
+  illustratedMapUrl,
+  loading = 'lazy',
+  id = 'static-map',
+  class: className = '',
+} = Astro.props;
+
+const { latitude, longitude } = COORDINATES;
+const { street, street2, city, state, zipCode } = BUSINESS_ADDRESS;
+const { businessName, phone, directionsCTA } = LOCATION_CONFIG;
+
+// Format address for display
+const fullAddress = [street, street2, `${city}, ${state} ${zipCode}`].filter(Boolean).join(', ');
+const encodedAddress = encodeURIComponent(fullAddress);
+
+// Map marker color mapping
+const markerColorMap: Record<string, string> = {
+  primary: '0xD97706', // Amber/gold brand color
+  red: '0xEF4444',
+  blue: '0x3B82F6',
+  green: '0x22C55E',
+  custom: customMarkerColor?.replace('#', '0x') || '0xD97706',
+};
+
+const markerHexColor = markerColorMap[markerColor] || markerColorMap.primary;
+
+// Google Maps Static API map styles
+const mapTypeMap: Record<string, string> = {
+  standard: 'roadmap',
+  satellite: 'satellite',
+  terrain: 'terrain',
+  illustrated: 'roadmap', // Fallback for illustrated
+};
+
+const mapType = mapTypeMap[mapStyle] || 'roadmap';
+
+// Build static map URL (Google Maps Static API)
+// Note: For production, you should add an API key for higher usage limits
+const staticMapParams = new URLSearchParams({
+  center: `${latitude},${longitude}`,
+  zoom: String(zoom),
+  size: `${width}x${height}`,
+  scale: '2', // Retina display support
+  maptype: mapType,
+  markers: `color:${markerHexColor}|size:mid|${latitude},${longitude}`,
+  format: 'png',
+});
+
+// Optional: Add custom map styling for a branded look
+const customMapStyle = [
+  'feature:poi|visibility:simplified',
+  'feature:transit|visibility:simplified',
+].join('&style=');
+
+const staticMapUrl = mapStyle === 'illustrated' && illustratedMapUrl
+  ? illustratedMapUrl
+  : `https://maps.googleapis.com/maps/api/staticmap?${staticMapParams.toString()}&style=${customMapStyle}`;
+
+// Alternative: Simple embed URL without API key (limited usage)
+const fallbackStaticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=${width}x${height}&markers=color:red%7C${latitude},${longitude}`;
+
+// Direction URLs
+const googleMapsUrl = directionsCTA.googleMapsUrl || `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+const appleMapsUrl = directionsCTA.appleMapsUrl || `https://maps.apple.com/?daddr=${latitude},${longitude}&dirflg=d`;
+
+const containerClasses = ['static-map-component', className].filter(Boolean).join(' ');
+
+// Generate unique IDs for accessibility
+const mapImageId = `${id}-image`;
+const addressId = `${id}-address`;
+const fallbackId = `${id}-fallback`;
+---
+
+<div class={containerClasses} id={id} role="region" aria-labelledby={addressId}>
+  <!-- Map Image Container -->
+  <div class="static-map__image-container" style={`aspect-ratio: ${width}/${height};`}>
+    <!-- Static Map Image -->
+    <img
+      id={mapImageId}
+      src={staticMapUrl}
+      alt={`Map showing ${businessName} location at ${fullAddress}`}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+      class="static-map__image"
+      data-fallback-src={fallbackStaticMapUrl}
+      onerror="this.onerror=null; this.classList.add('static-map__image--error'); this.parentElement.querySelector('.static-map__fallback').classList.add('static-map__fallback--visible');"
+      onload="this.classList.add('static-map__image--loaded');"
+    />
+
+    <!-- Custom Marker Overlay (CSS-based for guaranteed visibility) -->
+    <div class="static-map__marker" aria-hidden="true" style={`--marker-color: ${markerColor === 'custom' ? customMarkerColor : 'var(--color-primary)'};`}>
+      <div class="static-map__marker-pin">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+      </div>
+      <div class="static-map__marker-pulse"></div>
+    </div>
+
+    <!-- Fallback: Address Display (shown when image fails) -->
+    <div id={fallbackId} class="static-map__fallback" aria-live="polite">
+      <div class="static-map__fallback-content">
+        <svg class="static-map__fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <div class="static-map__fallback-text">
+          <strong class="static-map__fallback-name">{businessName}</strong>
+          <address class="static-map__fallback-address">
+            {street}<br />
+            {street2 && <>{street2}<br /></>}
+            {city}, {state} {zipCode}
+          </address>
+        </div>
+      </div>
+    </div>
+
+    <!-- Illustrated Map Overlay Pattern (optional) -->
+    {mapStyle === 'illustrated' && (
+      <div class="static-map__illustrated-overlay" aria-hidden="true">
+        <svg class="static-map__pattern" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="map-pattern" patternUnits="userSpaceOnUse" width="20" height="20">
+              <path d="M0 10h20M10 0v20" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#map-pattern)"/>
+        </svg>
+      </div>
+    )}
+  </div>
+
+  <!-- Address Card Overlay -->
+  {showAddressCard && (
+    <div class="static-map__address-card">
+      <h3 id={addressId} class="static-map__address-name">{businessName}</h3>
+      <address class="static-map__address-text">
+        {street}<br />
+        {street2 && <>{street2}<br /></>}
+        {city}, {state} {zipCode}
+      </address>
+      {phone && (
+        <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} class="static-map__phone">
+          <svg class="static-map__phone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <span>{phone}</span>
+        </a>
+      )}
+    </div>
+  )}
+
+  <!-- Map Link / Get Directions -->
+  {showMapLink && (
+    <div class="static-map__links">
+      <a
+        href={googleMapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="static-map__link static-map__link--primary"
+        aria-label="Get directions using Google Maps (opens in new tab)"
+      >
+        <svg class="static-map__link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        <span>Get Directions</span>
+        <svg class="static-map__link-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+      <a
+        href={appleMapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="static-map__link static-map__link--secondary"
+        aria-label="Get directions using Apple Maps (opens in new tab)"
+      >
+        <svg class="static-map__link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+        <span>Apple Maps</span>
+      </a>
+    </div>
+  )}
+</div>
+
+<style>
+  /* =================================================================
+   * COMPONENT CONTAINER
+   * ================================================================= */
+  .static-map-component {
+    position: relative;
+    width: 100%;
+    max-width: var(--container-2xl, 1280px);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * MAP IMAGE CONTAINER
+   * ================================================================= */
+  .static-map__image-container {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-xl, 16px);
+    overflow: hidden;
+    background-color: var(--color-background-muted, #f3f4f6);
+    box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  }
+
+  .static-map__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--duration-300, 300ms) var(--ease-out, ease-out);
+  }
+
+  .static-map__image--loaded {
+    opacity: 1;
+  }
+
+  .static-map__image--error {
+    opacity: 0 !important;
+    visibility: hidden;
+  }
+
+  /* =================================================================
+   * CUSTOM MARKER OVERLAY
+   * ================================================================= */
+  .static-map__marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    z-index: 5;
+    pointer-events: none;
+    display: none; /* Hidden by default, shown when using illustrated style */
+  }
+
+  .static-map__marker-pin {
+    width: 40px;
+    height: 40px;
+    color: var(--marker-color, var(--color-primary, #D97706));
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    animation: marker-bounce 0.6s ease-out;
+  }
+
+  .static-map__marker-pin svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .static-map__marker-pulse {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: var(--marker-color, var(--color-primary, #D97706));
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: marker-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes marker-bounce {
+    0% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(5px);
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes marker-pulse {
+    0%, 100% {
+      transform: translateX(-50%) scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: translateX(-50%) scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* =================================================================
+   * FALLBACK ADDRESS DISPLAY
+   * ================================================================= */
+  .static-map__fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      var(--color-background, #ffffff) 0%,
+      var(--color-background-muted, #f3f4f6) 100%
+    );
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-300, 300ms) var(--ease-in-out, ease-in-out),
+                visibility var(--duration-300, 300ms) var(--ease-in-out, ease-in-out);
+  }
+
+  .static-map__fallback--visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .static-map__fallback-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-8, 32px);
+  }
+
+  .static-map__fallback-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary, #D97706);
+    margin-bottom: var(--spacing-4, 16px);
+  }
+
+  .static-map__fallback-name {
+    font-size: var(--font-size-lg, 18px);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--color-text-primary, #1f2937);
+    margin-bottom: var(--spacing-2, 8px);
+  }
+
+  .static-map__fallback-address {
+    font-size: var(--font-size-base, 16px);
+    font-style: normal;
+    color: var(--color-text-secondary, #6b7280);
+    line-height: var(--line-height-relaxed, 1.625);
+  }
+
+  /* =================================================================
+   * ILLUSTRATED MAP OVERLAY
+   * ================================================================= */
+  .static-map__illustrated-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .static-map__pattern {
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-primary, #1f2937);
+  }
+
+  /* Show marker for illustrated style */
+  .static-map-component:has(.static-map__illustrated-overlay) .static-map__marker {
+    display: block;
+  }
+
+  /* =================================================================
+   * ADDRESS CARD OVERLAY
+   * ================================================================= */
+  .static-map__address-card {
+    position: absolute;
+    bottom: var(--spacing-4, 16px);
+    left: var(--spacing-4, 16px);
+    background-color: var(--color-background-elevated, #ffffff);
+    padding: var(--spacing-4, 16px) var(--spacing-5, 20px);
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+    max-width: 260px;
+    z-index: 10;
+  }
+
+  .static-map__address-name {
+    font-size: var(--font-size-base, 16px);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--color-text-primary, #1f2937);
+    margin: 0 0 var(--spacing-2, 8px) 0;
+  }
+
+  .static-map__address-text {
+    font-size: var(--font-size-sm, 14px);
+    font-style: normal;
+    color: var(--color-text-secondary, #6b7280);
+    line-height: var(--line-height-relaxed, 1.625);
+    margin-bottom: var(--spacing-3, 12px);
+  }
+
+  .static-map__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2, 8px);
+    font-size: var(--font-size-sm, 14px);
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--color-primary, #D97706);
+    text-decoration: none;
+    transition: color var(--duration-150, 150ms) var(--ease-in-out, ease-in-out);
+  }
+
+  .static-map__phone:hover {
+    color: var(--color-primary-hover, #b45309);
+  }
+
+  .static-map__phone:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--color-primary, #D97706);
+    outline-offset: var(--focus-ring-offset, 2px);
+    border-radius: var(--radius-sm, 4px);
+  }
+
+  .static-map__phone-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * MAP LINKS
+   * ================================================================= */
+  .static-map__links {
+    display: flex;
+    gap: var(--spacing-3, 12px);
+    margin-top: var(--spacing-4, 16px);
+    flex-wrap: wrap;
+  }
+
+  .static-map__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2, 8px);
+    padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+    font-size: var(--font-size-sm, 14px);
+    font-weight: var(--font-weight-medium, 500);
+    text-decoration: none;
+    border-radius: var(--radius-lg, 12px);
+    transition: all var(--duration-200, 200ms) var(--ease-in-out, ease-in-out);
+  }
+
+  .static-map__link:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--color-primary, #D97706);
+    outline-offset: var(--focus-ring-offset, 2px);
+  }
+
+  .static-map__link-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .static-map__link-external {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .static-map__link--primary {
+    background-color: var(--color-primary, #D97706);
+    color: white;
+  }
+
+  .static-map__link--primary:hover {
+    background-color: var(--color-primary-hover, #b45309);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  }
+
+  .static-map__link--secondary {
+    background-color: var(--color-charcoal, #374151);
+    color: white;
+  }
+
+  .static-map__link--secondary:hover {
+    background-color: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  }
+
+  /* =================================================================
+   * RESPONSIVE DESIGN
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .static-map__image-container {
+      border-radius: var(--radius-lg, 12px);
+    }
+
+    .static-map__address-card {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      margin-top: var(--spacing-4, 16px);
+      max-width: none;
+      box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+    }
+
+    .static-map__links {
+      flex-direction: column;
+    }
+
+    .static-map__link {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .static-map__address-card {
+      max-width: 220px;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .static-map__image-container {
+    background-color: var(--color-background-muted);
+  }
+
+  :global(html[data-theme="dark"]) .static-map__fallback {
+    background: linear-gradient(
+      135deg,
+      var(--color-background) 0%,
+      var(--color-background-muted) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .static-map__address-card {
+    background-color: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .static-map__link--secondary {
+    background-color: var(--color-background-elevated);
+    border: 1px solid var(--color-border);
+  }
+
+  :global(html[data-theme="dark"]) .static-map__link--secondary:hover {
+    background-color: var(--color-background-muted);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .static-map__image {
+      transition: none;
+    }
+
+    .static-map__link:hover {
+      transform: none;
+    }
+
+    .static-map__marker-pin {
+      animation: none;
+    }
+
+    .static-map__marker-pulse {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .static-map__image-container {
+      box-shadow: none;
+      border: 1px solid var(--color-border, #e5e7eb);
+    }
+
+    .static-map__address-card {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      box-shadow: none;
+      border: 1px solid var(--color-border, #e5e7eb);
+      max-width: none;
+      margin-top: var(--spacing-4, 16px);
+    }
+
+    .static-map__links {
+      display: none;
+    }
+
+    .static-map__marker {
+      display: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .static-map__address-card {
+      border: 2px solid CanvasText;
+    }
+
+    .static-map__link {
+      border: 2px solid CanvasText;
+    }
+
+    .static-map__fallback {
+      border: 2px solid CanvasText;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * StaticMapComponent Client-side Enhancement
+   * Handles image loading states and fallback behavior
+   */
+  function initStaticMaps() {
+    const mapImages = document.querySelectorAll('.static-map__image') as NodeListOf<HTMLImageElement>;
+
+    mapImages.forEach((img) => {
+      // If image already loaded (cached), add loaded class
+      if (img.complete && img.naturalHeight !== 0) {
+        img.classList.add('static-map__image--loaded');
+      }
+
+      // Handle load event
+      img.addEventListener('load', () => {
+        img.classList.add('static-map__image--loaded');
+      });
+
+      // Enhanced error handling with retry using fallback URL
+      img.addEventListener('error', () => {
+        const fallbackSrc = img.dataset.fallbackSrc;
+
+        // If we haven't tried the fallback yet and one exists
+        if (fallbackSrc && img.src !== fallbackSrc) {
+          img.src = fallbackSrc;
+        } else {
+          // Show the text fallback
+          img.classList.add('static-map__image--error');
+          const fallbackEl = img.parentElement?.querySelector('.static-map__fallback');
+          if (fallbackEl) {
+            fallbackEl.classList.add('static-map__fallback--visible');
+          }
+        }
+      });
+    });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStaticMaps);
+  } else {
+    initStaticMaps();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initStaticMaps);
+</script>

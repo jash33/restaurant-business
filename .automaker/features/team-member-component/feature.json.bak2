@@ -1,0 +1,12 @@
+{
+  "id": "team-member-component",
+  "category": "UI",
+  "title": "Team Member Bio Card",
+  "description": "Design team member component with photo, name, role, and short bio. Supports optional social links and emphasizes personality and passion for food. Used in About page.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.098Z",
+  "updatedAt": "2026-01-27T01:55:50.994Z",
+  "descriptionHistory": []
+}

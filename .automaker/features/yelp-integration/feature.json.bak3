@@ -1,0 +1,14 @@
+{
+  "id": "yelp-integration",
+  "category": "Integration",
+  "title": "Yelp Business Page Integration",
+  "description": "Add Yelp badge, review highlights, and link to full Yelp page. Follows Yelp brand guidelines and includes proper attribution for review content.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [
+    "location-section"
+  ],
+  "createdAt": "2026-01-26T01:50:42.120Z",
+  "updatedAt": "2026-01-26T01:50:42.120Z"
+}

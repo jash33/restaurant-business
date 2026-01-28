@@ -1,0 +1,14 @@
+{
+  "id": "special-events-banner",
+  "category": "UI",
+  "title": "Special Events and Announcements Banner",
+  "description": "Create dismissible banner component for special events, holiday hours, prix fixe menus, and announcements. Includes date-based auto-display/hide logic and persistent dismissal via localStorage.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "hours-display-component"
+  ],
+  "createdAt": "2026-01-26T01:50:42.123Z",
+  "updatedAt": "2026-01-26T01:50:42.123Z"
+}

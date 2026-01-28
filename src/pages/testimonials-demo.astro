@@ -1,0 +1,65 @@
+---
+/**
+ * Testimonials Demo Page
+ * Demonstrates the TestimonialsSection component with different layouts.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import TestimonialsSection from '../components/TestimonialsSection.astro';
+import { TESTIMONIALS_CONFIG, testimonials } from '../config/testimonials.config';
+---
+
+<Layout
+  title="Testimonials Demo"
+  description="Demo page showcasing the TestimonialsSection component with different layouts."
+>
+  <main>
+    <div style="padding: 2rem; max-width: 1280px; margin: 0 auto;">
+      <h1 style="margin-bottom: 1rem; font-family: var(--font-heading);">Testimonials Demo</h1>
+      <p style="margin-bottom: 3rem; color: var(--color-text-secondary);">
+        This page demonstrates the TestimonialsSection component with various layout options.
+      </p>
+    </div>
+
+    <!-- Auto Layout (Carousel on mobile, Grid on desktop) - Default -->
+    <TestimonialsSection
+      heading="What Our Guests Say"
+      subheading="Hear from our valued customers about their dining experience"
+      testimonials={testimonials}
+      layout="auto"
+      autoScroll={true}
+      autoScrollInterval={6000}
+      includeSchema={true}
+      id="testimonials-auto"
+      background="subtle"
+      testId="testimonials-section-auto"
+    />
+
+    <!-- Carousel Layout Only -->
+    <TestimonialsSection
+      heading="Customer Reviews - Carousel"
+      subheading="Swipe or use arrows to navigate through reviews"
+      testimonials={testimonials}
+      layout="carousel"
+      autoScroll={false}
+      showArrows={true}
+      showIndicators={true}
+      includeSchema={false}
+      id="testimonials-carousel"
+      background="default"
+      testId="testimonials-section-carousel"
+    />
+
+    <!-- Grid Layout Only -->
+    <TestimonialsSection
+      heading="Customer Reviews - Grid"
+      subheading="All reviews displayed in a responsive grid layout"
+      testimonials={testimonials}
+      layout="grid"
+      includeSchema={false}
+      id="testimonials-grid"
+      background="subtle"
+      testId="testimonials-section-grid"
+    />
+  </main>
+</Layout>

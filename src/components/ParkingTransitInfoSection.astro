@@ -1,0 +1,1776 @@
+---
+/**
+ * Parking & Transit Info Section Component
+ * A comprehensive section displaying parking instructions, public transit directions,
+ * bike parking, accessibility information, and first-time visitor tips.
+ *
+ * Features:
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design for mobile, tablet, and desktop
+ * - Tabbed interface for organized content
+ * - Expandable/collapsible subsections
+ * - Dark mode support
+ * - Reduced motion support
+ * - Print-friendly styles
+ *
+ * @example Basic usage
+ * ```astro
+ * <ParkingTransitInfoSection />
+ * ```
+ *
+ * @example With custom configuration
+ * ```astro
+ * <ParkingTransitInfoSection
+ *   heading="Getting Here"
+ *   subheading="Everything you need to know"
+ *   showBikeParking={false}
+ * />
+ * ```
+ */
+
+import type { ParkingTransitInfoSectionProps } from '../types/parking-transit-info';
+import {
+  PARKING_TRANSIT_INFO_CONFIG,
+  PARKING_TRANSIT_DISPLAY_CONFIG,
+} from '../config/parking-transit-info.config';
+
+interface Props extends ParkingTransitInfoSectionProps {}
+
+const {
+  config = PARKING_TRANSIT_INFO_CONFIG,
+  heading = PARKING_TRANSIT_DISPLAY_CONFIG.defaultHeading,
+  subheading = PARKING_TRANSIT_DISPLAY_CONFIG.defaultSubheading,
+  showParking = PARKING_TRANSIT_DISPLAY_CONFIG.showParking,
+  showTransit = PARKING_TRANSIT_DISPLAY_CONFIG.showTransit,
+  showBikeParking = PARKING_TRANSIT_DISPLAY_CONFIG.showBikeParking,
+  showAccessibility = PARKING_TRANSIT_DISPLAY_CONFIG.showAccessibility,
+  showVisitorTips = PARKING_TRANSIT_DISPLAY_CONFIG.showVisitorTips,
+  showRideshare = PARKING_TRANSIT_DISPLAY_CONFIG.showRideshare,
+  id = 'parking-transit-info',
+  class: className = '',
+} = Astro.props;
+
+const {
+  parkingTips,
+  transitTips,
+  bikeParking,
+  accessibilityFeatures,
+  firstTimeVisitorTips,
+  rideshare,
+} = config;
+
+// Build CSS classes
+const sectionClasses = ['parking-transit-section', className].filter(Boolean).join(' ');
+
+// Sort visitor tips by priority
+const sortedVisitorTips = [...firstTimeVisitorTips].sort((a, b) => (a.priority || 99) - (b.priority || 99));
+
+// Parking type icons
+const parkingIcons: Record<string, string> = {
+  street: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+  lot: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>`,
+  garage: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 21V10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path d="M10 4l2-2 2 2"/><path d="M12 2v6"/></svg>`,
+  valet: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/><path d="M12 13v8"/><path d="M9 18l3-2 3 2"/></svg>`,
+};
+
+// Transit type icons
+const transitIcons: Record<string, string> = {
+  bus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M16 6v6"/><path d="M2 12h20"/><path d="M18 18H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
+  metro: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  train: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  'light-rail': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  ferry: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg>`,
+  rideshare: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>`,
+  other: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+};
+
+// Accessibility icons
+const accessibilityIcons: Record<string, string> = {
+  wheelchair: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 1 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/></svg>`,
+  parking: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>`,
+  entrance: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  restroom: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  seating: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0v5Z"/><path d="M5 18v3"/><path d="M19 18v3"/></svg>`,
+  assistance: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`,
+  hearing: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>`,
+  visual: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+};
+
+// Visitor tip category icons
+const tipCategoryIcons: Record<string, string> = {
+  arrival: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  parking: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>`,
+  entrance: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  seating: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0v5Z"/></svg>`,
+  ordering: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+  general: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+};
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-parking-transit-section
+>
+  <div class="parking-transit-container">
+    <!-- Section Header -->
+    <header class="parking-transit-header section-heading--decorated">
+      <h2 id={`${id}-heading`} class="parking-transit-title">{heading}</h2>
+      {subheading && <p class="parking-transit-description">{subheading}</p>}
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="parking-transit-tabs" role="tablist" aria-label="Parking and transit information">
+      {showParking && parkingTips.length > 0 && (
+        <button
+          class="parking-transit-tab is-active"
+          role="tab"
+          aria-selected="true"
+          aria-controls={`${id}-parking-panel`}
+          id={`${id}-parking-tab`}
+          data-tab="parking"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-transit-tab__icon" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>
+          </svg>
+          <span>Parking</span>
+        </button>
+      )}
+      {showTransit && transitTips.length > 0 && (
+        <button
+          class="parking-transit-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls={`${id}-transit-panel`}
+          id={`${id}-transit-tab`}
+          data-tab="transit"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-transit-tab__icon" aria-hidden="true">
+            <rect x="4" y="3" width="16" height="16" rx="2"/>
+            <path d="M4 11h16"/>
+            <path d="M12 3v8"/>
+            <path d="m8 19-2 3"/>
+            <path d="m18 22-2-3"/>
+            <path d="m8 19h8"/>
+          </svg>
+          <span>Transit</span>
+        </button>
+      )}
+      {showBikeParking && bikeParking.available && (
+        <button
+          class="parking-transit-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls={`${id}-bike-panel`}
+          id={`${id}-bike-tab`}
+          data-tab="bike"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-transit-tab__icon" aria-hidden="true">
+            <circle cx="18.5" cy="17.5" r="3.5"/>
+            <circle cx="5.5" cy="17.5" r="3.5"/>
+            <circle cx="15" cy="5" r="1"/>
+            <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+          </svg>
+          <span>Bike</span>
+        </button>
+      )}
+      {showAccessibility && accessibilityFeatures.length > 0 && (
+        <button
+          class="parking-transit-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls={`${id}-accessibility-panel`}
+          id={`${id}-accessibility-tab`}
+          data-tab="accessibility"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-transit-tab__icon" aria-hidden="true">
+            <circle cx="16" cy="4" r="1"/>
+            <path d="m18 19 1-7-6 1"/>
+            <path d="m5 8 3-3 5.5 3-2.36 3.5"/>
+            <path d="M4.24 14.5a5 5 0 1 0 6.88 6"/>
+            <path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>
+          </svg>
+          <span>Accessibility</span>
+        </button>
+      )}
+      {showVisitorTips && sortedVisitorTips.length > 0 && (
+        <button
+          class="parking-transit-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls={`${id}-tips-panel`}
+          id={`${id}-tips-tab`}
+          data-tab="tips"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-transit-tab__icon" aria-hidden="true">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+          <span>First Visit</span>
+        </button>
+      )}
+    </nav>
+
+    <!-- Tab Panels -->
+    <div class="parking-transit-panels">
+      <!-- Parking Panel -->
+      {showParking && parkingTips.length > 0 && (
+        <div
+          class="parking-transit-panel is-active"
+          role="tabpanel"
+          id={`${id}-parking-panel`}
+          aria-labelledby={`${id}-parking-tab`}
+          data-panel="parking"
+        >
+          <div class="parking-transit-panel__grid">
+            {parkingTips.map((tip) => (
+              <article class="parking-card" data-parking-type={tip.type}>
+                <div class="parking-card__header">
+                  <div class="parking-card__icon" aria-hidden="true" set:html={parkingIcons[tip.type] || parkingIcons['lot']} />
+                  <div class="parking-card__title-group">
+                    <h3 class="parking-card__title">{tip.title}</h3>
+                    <div class="parking-card__badges">
+                      {tip.isFree && (
+                        <span class="parking-card__badge parking-card__badge--free">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                          Free
+                        </span>
+                      )}
+                      {!tip.isFree && tip.pricing && (
+                        <span class="parking-card__badge parking-card__badge--paid">
+                          {tip.pricing}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <p class="parking-card__description">{tip.description}</p>
+                {tip.tips && tip.tips.length > 0 && (
+                  <ul class="parking-card__tips" role="list">
+                    {tip.tips.map((tipItem) => (
+                      <li class="parking-card__tip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="parking-card__tip-icon" aria-hidden="true">
+                          <polyline points="9 11 12 14 22 4"/>
+                          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        {tipItem}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div class="parking-card__meta">
+                  {tip.hours && (
+                    <div class="parking-card__meta-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span>{tip.hours}</span>
+                    </div>
+                  )}
+                  {tip.location && (
+                    <div class="parking-card__meta-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span>{tip.location}</span>
+                    </div>
+                  )}
+                </div>
+                {tip.notes && (
+                  <p class="parking-card__notes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="16" x2="12" y2="12"/>
+                      <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    {tip.notes}
+                  </p>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Transit Panel -->
+      {showTransit && transitTips.length > 0 && (
+        <div
+          class="parking-transit-panel"
+          role="tabpanel"
+          id={`${id}-transit-panel`}
+          aria-labelledby={`${id}-transit-tab`}
+          data-panel="transit"
+          hidden
+        >
+          <div class="parking-transit-panel__grid">
+            {transitTips.map((tip) => (
+              <article class="transit-card" data-transit-type={tip.type}>
+                <div class="transit-card__header">
+                  <div class="transit-card__icon" aria-hidden="true" set:html={transitIcons[tip.type] || transitIcons['other']} />
+                  <div class="transit-card__title-group">
+                    <h3 class="transit-card__title">{tip.routeName}</h3>
+                    <span class="transit-card__stop">{tip.nearestStop}</span>
+                  </div>
+                </div>
+                {tip.walkingDistance && (
+                  <div class="transit-card__walking">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="5" r="1"/>
+                      <path d="m9 20 3-6 3 6"/>
+                      <path d="m6 8 6 2 6-2"/>
+                      <path d="M12 10v4"/>
+                    </svg>
+                    <span>{tip.walkingDistance}</span>
+                  </div>
+                )}
+                {tip.directions && tip.directions.length > 0 && (
+                  <ol class="transit-card__directions" role="list">
+                    {tip.directions.map((step, index) => (
+                      <li class="transit-card__direction">
+                        <span class="transit-card__step-number">{index + 1}</span>
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                <div class="transit-card__footer">
+                  {tip.frequency && (
+                    <span class="transit-card__frequency">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      {tip.frequency}
+                    </span>
+                  )}
+                  {tip.notes && (
+                    <p class="transit-card__notes">{tip.notes}</p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <!-- Rideshare Section -->
+          {showRideshare && rideshare.available && (
+            <div class="rideshare-section">
+              <h3 class="rideshare-section__title">
+                <span class="rideshare-section__icon" aria-hidden="true" set:html={transitIcons['rideshare']} />
+                Rideshare (Uber/Lyft)
+              </h3>
+              <p class="rideshare-section__description">{rideshare.description}</p>
+              {rideshare.dropOffLocation && (
+                <p class="rideshare-section__location">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {rideshare.dropOffLocation}
+                </p>
+              )}
+              {rideshare.tips && rideshare.tips.length > 0 && (
+                <ul class="rideshare-section__tips" role="list">
+                  {rideshare.tips.map((tip) => (
+                    <li class="rideshare-section__tip">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      <!-- Bike Parking Panel -->
+      {showBikeParking && bikeParking.available && (
+        <div
+          class="parking-transit-panel"
+          role="tabpanel"
+          id={`${id}-bike-panel`}
+          aria-labelledby={`${id}-bike-tab`}
+          data-panel="bike"
+          hidden
+        >
+          <div class="bike-parking-content">
+            <div class="bike-parking-header">
+              <div class="bike-parking-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18.5" cy="17.5" r="3.5"/>
+                  <circle cx="5.5" cy="17.5" r="3.5"/>
+                  <circle cx="15" cy="5" r="1"/>
+                  <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="bike-parking-title">Bike Parking</h3>
+                <p class="bike-parking-description">{bikeParking.description}</p>
+              </div>
+            </div>
+
+            <div class="bike-parking-details">
+              <div class="bike-parking-detail">
+                <span class="bike-parking-detail__label">Location</span>
+                <span class="bike-parking-detail__value">{bikeParking.location}</span>
+              </div>
+              {bikeParking.capacity && (
+                <div class="bike-parking-detail">
+                  <span class="bike-parking-detail__label">Capacity</span>
+                  <span class="bike-parking-detail__value">{bikeParking.capacity} bikes</span>
+                </div>
+              )}
+              <div class="bike-parking-detail">
+                <span class="bike-parking-detail__label">Covered</span>
+                <span class="bike-parking-detail__value">{bikeParking.isCovered ? 'Yes' : 'No'}</span>
+              </div>
+              <div class="bike-parking-detail">
+                <span class="bike-parking-detail__label">Locks Available</span>
+                <span class="bike-parking-detail__value">{bikeParking.locksAvailable ? 'Yes' : 'Bring your own'}</span>
+              </div>
+            </div>
+
+            {bikeParking.tips && bikeParking.tips.length > 0 && (
+              <div class="bike-parking-tips">
+                <h4 class="bike-parking-tips__title">Tips for Cyclists</h4>
+                <ul class="bike-parking-tips__list" role="list">
+                  {bikeParking.tips.map((tip) => (
+                    <li class="bike-parking-tips__item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {bikeParking.notes && (
+              <p class="bike-parking-notes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                {bikeParking.notes}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Accessibility Panel -->
+      {showAccessibility && accessibilityFeatures.length > 0 && (
+        <div
+          class="parking-transit-panel"
+          role="tabpanel"
+          id={`${id}-accessibility-panel`}
+          aria-labelledby={`${id}-accessibility-tab`}
+          data-panel="accessibility"
+          hidden
+        >
+          <div class="accessibility-grid">
+            {accessibilityFeatures.filter(f => f.available).map((feature) => (
+              <div class="accessibility-card">
+                <div class="accessibility-card__icon" aria-hidden="true" set:html={accessibilityIcons[feature.icon || 'wheelchair'] || accessibilityIcons['wheelchair']} />
+                <div class="accessibility-card__content">
+                  <h3 class="accessibility-card__title">{feature.title}</h3>
+                  <p class="accessibility-card__description">{feature.description}</p>
+                </div>
+                <div class="accessibility-card__badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Available
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- First-Time Visitor Tips Panel -->
+      {showVisitorTips && sortedVisitorTips.length > 0 && (
+        <div
+          class="parking-transit-panel"
+          role="tabpanel"
+          id={`${id}-tips-panel`}
+          aria-labelledby={`${id}-tips-tab`}
+          data-panel="tips"
+          hidden
+        >
+          <div class="visitor-tips-intro">
+            <h3 class="visitor-tips-intro__title">Welcome! Here's what you need to know</h3>
+            <p class="visitor-tips-intro__text">We've put together some helpful tips to make your first visit a great experience.</p>
+          </div>
+          <div class="visitor-tips-grid">
+            {sortedVisitorTips.map((tip, index) => (
+              <article class="visitor-tip-card" data-category={tip.category}>
+                <div class="visitor-tip-card__number" aria-hidden="true">{index + 1}</div>
+                <div class="visitor-tip-card__icon" aria-hidden="true" set:html={tipCategoryIcons[tip.category] || tipCategoryIcons['general']} />
+                <div class="visitor-tip-card__content">
+                  <h4 class="visitor-tip-card__title">{tip.title}</h4>
+                  <p class="visitor-tip-card__text">{tip.content}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Screen reader announcement region -->
+    <div
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      id={`${id}-announcer`}
+      data-parking-transit-announcer
+    ></div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * PARKING & TRANSIT SECTION
+   * ================================================================= */
+  .parking-transit-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background);
+  }
+
+  .parking-transit-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER
+   * ================================================================= */
+  .parking-transit-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .parking-transit-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-3);
+    line-height: var(--line-height-tight);
+  }
+
+  .parking-transit-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * TAB NAVIGATION
+   * ================================================================= */
+  .parking-transit-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-8);
+    padding: var(--spacing-2);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-2xl);
+  }
+
+  .parking-transit-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-5);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    transition: all var(--duration-200) var(--ease-out);
+  }
+
+  .parking-transit-tab:hover {
+    color: var(--color-text-primary);
+    background: var(--color-background);
+  }
+
+  .parking-transit-tab:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .parking-transit-tab.is-active {
+    color: var(--color-primary);
+    background: var(--color-background);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .parking-transit-tab__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * TAB PANELS
+   * ================================================================= */
+  .parking-transit-panels {
+    min-height: 300px;
+  }
+
+  .parking-transit-panel {
+    display: none;
+    animation: fadeIn var(--duration-300) var(--ease-out);
+  }
+
+  .parking-transit-panel.is-active {
+    display: block;
+  }
+
+  .parking-transit-panel[hidden] {
+    display: none;
+  }
+
+  .parking-transit-panel__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * PARKING CARDS
+   * ================================================================= */
+  .parking-card {
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+    transition: all var(--duration-300) var(--ease-out);
+  }
+
+  .parking-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .parking-card__header {
+    display: flex;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .parking-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-radius: var(--radius-lg);
+    color: var(--color-primary);
+  }
+
+  .parking-card__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .parking-card__title-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .parking-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    line-height: var(--line-height-tight);
+  }
+
+  .parking-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .parking-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-full);
+  }
+
+  .parking-card__badge svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .parking-card__badge--free {
+    color: var(--color-success-text, var(--color-success));
+    background: var(--color-success-light, rgba(16, 185, 129, 0.1));
+  }
+
+  .parking-card__badge--paid {
+    color: var(--color-text-secondary);
+    background: var(--color-background-muted);
+  }
+
+  .parking-card__description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-4);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .parking-card__tips {
+    list-style: none;
+    margin: 0 0 var(--spacing-4);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .parking-card__tip {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .parking-card__tip-icon {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-success);
+    margin-top: 0.125rem;
+  }
+
+  .parking-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px dashed var(--color-border, rgba(0,0,0,0.1));
+  }
+
+  .parking-card__meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  .parking-card__meta-item svg {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-primary);
+  }
+
+  .parking-card__notes {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+    padding: var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    background: var(--color-background);
+    border-radius: var(--radius-lg);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .parking-card__notes svg {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-info);
+    margin-top: 0.125rem;
+  }
+
+  /* =================================================================
+   * TRANSIT CARDS
+   * ================================================================= */
+  .transit-card {
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+    transition: all var(--duration-300) var(--ease-out);
+  }
+
+  .transit-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .transit-card__header {
+    display: flex;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .transit-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: linear-gradient(135deg, var(--color-accent-subtle, #ede9fe) 0%, var(--color-accent-light, #ddd6fe) 100%);
+    border-radius: var(--radius-lg);
+    color: var(--color-accent, #8b5cf6);
+  }
+
+  .transit-card__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .transit-card__title-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .transit-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-1);
+    line-height: var(--line-height-tight);
+  }
+
+  .transit-card__stop {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .transit-card__walking {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-success-text, var(--color-success));
+    background: var(--color-success-light, rgba(16, 185, 129, 0.1));
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .transit-card__walking svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .transit-card__directions {
+    list-style: none;
+    margin: 0 0 var(--spacing-4);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .transit-card__direction {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .transit-card__step-number {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-background);
+    background: var(--color-primary);
+    border-radius: var(--radius-full);
+  }
+
+  .transit-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px dashed var(--color-border, rgba(0,0,0,0.1));
+  }
+
+  .transit-card__frequency {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+  }
+
+  .transit-card__frequency svg {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-primary);
+  }
+
+  .transit-card__notes {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * RIDESHARE SECTION
+   * ================================================================= */
+  .rideshare-section {
+    margin-top: var(--spacing-8);
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+  }
+
+  .rideshare-section__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-3);
+  }
+
+  .rideshare-section__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-accent);
+  }
+
+  .rideshare-section__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .rideshare-section__description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-3);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .rideshare-section__location {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-4);
+  }
+
+  .rideshare-section__location svg {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-primary);
+  }
+
+  .rideshare-section__tips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .rideshare-section__tip {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .rideshare-section__tip svg {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-success);
+    margin-top: 0.125rem;
+  }
+
+  /* =================================================================
+   * BIKE PARKING
+   * ================================================================= */
+  .bike-parking-content {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .bike-parking-header {
+    display: flex;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+  }
+
+  .bike-parking-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--color-success-light, #d1fae5) 0%, rgba(16, 185, 129, 0.2) 100%);
+    border-radius: var(--radius-xl);
+    color: var(--color-success);
+  }
+
+  .bike-parking-icon svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .bike-parking-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    line-height: var(--line-height-tight);
+  }
+
+  .bike-parking-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  .bike-parking-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+  }
+
+  .bike-parking-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .bike-parking-detail__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .bike-parking-detail__value {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .bike-parking-tips {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .bike-parking-tips__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4);
+  }
+
+  .bike-parking-tips__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .bike-parking-tips__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .bike-parking-tips__item svg {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-success);
+    margin-top: 0.125rem;
+  }
+
+  .bike-parking-notes {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border-left: 4px solid var(--color-success);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  .bike-parking-notes svg {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-success);
+    margin-top: 0.125rem;
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY CARDS
+   * ================================================================= */
+  .accessibility-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .accessibility-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+    transition: all var(--duration-200) var(--ease-out);
+  }
+
+  .accessibility-card:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .accessibility-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, var(--color-info-light, #dbeafe) 0%, rgba(59, 130, 246, 0.2) 100%);
+    border-radius: var(--radius-lg);
+    color: var(--color-info);
+  }
+
+  .accessibility-card__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .accessibility-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .accessibility-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-1);
+    line-height: var(--line-height-tight);
+  }
+
+  .accessibility-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  .accessibility-card__badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-success-text, var(--color-success));
+    background: var(--color-success-light, rgba(16, 185, 129, 0.1));
+    border-radius: var(--radius-full);
+  }
+
+  .accessibility-card__badge svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  /* =================================================================
+   * VISITOR TIPS
+   * ================================================================= */
+  .visitor-tips-intro {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+    padding: var(--spacing-6);
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-radius: var(--radius-2xl);
+  }
+
+  .visitor-tips-intro__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+  }
+
+  .visitor-tips-intro__text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .visitor-tips-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .visitor-tip-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+    transition: all var(--duration-200) var(--ease-out);
+  }
+
+  .visitor-tip-card:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
+
+  .visitor-tip-card__number {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-tertiary);
+    background: var(--color-background);
+    border-radius: var(--radius-full);
+  }
+
+  .visitor-tip-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-radius: var(--radius-lg);
+    color: var(--color-primary);
+  }
+
+  .visitor-tip-card__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .visitor-tip-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .visitor-tip-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    line-height: var(--line-height-tight);
+  }
+
+  .visitor-tip-card__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .parking-transit-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .parking-transit-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .parking-transit-tabs {
+      gap: var(--spacing-1);
+      padding: var(--spacing-1);
+    }
+
+    .parking-transit-tab {
+      padding: var(--spacing-2) var(--spacing-3);
+      font-size: var(--font-size-xs);
+    }
+
+    .parking-transit-tab span {
+      display: none;
+    }
+
+    .parking-transit-tab__icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .parking-card__header,
+    .transit-card__header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .bike-parking-header {
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+    }
+
+    .bike-parking-details {
+      grid-template-columns: 1fr;
+    }
+
+    .accessibility-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .visitor-tip-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .visitor-tip-card__number {
+      position: static;
+      align-self: flex-end;
+      margin-bottom: var(--spacing-2);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .parking-transit-panel__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rideshare-section__tips {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .accessibility-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .visitor-tips-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .parking-transit-title {
+      font-size: var(--font-size-5xl);
+    }
+
+    .accessibility-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .parking-transit-tabs {
+    background: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .parking-transit-tab.is-active {
+    background: var(--color-background);
+    box-shadow: var(--shadow-md);
+  }
+
+  :global(html[data-theme="dark"]) .parking-card,
+  :global(html[data-theme="dark"]) .transit-card,
+  :global(html[data-theme="dark"]) .rideshare-section,
+  :global(html[data-theme="dark"]) .accessibility-card,
+  :global(html[data-theme="dark"]) .visitor-tip-card {
+    background: var(--color-background-subtle);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  :global(html[data-theme="dark"]) .parking-card:hover,
+  :global(html[data-theme="dark"]) .transit-card:hover,
+  :global(html[data-theme="dark"]) .visitor-tip-card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  :global(html[data-theme="dark"]) .parking-card__icon,
+  :global(html[data-theme="dark"]) .visitor-tip-card__icon {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.2) 0%,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.3) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .transit-card__icon {
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.2) 0%,
+      rgba(139, 92, 246, 0.3) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .bike-parking-icon {
+    background: linear-gradient(
+      135deg,
+      rgba(16, 185, 129, 0.2) 0%,
+      rgba(16, 185, 129, 0.3) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .accessibility-card__icon {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.2) 0%,
+      rgba(59, 130, 246, 0.3) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .parking-card__notes,
+  :global(html[data-theme="dark"]) .bike-parking-details {
+    background: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .visitor-tips-intro {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.15) 0%,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.25) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .visitor-tip-card__number {
+    background: var(--color-background-muted);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .parking-transit-tab,
+    .parking-card,
+    .transit-card,
+    .accessibility-card,
+    .visitor-tip-card {
+      transition: none;
+    }
+
+    .parking-card:hover,
+    .transit-card:hover,
+    .visitor-tip-card:hover {
+      transform: none;
+    }
+
+    .parking-transit-panel {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .parking-transit-tab {
+      border: 2px solid CanvasText;
+    }
+
+    .parking-transit-tab.is-active {
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .parking-card,
+    .transit-card,
+    .rideshare-section,
+    .accessibility-card,
+    .visitor-tip-card {
+      border: 2px solid CanvasText;
+    }
+
+    .parking-card__badge,
+    .accessibility-card__badge {
+      border: 1px solid currentColor;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .parking-transit-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .parking-transit-tabs {
+      display: none;
+    }
+
+    .parking-transit-panel {
+      display: block !important;
+      page-break-inside: avoid;
+      margin-bottom: var(--spacing-8);
+    }
+
+    .parking-transit-panel[hidden] {
+      display: block !important;
+    }
+
+    .parking-transit-panel::before {
+      content: attr(aria-labelledby);
+      display: block;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-4);
+      text-transform: capitalize;
+    }
+
+    .parking-card,
+    .transit-card,
+    .rideshare-section,
+    .accessibility-card,
+    .visitor-tip-card {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+      page-break-inside: avoid;
+    }
+
+    .parking-card:hover,
+    .transit-card:hover,
+    .visitor-tip-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Parking & Transit Info Section Client-Side Logic
+   * Handles tab switching and accessibility
+   */
+
+  class ParkingTransitSection {
+    private container: HTMLElement;
+    private tabs: NodeListOf<HTMLButtonElement>;
+    private panels: NodeListOf<HTMLElement>;
+    private announcer: HTMLElement | null;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.tabs = container.querySelectorAll('[role="tab"]');
+      this.panels = container.querySelectorAll('[role="tabpanel"]');
+      this.announcer = container.querySelector('[data-parking-transit-announcer]');
+
+      this.initialize();
+    }
+
+    private initialize(): void {
+      this.setupTabs();
+      this.setupKeyboardNavigation();
+    }
+
+    private setupTabs(): void {
+      this.tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          this.activateTab(tab);
+        });
+      });
+    }
+
+    private setupKeyboardNavigation(): void {
+      this.tabs.forEach((tab, index) => {
+        tab.addEventListener('keydown', (e: KeyboardEvent) => {
+          const key = e.key;
+          let newIndex = index;
+
+          if (key === 'ArrowRight' || key === 'ArrowDown') {
+            e.preventDefault();
+            newIndex = (index + 1) % this.tabs.length;
+          } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+            e.preventDefault();
+            newIndex = (index - 1 + this.tabs.length) % this.tabs.length;
+          } else if (key === 'Home') {
+            e.preventDefault();
+            newIndex = 0;
+          } else if (key === 'End') {
+            e.preventDefault();
+            newIndex = this.tabs.length - 1;
+          }
+
+          if (newIndex !== index) {
+            this.tabs[newIndex].focus();
+            this.activateTab(this.tabs[newIndex]);
+          }
+        });
+      });
+    }
+
+    private activateTab(tab: HTMLButtonElement): void {
+      const tabId = tab.dataset.tab;
+      if (!tabId) return;
+
+      // Deactivate all tabs
+      this.tabs.forEach((t) => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+      });
+
+      // Activate clicked tab
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
+
+      // Hide all panels
+      this.panels.forEach((panel) => {
+        panel.classList.remove('is-active');
+        panel.hidden = true;
+      });
+
+      // Show corresponding panel
+      const panel = this.container.querySelector(`[data-panel="${tabId}"]`) as HTMLElement;
+      if (panel) {
+        panel.classList.add('is-active');
+        panel.hidden = false;
+        this.announce(`${tab.textContent?.trim()} tab selected`);
+      }
+    }
+
+    private announce(message: string): void {
+      if (!this.announcer) return;
+      this.announcer.textContent = message;
+
+      // Clear after announcement
+      setTimeout(() => {
+        if (this.announcer) {
+          this.announcer.textContent = '';
+        }
+      }, 1000);
+    }
+  }
+
+  // Initialize all parking transit sections on the page
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll<HTMLElement>('[data-parking-transit-section]');
+    sections.forEach((section) => new ParkingTransitSection(section));
+  });
+
+  // Also initialize on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    const sections = document.querySelectorAll<HTMLElement>('[data-parking-transit-section]');
+    sections.forEach((section) => new ParkingTransitSection(section));
+  });
+</script>

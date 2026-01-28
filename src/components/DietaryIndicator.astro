@@ -1,0 +1,409 @@
+---
+/**
+ * DietaryIndicator Component
+ * A reusable dietary indicator with SVG icon, tooltip, and accessibility support.
+ * Displays dietary information (Gluten-Free, Vegan, Vegetarian, etc.) with
+ * clear visual indicators and screen reader support.
+ *
+ * Features:
+ * - Custom SVG icons for each dietary type
+ * - Native tooltips with full descriptions
+ * - ARIA labels for screen readers
+ * - Color-coded badges for visual distinction
+ * - Print-friendly styling
+ * - High contrast mode support
+ * - Reduced motion support
+ *
+ * @example Basic usage
+ * ```astro
+ * <DietaryIndicator tag="gluten-free" />
+ * ```
+ *
+ * @example With custom size
+ * ```astro
+ * <DietaryIndicator tag="vegan" size="lg" />
+ * ```
+ */
+
+import type { DietaryTag } from '../types/menu';
+
+interface Props {
+  /** The dietary tag to display */
+  tag: DietaryTag;
+  /** Size variant */
+  size?: 'sm' | 'md' | 'lg';
+  /** Whether to show the abbreviation text */
+  showLabel?: boolean;
+  /** Additional CSS class names */
+  class?: string;
+}
+
+const {
+  tag,
+  size = 'md',
+  showLabel = true,
+  class: className = '',
+} = Astro.props;
+
+// Dietary tag information with SVG paths and descriptions
+const dietaryTagInfo: Record<DietaryTag, {
+  abbr: string;
+  label: string;
+  description: string;
+  iconPath: string;
+  viewBox?: string;
+}> = {
+  'gluten-free': {
+    abbr: 'GF',
+    label: 'Gluten-Free',
+    description: 'This item contains no gluten or gluten-containing ingredients.',
+    iconPath: 'M12 2C9.5 2 7.5 3.5 7.5 5.5c0 1.5 1 2.8 2.5 3.3V20h4V8.8c1.5-.5 2.5-1.8 2.5-3.3C16.5 3.5 14.5 2 12 2zm0 2c1.4 0 2.5.9 2.5 2s-1.1 2-2.5 2-2.5-.9-2.5-2 1.1-2 2.5-2zM6 12v2h12v-2H6z',
+  },
+  'vegan': {
+    abbr: 'VG',
+    label: 'Vegan',
+    description: 'This item contains no animal products or by-products.',
+    iconPath: 'M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8zm0 2c2.5 0 5 2 5.5 5H12V4zm-5.5 5C7 6 9.5 4 12 4v5H6.5zM12 19.5c-2-2.3-6-6.5-6-9.5h6v9.5z',
+  },
+  'vegetarian': {
+    abbr: 'V',
+    label: 'Vegetarian',
+    description: 'This item contains no meat or fish products.',
+    iconPath: 'M17.75 7c-.83 0-1.5.67-1.5 1.5 0 1.03.84 1.87 1.87 1.87.07 0 .14 0 .2-.02C17.71 14.71 14.29 18 10 18c-4.42 0-8-3.58-8-8s3.58-8 8-8c1.42 0 2.75.37 3.9 1.02-.46.36-.74.91-.74 1.52 0 .52.21 1 .55 1.35-.33.36-.55.84-.55 1.36 0 1.1.9 2 2 2 .55 0 1.05-.22 1.41-.58.38.7.59 1.5.59 2.33 0 .44-.06.87-.16 1.28-.11 0-.21-.02-.32-.02-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5c.83 0 1.5-.67 1.5-1.5 0-.14-.02-.28-.06-.41C19.25 10.6 20 8.65 20 6.5c0-.14-.02-.28-.06-.41.04-.2.06-.39.06-.59 0-1.38-1.12-2.5-2.5-2.5-.83 0-1.5.67-1.5 1.5 0 .83.67 1.5 1.5 1.5.07 0 .14-.01.2-.02.02.17.05.33.05.52z',
+    viewBox: '0 0 24 24',
+  },
+  'dairy-free': {
+    abbr: 'DF',
+    label: 'Dairy-Free',
+    description: 'This item contains no milk or dairy products.',
+    iconPath: 'M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm2 13h-4v-1h4v1zm1.83-4.17l-.83.58V13h-6v-1.59l-.83-.58C7.43 10.13 7 8.65 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0-.35-.43 1.13-1.17 1.83zM3 3l1.41 1.41L19.59 19.6 21 21l-1.41-1.41L4.41 4.42 3 3z',
+  },
+  'nut-free': {
+    abbr: 'NF',
+    label: 'Nut-Free',
+    description: 'This item contains no tree nuts or peanuts.',
+    iconPath: 'M12 2C9.79 2 8 3.79 8 6c0 1.1.45 2.1 1.17 2.83L8 10l1.17 1.17C8.45 11.9 8 12.9 8 14c0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.1-.45-2.1-1.17-2.83L16 10l-1.17-1.17C15.55 8.1 16 7.1 16 6c0-2.21-1.79-4-4-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM3 3l1.41 1.41L19.59 19.6 21 21l-1.41-1.41L4.41 4.42 3 3z',
+  },
+  'egg-free': {
+    abbr: 'EF',
+    label: 'Egg-Free',
+    description: 'This item contains no eggs or egg products.',
+    iconPath: 'M12 3C8.5 3 5 8 5 13c0 3.31 2.69 6 6 6h2c3.31 0 6-2.69 6-6 0-5-3.5-10-7-10zm0 2c2.14 0 5 4.03 5 8 0 2.21-1.79 4-4 4h-2c-2.21 0-4-1.79-4-4 0-3.97 2.86-8 5-8zM3 3l1.41 1.41L19.59 19.6 21 21l-1.41-1.41L4.41 4.42 3 3z',
+  },
+  'soy-free': {
+    abbr: 'SF',
+    label: 'Soy-Free',
+    description: 'This item contains no soy or soy products.',
+    iconPath: 'M12 2C9.5 2 7 4.5 7 7c0 1.68.92 3.14 2.27 3.93-.01.02-.01.05-.02.07L8 15h8l-1.25-4c-.01-.02-.01-.05-.02-.07C16.08 10.14 17 8.68 17 7c0-2.5-2.5-5-5-5zm0 2c1.5 0 3 1.5 3 3s-1.5 3-3 3-3-1.5-3-3 1.5-3 3-3zM10 17v3c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-3h-4z',
+  },
+  'halal': {
+    abbr: 'H',
+    label: 'Halal',
+    description: 'This item is prepared according to Islamic dietary law.',
+    iconPath: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9.5c0 .83-.67 1.5-1.5 1.5S7 11.33 7 10.5 7.67 9 8.5 9s1.5.67 1.5 1.5zm7 0c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z',
+  },
+  'kosher': {
+    abbr: 'K',
+    label: 'Kosher',
+    description: 'This item is prepared according to Jewish dietary law.',
+    iconPath: 'M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2zm0 4.83l4.5 10.17H7.5L12 6.83z',
+  },
+  'organic': {
+    abbr: 'O',
+    label: 'Organic',
+    description: 'This item is made with certified organic ingredients.',
+    iconPath: 'M12 2C9.5 2 7.5 4 7.5 6.5c0 .88.25 1.7.69 2.4L6 12l2.19 3.1c-.44.7-.69 1.52-.69 2.4C7.5 20 9.5 22 12 22s4.5-2 4.5-4.5c0-.88-.25-1.7-.69-2.4L18 12l-2.19-3.1c.44-.7.69-1.52.69-2.4C16.5 4 14.5 2 12 2zm0 2c1.38 0 2.5 1.12 2.5 2.5S13.38 9 12 9s-2.5-1.12-2.5-2.5S10.62 4 12 4zm0 16c-1.38 0-2.5-1.12-2.5-2.5S10.62 15 12 15s2.5 1.12 2.5 2.5S13.38 20 12 20z',
+  },
+  'locally-sourced': {
+    abbr: 'LS',
+    label: 'Locally Sourced',
+    description: 'Ingredients are sourced from local farms and suppliers.',
+    iconPath: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+  },
+  'spicy': {
+    abbr: 'S',
+    label: 'Spicy',
+    description: 'This item contains spicy ingredients and may be hot.',
+    iconPath: 'M12 2C10.34 2 9 3.34 9 5c0 .7.24 1.34.64 1.85L8 12l1.64 5.15c-.4.51-.64 1.15-.64 1.85 0 1.66 1.34 3 3 3s3-1.34 3-3c0-.7-.24-1.34-.64-1.85L16 12l-1.64-5.15c.4-.51.64-1.15.64-1.85 0-1.66-1.34-3-3-3zm0 2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 14c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z',
+  },
+  'mild': {
+    abbr: 'M',
+    label: 'Mild',
+    description: 'This item has no significant spice or heat.',
+    iconPath: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z',
+  },
+};
+
+const info = dietaryTagInfo[tag];
+const sizeClasses = {
+  sm: 'dietary-indicator--sm',
+  md: 'dietary-indicator--md',
+  lg: 'dietary-indicator--lg',
+};
+---
+
+<span
+  class:list={[
+    'dietary-indicator',
+    `dietary-indicator--${tag}`,
+    sizeClasses[size],
+    className,
+  ]}
+  role="img"
+  aria-label={`${info.label}: ${info.description}`}
+  title={`${info.label}: ${info.description}`}
+  data-dietary-tag={tag}
+>
+  <svg
+    class="dietary-indicator__icon"
+    viewBox={info.viewBox || '0 0 24 24'}
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d={info.iconPath} />
+  </svg>
+  {showLabel && (
+    <span class="dietary-indicator__abbr">{info.abbr}</span>
+  )}
+</span>
+
+<style>
+  /* =================================================================
+   * DIETARY INDICATOR BASE STYLES
+   * ================================================================= */
+  .dietary-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    border-radius: var(--radius-base);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    cursor: help;
+    transition:
+      transform var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .dietary-indicator:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .dietary-indicator:focus {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* =================================================================
+   * SIZE VARIANTS
+   * ================================================================= */
+  .dietary-indicator--sm {
+    min-width: 22px;
+    height: 18px;
+    padding: 0 var(--spacing-1);
+    font-size: 10px;
+  }
+
+  .dietary-indicator--sm .dietary-indicator__icon {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dietary-indicator--md {
+    min-width: 28px;
+    height: 22px;
+    padding: 0 var(--spacing-1-5);
+    font-size: var(--font-size-xs);
+  }
+
+  .dietary-indicator--md .dietary-indicator__icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .dietary-indicator--lg {
+    min-width: 36px;
+    height: 28px;
+    padding: 0 var(--spacing-2);
+    font-size: var(--font-size-sm);
+  }
+
+  .dietary-indicator--lg .dietary-indicator__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* =================================================================
+   * ICON STYLES
+   * ================================================================= */
+  .dietary-indicator__icon {
+    flex-shrink: 0;
+  }
+
+  .dietary-indicator__abbr {
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Gluten-Free (Amber)
+   * ================================================================= */
+  .dietary-indicator--gluten-free {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: var(--border-width-1) solid #fcd34d;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Vegan (Dark Green)
+   * ================================================================= */
+  .dietary-indicator--vegan {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: var(--border-width-1) solid #6ee7b7;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Vegetarian (Green)
+   * ================================================================= */
+  .dietary-indicator--vegetarian {
+    background-color: #dcfce7;
+    color: #166534;
+    border: var(--border-width-1) solid #86efac;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Dairy-Free (Blue)
+   * ================================================================= */
+  .dietary-indicator--dairy-free {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: var(--border-width-1) solid #93c5fd;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Nut-Free (Orange)
+   * ================================================================= */
+  .dietary-indicator--nut-free {
+    background-color: #ffedd5;
+    color: #9a3412;
+    border: var(--border-width-1) solid #fdba74;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Spicy (Red)
+   * ================================================================= */
+  .dietary-indicator--spicy {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: var(--border-width-1) solid #fca5a5;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Egg-Free (Yellow)
+   * ================================================================= */
+  .dietary-indicator--egg-free {
+    background-color: #fef9c3;
+    color: #854d0e;
+    border: var(--border-width-1) solid #fde047;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Soy-Free (Teal)
+   * ================================================================= */
+  .dietary-indicator--soy-free {
+    background-color: #ccfbf1;
+    color: #115e59;
+    border: var(--border-width-1) solid #5eead4;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Halal (Purple)
+   * ================================================================= */
+  .dietary-indicator--halal {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    border: var(--border-width-1) solid #d8b4fe;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Kosher (Indigo)
+   * ================================================================= */
+  .dietary-indicator--kosher {
+    background-color: #e0e7ff;
+    color: #3730a3;
+    border: var(--border-width-1) solid #a5b4fc;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Organic (Lime)
+   * ================================================================= */
+  .dietary-indicator--organic {
+    background-color: #ecfccb;
+    color: #3f6212;
+    border: var(--border-width-1) solid #bef264;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Locally Sourced (Cyan)
+   * ================================================================= */
+  .dietary-indicator--locally-sourced {
+    background-color: #cffafe;
+    color: #155e75;
+    border: var(--border-width-1) solid #67e8f9;
+  }
+
+  /* =================================================================
+   * COLOR VARIANTS - Mild (Gray)
+   * ================================================================= */
+  .dietary-indicator--mild {
+    background-color: #f3f4f6;
+    color: #374151;
+    border: var(--border-width-1) solid #d1d5db;
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY - REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .dietary-indicator {
+      transition: none;
+    }
+
+    .dietary-indicator:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .dietary-indicator {
+      border: 2px solid currentColor;
+      forced-color-adjust: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .dietary-indicator {
+      font-size: 8pt;
+      min-width: 18px;
+      height: 14px;
+      padding: 0 2px;
+      background-color: #f0f0f0 !important;
+      color: #333 !important;
+      border: 1px solid #999 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .dietary-indicator__icon {
+      display: none;
+    }
+  }
+</style>

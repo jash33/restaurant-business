@@ -1,0 +1,1150 @@
+---
+/**
+ * Horizontal Gallery Component
+ *
+ * A mobile-optimized horizontal scrolling gallery with snap points,
+ * scroll indicators, and touch-friendly navigation.
+ *
+ * Features:
+ * - CSS scroll-snap for precise navigation
+ * - Dot indicators showing current position
+ * - Touch swipe gestures for mobile
+ * - Optional navigation arrows
+ * - Keyboard navigation (Arrow keys)
+ * - Lightbox integration
+ * - WCAG 2.1 AA compliant
+ * - Reduced motion support
+ *
+ * Best used as an alternative layout for mobile screens to showcase
+ * multiple photos efficiently in a horizontal carousel format.
+ *
+ * @example Basic usage:
+ * ```astro
+ * <HorizontalGallery
+ *   images={galleryImages}
+ *   showArrows={true}
+ * />
+ * ```
+ *
+ * @example With lightbox:
+ * ```astro
+ * <HorizontalGallery
+ *   images={galleryImages}
+ *   lightbox={true}
+ *   showIndicators={true}
+ * />
+ * ```
+ */
+
+import FoodImage from './FoodImage.astro';
+
+export interface GalleryImage {
+  /** Image source URL */
+  src: string;
+  /** Alternative text for accessibility (required) */
+  alt: string;
+  /** Image title for display */
+  title?: string;
+  /** Image description */
+  description?: string;
+  /** Original image width */
+  width: number;
+  /** Original image height */
+  height: number;
+  /** Category for filtering */
+  category?: string;
+}
+
+interface Props {
+  /** Array of gallery images */
+  images: GalleryImage[];
+  /** Show dot indicators */
+  showIndicators?: boolean;
+  /** Show navigation arrows */
+  showArrows?: boolean;
+  /** Gap between slides in rem */
+  gap?: number;
+  /** Enable lightbox modal on click */
+  lightbox?: boolean;
+  /** CSS class for the gallery container */
+  class?: string;
+  /** Height of the gallery container */
+  height?: string;
+  /** Test ID for e2e testing */
+  testId?: string;
+  /** Aspect ratio for images (e.g., '16/9', '4/3') */
+  aspectRatio?: string;
+  /** Enable auto-scroll (optional) */
+  autoScroll?: boolean;
+  /** Auto-scroll interval in milliseconds */
+  autoScrollInterval?: number;
+  /** Show image captions below slides */
+  showCaptions?: boolean;
+}
+
+const {
+  images,
+  showIndicators = true,
+  showArrows = true,
+  gap = 1,
+  lightbox = true,
+  class: className = '',
+  height = '300px',
+  testId = 'horizontal-gallery',
+  aspectRatio = '4/3',
+  autoScroll = false,
+  autoScrollInterval = 5000,
+  showCaptions = false,
+} = Astro.props;
+
+// Generate unique ID for this gallery instance
+const galleryId = `hgallery-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div
+  class:list={['horizontal-gallery', className]}
+  data-gallery-id={galleryId}
+  data-testid={testId}
+  data-auto-scroll={autoScroll ? 'true' : 'false'}
+  data-auto-scroll-interval={autoScrollInterval}
+  style={`--gallery-gap: ${gap}rem; --gallery-height: ${height}; --gallery-aspect-ratio: ${aspectRatio};`}
+  role="region"
+  aria-label="Horizontal photo gallery - Use arrow keys or swipe to navigate"
+  aria-roledescription="carousel"
+>
+  {/* Main scroll container */}
+  <div
+    class="gallery-track"
+    role="list"
+    aria-label="Gallery images"
+    tabindex="0"
+  >
+    {images.map((image, index) => (
+      <article
+        class="gallery-slide"
+        role="listitem"
+        data-slide-index={index}
+        aria-label={`Slide ${index + 1} of ${images.length}`}
+        aria-roledescription="slide"
+      >
+        <button
+          type="button"
+          class="slide-button"
+          aria-label={`View ${image.title || image.alt} in fullscreen`}
+          data-image-index={index}
+          disabled={!lightbox}
+        >
+          <div class="slide-image-wrapper">
+            <FoodImage
+              src={image.src}
+              alt={image.alt}
+              width={image.width}
+              height={image.height}
+              preset="foodPhoto"
+              placeholder={true}
+              objectFit="cover"
+              aspectRatio={aspectRatio}
+            />
+          </div>
+          {(image.title || image.description) && (
+            <div class="slide-overlay">
+              {image.title && <h3 class="slide-title">{image.title}</h3>}
+              {image.description && <p class="slide-description">{image.description}</p>}
+            </div>
+          )}
+        </button>
+        {showCaptions && (image.title || image.description) && (
+          <div class="slide-caption">
+            {image.title && <h4 class="caption-title">{image.title}</h4>}
+            {image.description && <p class="caption-text">{image.description}</p>}
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+
+  {/* Navigation Arrows */}
+  {showArrows && images.length > 1 && (
+    <>
+      <button
+        type="button"
+        class="gallery-nav gallery-prev"
+        aria-label="Previous slide"
+        data-testid="gallery-prev"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="gallery-nav gallery-next"
+        aria-label="Next slide"
+        data-testid="gallery-next"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </>
+  )}
+
+  {/* Scroll Indicators (Dots) */}
+  {showIndicators && images.length > 1 && (
+    <div
+      class="gallery-indicators"
+      role="tablist"
+      aria-label="Gallery navigation"
+    >
+      {images.map((_, index) => (
+        <button
+          type="button"
+          class:list={['indicator-dot', { active: index === 0 }]}
+          role="tab"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          aria-label={`Go to slide ${index + 1}`}
+          data-slide-index={index}
+          data-testid={`indicator-${index}`}
+        />
+      ))}
+    </div>
+  )}
+
+  {/* Swipe hint for touch devices */}
+  <div class="swipe-hint" aria-hidden="true" data-testid="swipe-hint">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    <span>Swipe</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </div>
+
+  {/* Lightbox Modal */}
+  {lightbox && (
+    <div
+      class="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image lightbox - Use arrow keys to navigate, Escape to close"
+      aria-hidden="true"
+      data-testid="lightbox-modal"
+    >
+      <div class="lightbox-backdrop" aria-hidden="true"></div>
+      <div class="lightbox-content">
+        <button
+          type="button"
+          class="lightbox-close"
+          aria-label="Close lightbox"
+          data-testid="lightbox-close"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="lightbox-nav lightbox-prev"
+          aria-label="Previous image"
+          data-testid="lightbox-prev"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="lightbox-image-container">
+          <img
+            class="lightbox-image"
+            src=""
+            alt=""
+            data-testid="lightbox-image"
+            draggable="false"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="lightbox-nav lightbox-next"
+          aria-label="Next image"
+          data-testid="lightbox-next"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="lightbox-info">
+          <h3 class="lightbox-title" data-testid="lightbox-title"></h3>
+          <p class="lightbox-description" data-testid="lightbox-description"></p>
+          <span class="lightbox-counter" data-testid="lightbox-counter"></span>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .horizontal-gallery {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Main scroll track */
+  .gallery-track {
+    display: flex;
+    gap: var(--gallery-gap, 1rem);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem;
+    margin: -0.5rem;
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-track:focus {
+    outline: none;
+  }
+
+  .gallery-track:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+    border-radius: var(--radius-lg, 0.5rem);
+  }
+
+  /* Individual slide */
+  .gallery-slide {
+    flex: 0 0 auto;
+    width: calc(100% - var(--gallery-gap, 1rem) * 2);
+    max-width: 400px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  /* For larger screens, show partial next slide */
+  @media (min-width: 640px) {
+    .gallery-slide {
+      width: calc(50% - var(--gallery-gap, 1rem));
+      max-width: 450px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-slide {
+      width: calc(33.333% - var(--gallery-gap, 1rem));
+      max-width: 500px;
+    }
+  }
+
+  /* Slide button wrapper */
+  .slide-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl, 0.75rem);
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+    transition: transform var(--duration-200, 200ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+                box-shadow var(--duration-200, 200ms) var(--ease-out);
+  }
+
+  .slide-button:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1));
+  }
+
+  .slide-button:focus-visible {
+    outline: 3px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+  }
+
+  .slide-button:disabled {
+    cursor: default;
+  }
+
+  .slide-button:disabled:hover {
+    transform: none;
+  }
+
+  /* Image wrapper */
+  .slide-image-wrapper {
+    width: 100%;
+    aspect-ratio: var(--gallery-aspect-ratio, 4/3);
+    overflow: hidden;
+    border-radius: var(--radius-xl, 0.75rem);
+  }
+
+  /* Image overlay for title/description */
+  .slide-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    color: white;
+    border-radius: 0 0 var(--radius-xl, 0.75rem) var(--radius-xl, 0.75rem);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity var(--duration-300, 300ms) var(--ease-out),
+                transform var(--duration-300, 300ms) var(--ease-out);
+  }
+
+  .slide-button:hover .slide-overlay,
+  .slide-button:focus-visible .slide-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .slide-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    line-height: 1.3;
+    font-family: var(--font-heading, 'DM Sans', sans-serif);
+  }
+
+  .slide-description {
+    font-size: 0.875rem;
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.4;
+  }
+
+  /* Caption below slides */
+  .slide-caption {
+    padding: 0.75rem 0.25rem;
+    text-align: center;
+  }
+
+  .caption-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--color-text-primary, #111827);
+  }
+
+  .caption-text {
+    font-size: 0.875rem;
+    margin: 0;
+    color: var(--color-text-secondary, #4b5563);
+    line-height: 1.4;
+  }
+
+  /* Navigation arrows */
+  .gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-elevated, #ffffff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 50%;
+    color: var(--color-text-primary, #111827);
+    cursor: pointer;
+    transition: all var(--duration-200, 200ms) var(--ease-out);
+    z-index: 10;
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+  }
+
+  .gallery-nav:hover {
+    background: var(--color-primary, #365395);
+    color: white;
+    border-color: var(--color-primary, #365395);
+  }
+
+  .gallery-nav:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+  }
+
+  .gallery-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .gallery-prev {
+    left: 0.75rem;
+  }
+
+  .gallery-next {
+    right: 0.75rem;
+  }
+
+  /* Hide arrows on small touch devices */
+  @media (max-width: 640px) and (pointer: coarse) {
+    .gallery-nav {
+      display: none;
+    }
+  }
+
+  /* Scroll indicators (dots) */
+  .gallery-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-border-dark, #d1d5db);
+    cursor: pointer;
+    transition: all var(--duration-200, 200ms) var(--ease-out);
+    padding: 0;
+  }
+
+  .indicator-dot:hover {
+    background: var(--color-primary-light, #7287b5);
+    transform: scale(1.2);
+  }
+
+  .indicator-dot:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+  }
+
+  .indicator-dot.active {
+    background: var(--color-primary, #365395);
+    transform: scale(1.2);
+  }
+
+  /* Progress bar alternative (can replace dots) */
+  .gallery-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--color-border-light, #f3f4f6);
+    overflow: hidden;
+  }
+
+  .gallery-progress-bar {
+    height: 100%;
+    background: var(--color-primary, #365395);
+    transition: width var(--duration-300, 300ms) var(--ease-out);
+  }
+
+  /* Swipe hint */
+  .swipe-hint {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: var(--color-text-tertiary, #6b7280);
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity var(--duration-300, 300ms) var(--ease-out);
+  }
+
+  /* Show swipe hint on touch devices */
+  @media (pointer: coarse) {
+    .swipe-hint {
+      display: flex;
+    }
+
+    .swipe-hint.visible {
+      opacity: 1;
+    }
+  }
+
+  /* Lightbox styles */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal, 500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-300, 300ms) var(--ease-out),
+                visibility var(--duration-300, 300ms) var(--ease-out);
+  }
+
+  .lightbox[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  .lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: background var(--duration-200, 200ms) var(--ease-out);
+    z-index: 10;
+  }
+
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-close:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: background var(--duration-200, 200ms) var(--ease-out);
+    z-index: 10;
+  }
+
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-nav:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  .lightbox-prev {
+    left: 1rem;
+  }
+
+  .lightbox-next {
+    right: 1rem;
+  }
+
+  .lightbox-image-container {
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius-base, 0.25rem);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .lightbox-info {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    padding: 0 1rem;
+  }
+
+  .lightbox-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    font-family: var(--font-heading, 'DM Sans', sans-serif);
+  }
+
+  .lightbox-description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0 0 0.5rem;
+  }
+
+  .lightbox-counter {
+    font-size: 0.875rem;
+    opacity: 0.6;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .lightbox-content {
+      padding: 3rem 0.5rem;
+    }
+
+    .lightbox-nav,
+    .lightbox-close {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-track {
+      scroll-behavior: auto;
+    }
+
+    .slide-button,
+    .slide-overlay,
+    .gallery-nav,
+    .indicator-dot,
+    .lightbox {
+      transition: none;
+    }
+
+    .slide-button:hover {
+      transform: none;
+    }
+
+    .indicator-dot:hover {
+      transform: none;
+    }
+
+    .indicator-dot.active {
+      transform: none;
+    }
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .gallery-nav {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .gallery-nav:hover {
+      background: var(--color-primary, #365395);
+      border-color: var(--color-primary, #365395);
+    }
+
+    .indicator-dot {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .indicator-dot.active {
+      background: var(--color-primary-light, #7287b5);
+    }
+
+    .caption-title {
+      color: var(--color-text-inverse, #f8fafc);
+    }
+
+    .caption-text {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .swipe-hint {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  /* Theme support via data attribute */
+  html[data-theme="dark"] .gallery-nav {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  html[data-theme="dark"] .gallery-nav:hover {
+    background: var(--color-primary, #365395);
+    border-color: var(--color-primary, #365395);
+  }
+
+  html[data-theme="dark"] .indicator-dot {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  html[data-theme="dark"] .indicator-dot.active {
+    background: var(--color-primary-light, #7287b5);
+  }
+
+  html[data-theme="dark"] .caption-title {
+    color: var(--color-text-inverse, #f8fafc);
+  }
+
+  html[data-theme="dark"] .caption-text {
+    color: rgba(255, 255, 255, 0.8);
+  }
+</style>
+
+<script define:vars={{ galleryId, images }}>
+  /**
+   * Horizontal Gallery Interactive Functionality
+   * Handles scroll tracking, navigation, touch gestures, and lightbox
+   */
+
+  function initHorizontalGallery() {
+    const gallery = document.querySelector(`[data-gallery-id="${galleryId}"]`);
+    if (!gallery) return;
+
+    const track = gallery.querySelector('.gallery-track');
+    const slides = gallery.querySelectorAll('.gallery-slide');
+    const indicators = gallery.querySelectorAll('.indicator-dot');
+    const prevButton = gallery.querySelector('.gallery-prev');
+    const nextButton = gallery.querySelector('.gallery-next');
+    const swipeHint = gallery.querySelector('.swipe-hint');
+    const slideButtons = gallery.querySelectorAll('.slide-button:not([disabled])');
+
+    // Lightbox elements
+    const lightbox = gallery.querySelector('.lightbox');
+    const lightboxImage = gallery.querySelector('.lightbox-image');
+    const lightboxTitle = gallery.querySelector('.lightbox-title');
+    const lightboxDescription = gallery.querySelector('.lightbox-description');
+    const lightboxCounter = gallery.querySelector('.lightbox-counter');
+    const lightboxClose = gallery.querySelector('.lightbox-close');
+    const lightboxPrev = gallery.querySelector('.lightbox-prev');
+    const lightboxNext = gallery.querySelector('.lightbox-next');
+
+    let currentIndex = 0;
+    let previouslyFocusedElement = null;
+    let autoScrollTimer = null;
+
+    // Get auto-scroll settings
+    const autoScroll = gallery.dataset.autoScroll === 'true';
+    const autoScrollInterval = parseInt(gallery.dataset.autoScrollInterval || '5000', 10);
+
+    // Show swipe hint on touch devices
+    if ('ontouchstart' in window && swipeHint) {
+      swipeHint.classList.add('visible');
+      setTimeout(() => {
+        swipeHint.classList.remove('visible');
+      }, 3000);
+    }
+
+    // Update active indicator
+    function updateIndicators(index) {
+      indicators.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+        dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+      currentIndex = index;
+    }
+
+    // Scroll to specific slide
+    function scrollToSlide(index) {
+      if (!track || !slides[index]) return;
+
+      const slide = slides[index];
+      const scrollPosition = slide.offsetLeft - (track.offsetWidth - slide.offsetWidth) / 2;
+
+      track.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+
+      updateIndicators(index);
+    }
+
+    // Get current visible slide index using Intersection Observer
+    function setupScrollObserver() {
+      if (!track) return;
+
+      const options = {
+        root: track,
+        rootMargin: '0px',
+        threshold: 0.5
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.slideIndex || '0', 10);
+            updateIndicators(index);
+          }
+        });
+      }, options);
+
+      slides.forEach((slide) => {
+        observer.observe(slide);
+      });
+    }
+
+    // Navigation button handlers
+    function goToPrevious() {
+      const newIndex = currentIndex > 0 ? currentIndex - 1 : slides.length - 1;
+      scrollToSlide(newIndex);
+    }
+
+    function goToNext() {
+      const newIndex = currentIndex < slides.length - 1 ? currentIndex + 1 : 0;
+      scrollToSlide(newIndex);
+    }
+
+    // Event listeners for navigation arrows
+    prevButton?.addEventListener('click', goToPrevious);
+    nextButton?.addEventListener('click', goToNext);
+
+    // Event listeners for indicator dots
+    indicators.forEach((dot, index) => {
+      dot.addEventListener('click', () => scrollToSlide(index));
+    });
+
+    // Keyboard navigation
+    track?.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          goToPrevious();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          goToNext();
+          break;
+        case 'Home':
+          e.preventDefault();
+          scrollToSlide(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          scrollToSlide(slides.length - 1);
+          break;
+      }
+    });
+
+    // Touch swipe handling (enhanced experience)
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    track?.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      // Pause auto-scroll on touch
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+      }
+    }, { passive: true });
+
+    track?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      const swipeDistance = touchEndX - touchStartX;
+      const swipeThreshold = 50;
+
+      // Native scroll-snap handles the actual scrolling,
+      // but we can detect direction for analytics or hints
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        // Swipe detected - scroll-snap will handle positioning
+      }
+
+      // Restart auto-scroll after interaction
+      if (autoScroll) {
+        startAutoScroll();
+      }
+    }, { passive: true });
+
+    // Auto-scroll functionality
+    function startAutoScroll() {
+      if (!autoScroll || autoScrollTimer) return;
+
+      autoScrollTimer = setInterval(() => {
+        goToNext();
+      }, autoScrollInterval);
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+      }
+    }
+
+    // Pause auto-scroll on hover
+    gallery.addEventListener('mouseenter', stopAutoScroll);
+    gallery.addEventListener('mouseleave', () => {
+      if (autoScroll) startAutoScroll();
+    });
+
+    // Lightbox functionality
+    function openLightbox(index) {
+      if (!lightbox) return;
+
+      previouslyFocusedElement = document.activeElement;
+      currentIndex = index;
+      updateLightboxContent();
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      lightboxClose?.focus();
+    }
+
+    function closeLightbox() {
+      if (!lightbox) return;
+
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      previouslyFocusedElement?.focus();
+    }
+
+    function updateLightboxContent() {
+      const image = images[currentIndex];
+      if (!image || !lightboxImage) return;
+
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt;
+
+      if (lightboxTitle) {
+        lightboxTitle.textContent = image.title || '';
+        lightboxTitle.style.display = image.title ? 'block' : 'none';
+      }
+
+      if (lightboxDescription) {
+        lightboxDescription.textContent = image.description || '';
+        lightboxDescription.style.display = image.description ? 'block' : 'none';
+      }
+
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+      }
+    }
+
+    function showPreviousImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateLightboxContent();
+    }
+
+    function showNextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateLightboxContent();
+    }
+
+    // Lightbox event listeners
+    slideButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const index = parseInt(button.dataset.imageIndex, 10);
+        openLightbox(index);
+      });
+    });
+
+    lightboxClose?.addEventListener('click', closeLightbox);
+    lightboxPrev?.addEventListener('click', showPreviousImage);
+    lightboxNext?.addEventListener('click', showNextImage);
+
+    gallery.querySelector('.lightbox-backdrop')?.addEventListener('click', closeLightbox);
+
+    // Lightbox keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox || lightbox.getAttribute('aria-hidden') === 'true') return;
+
+      switch (e.key) {
+        case 'Escape':
+          closeLightbox();
+          break;
+        case 'ArrowLeft':
+          showPreviousImage();
+          break;
+        case 'ArrowRight':
+          showNextImage();
+          break;
+      }
+    });
+
+    // Touch swipe in lightbox
+    let lightboxTouchStartX = 0;
+    const lightboxContainer = gallery.querySelector('.lightbox-content');
+
+    lightboxContainer?.addEventListener('touchstart', (e) => {
+      lightboxTouchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    lightboxContainer?.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const swipeDistance = touchEndX - lightboxTouchStartX;
+      const swipeThreshold = 50;
+
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+          showPreviousImage();
+        } else {
+          showNextImage();
+        }
+      }
+    }, { passive: true });
+
+    // Focus trapping in lightbox
+    lightbox?.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = lightbox.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement?.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement?.focus();
+      }
+    });
+
+    // Initialize scroll observer
+    setupScrollObserver();
+
+    // Start auto-scroll if enabled
+    if (autoScroll) {
+      startAutoScroll();
+    }
+
+    // Cleanup function
+    return () => {
+      stopAutoScroll();
+    };
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initHorizontalGallery);
+  document.addEventListener('astro:page-load', initHorizontalGallery);
+</script>

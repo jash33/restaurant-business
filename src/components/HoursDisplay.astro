@@ -1,0 +1,1075 @@
+---
+/**
+ * Hours Display Component
+ * A fully accessible component for displaying business hours with real-time status updates.
+ *
+ * Features:
+ * - WCAG 2.1 AA compliant accessibility
+ * - Real-time open/closed status updates via client-side JavaScript
+ * - Current day highlighting
+ * - Special hours display (holidays, events)
+ * - Responsive design for mobile, tablet, and desktop
+ * - Dark mode support
+ * - Reduced motion support
+ * - Print-friendly styles
+ *
+ * @example Basic usage
+ * ```astro
+ * <HoursDisplay />
+ * ```
+ *
+ * @example With custom configuration
+ * ```astro
+ * <HoursDisplay
+ *   heading="Our Hours"
+ *   timeFormat="24h"
+ *   showSpecialHours={true}
+ * />
+ * ```
+ */
+
+import type { HoursDisplayProps } from '../types/hours';
+import {
+  BUSINESS_HOURS_CONFIG,
+  HOURS_DISPLAY_CONFIG,
+  DAYS_OF_WEEK,
+} from '../config/hours.config';
+import {
+  getCurrentStatus,
+  getHoursDisplayState,
+  getUpcomingSpecialHours,
+  getDayHoursText,
+  getStatusColorClass,
+  formatDate,
+  formatTimeRanges,
+} from '../utils/hours';
+
+interface Props extends HoursDisplayProps {}
+
+const {
+  config = BUSINESS_HOURS_CONFIG,
+  timeFormat = HOURS_DISPLAY_CONFIG.defaultTimeFormat,
+  heading = HOURS_DISPLAY_CONFIG.defaultHeading,
+  subheading = HOURS_DISPLAY_CONFIG.defaultSubheading,
+  showStatus = true,
+  showSpecialHours = true,
+  upcomingSpecialHoursCount = HOURS_DISPLAY_CONFIG.defaultUpcomingSpecialHoursCount,
+  updateInterval = HOURS_DISPLAY_CONFIG.defaultUpdateInterval,
+  id = 'hours',
+  class: className = '',
+} = Astro.props;
+
+// Get initial state for server-side rendering
+const initialState = getHoursDisplayState(config);
+const upcomingSpecialHours = getUpcomingSpecialHours(config, upcomingSpecialHoursCount);
+const { regularHours } = config;
+
+// Build CSS classes
+const sectionClasses = ['hours-section', className].filter(Boolean).join(' ');
+const statusClasses = ['hours-status', getStatusColorClass(initialState.currentStatus.status)].join(' ');
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-hours-display
+  data-config={JSON.stringify(config)}
+  data-time-format={timeFormat}
+  data-update-interval={updateInterval}
+>
+  <div class="hours-container">
+    <!-- Section Header -->
+    <header class="hours-header section-heading--decorated">
+      <h2 id={`${id}-heading`} class="hours-title">{heading}</h2>
+      {subheading && <p class="hours-description">{subheading}</p>}
+    </header>
+
+    <!-- Current Status Indicator -->
+    {showStatus && (
+      <div class={statusClasses} role="status" aria-live="polite" data-hours-status>
+        <div class="hours-status__indicator" aria-hidden="true">
+          <span class="hours-status__dot"></span>
+        </div>
+        <div class="hours-status__content">
+          <span class="hours-status__message" data-status-message>
+            {initialState.currentStatus.message}
+          </span>
+          {initialState.currentStatus.nextChangeMessage && (
+            <span class="hours-status__next" data-status-next>
+              {initialState.currentStatus.nextChangeMessage}
+            </span>
+          )}
+        </div>
+      </div>
+    )}
+
+    <!-- Weekly Hours Grid -->
+    <div class="hours-grid" role="list" aria-label="Weekly hours">
+      {regularHours.map((day, index) => {
+        const isCurrentDay = index === initialState.currentDayIndex;
+        const isSpecialDay = initialState.isSpecialDay && isCurrentDay;
+        const dayClasses = [
+          'hours-day',
+          isCurrentDay && 'hours-day--current',
+          isSpecialDay && 'hours-day--special',
+          !day.isOpen && 'hours-day--closed',
+        ].filter(Boolean).join(' ');
+
+        return (
+          <div
+            class={dayClasses}
+            role="listitem"
+            data-day-index={index}
+            aria-current={isCurrentDay ? 'true' : undefined}
+          >
+            <span class="hours-day__name">
+              {day.day}
+              {isCurrentDay && (
+                <span class="hours-day__today-badge" aria-label="(Today)">Today</span>
+              )}
+            </span>
+            <span class="hours-day__hours" data-day-hours>
+              {isSpecialDay && initialState.todaySpecialHours
+                ? initialState.todaySpecialHours.isOpen && initialState.todaySpecialHours.hours
+                  ? formatTimeRanges(initialState.todaySpecialHours.hours, timeFormat)
+                  : 'Closed'
+                : getDayHoursText(day, timeFormat)}
+            </span>
+            {isSpecialDay && initialState.todaySpecialHours && (
+              <span class="hours-day__special-note" data-special-note>
+                {initialState.todaySpecialHours.name}
+              </span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Upcoming Special Hours -->
+    {showSpecialHours && upcomingSpecialHours.length > 0 && (
+      <div class="hours-special" aria-labelledby={`${id}-special-heading`}>
+        <h3 id={`${id}-special-heading`} class="hours-special__title">
+          <svg class="hours-special__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Upcoming Holiday Hours
+        </h3>
+        <ul class="hours-special__list">
+          {upcomingSpecialHours.map((special) => (
+            <li class="hours-special__item">
+              <div class="hours-special__item-header">
+                <span class="hours-special__item-name">{special.name}</span>
+                <span class="hours-special__item-date">{formatDate(special.date)}</span>
+              </div>
+              <span class={`hours-special__item-hours ${!special.isOpen ? 'hours-special__item-hours--closed' : ''}`}>
+                {special.isOpen && special.hours
+                  ? formatTimeRanges(special.hours, timeFormat)
+                  : 'Closed'}
+              </span>
+              {special.description && (
+                <span class="hours-special__item-desc">{special.description}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Screen reader announcement region -->
+    <div
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      id={`${id}-announcer`}
+      data-hours-announcer
+    ></div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * HOURS SECTION
+   * ================================================================= */
+  .hours-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+  }
+
+  .hours-container {
+    max-width: var(--container-4xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER
+   * ================================================================= */
+  .hours-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .hours-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-3);
+    line-height: var(--line-height-tight);
+  }
+
+  .hours-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    max-width: 32rem;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * STATUS INDICATOR
+   * ================================================================= */
+  .hours-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+    background: var(--color-background);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--duration-300) var(--ease-out);
+  }
+
+  .hours-status__indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    background: currentColor;
+    opacity: 0.1;
+  }
+
+  .hours-status__dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: var(--radius-full);
+    background: currentColor;
+    animation: pulse-status 2s infinite;
+  }
+
+  @keyframes pulse-status {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.85);
+    }
+  }
+
+  .hours-status__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-1);
+  }
+
+  .hours-status__message {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: currentColor;
+    line-height: 1;
+  }
+
+  .hours-status__next {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1;
+  }
+
+  /* Status Colors */
+  .status--open {
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
+  }
+
+  .status--closed {
+    color: var(--color-error);
+    border-left: 4px solid var(--color-error);
+  }
+
+  .status--closing-soon {
+    color: var(--color-warning);
+    border-left: 4px solid var(--color-warning);
+  }
+
+  .status--opening-soon {
+    color: var(--color-info);
+    border-left: 4px solid var(--color-info);
+  }
+
+  /* =================================================================
+   * HOURS GRID
+   * ================================================================= */
+  .hours-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    background: var(--color-background);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hours-day {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-1) var(--spacing-4);
+    align-items: center;
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-lg);
+    transition: all var(--duration-200) var(--ease-out);
+  }
+
+  .hours-day:hover {
+    background-color: var(--color-background-subtle);
+  }
+
+  .hours-day--current {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-accent-50, var(--color-primary-100)) 100%
+    );
+    box-shadow: inset 0 0 0 2px var(--color-primary-200);
+  }
+
+  .hours-day--current:hover {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-100) 0%,
+      var(--color-accent-100, var(--color-primary-150)) 100%
+    );
+  }
+
+  .hours-day--special {
+    position: relative;
+  }
+
+  .hours-day--special::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 1.5rem 1.5rem 0;
+    border-color: transparent var(--color-warning) transparent transparent;
+    border-radius: 0 var(--radius-lg) 0 0;
+  }
+
+  .hours-day--closed .hours-day__hours {
+    color: var(--color-text-tertiary);
+  }
+
+  .hours-day__name {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .hours-day__today-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-px) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-primary);
+    background: var(--color-primary-100);
+    border-radius: var(--radius-full);
+  }
+
+  .hours-day__hours {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-align: right;
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .hours-day__special-note {
+    font-size: var(--font-size-xs);
+    color: var(--color-warning-text);
+    font-style: italic;
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  /* =================================================================
+   * SPECIAL HOURS
+   * ================================================================= */
+  .hours-special {
+    margin-top: var(--spacing-8);
+    padding: var(--spacing-6);
+    background: var(--color-background);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hours-special__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0 0 var(--spacing-4);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .hours-special__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .hours-special__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .hours-special__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-1) var(--spacing-4);
+    padding: var(--spacing-3);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .hours-special__item-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--spacing-2);
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .hours-special__item-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .hours-special__item-date {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  .hours-special__item-hours {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-align: right;
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .hours-special__item-hours--closed {
+    color: var(--color-error);
+  }
+
+  .hours-special__item-desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .hours-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .hours-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .hours-header {
+      margin-bottom: var(--spacing-8);
+    }
+
+    .hours-status {
+      flex-direction: column;
+      text-align: center;
+      padding: var(--spacing-4);
+    }
+
+    .hours-status__content {
+      align-items: center;
+    }
+
+    .hours-day {
+      padding: var(--spacing-3);
+    }
+
+    .hours-day__name {
+      font-size: var(--font-size-sm);
+    }
+
+    .hours-day__hours {
+      font-size: var(--font-size-sm);
+    }
+
+    .hours-special__item {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+    }
+
+    .hours-special__item-hours {
+      text-align: left;
+      grid-row: 2;
+      grid-column: 1;
+    }
+
+    .hours-special__item-desc {
+      grid-row: 3;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hours-grid {
+      padding: var(--spacing-6);
+    }
+
+    .hours-day {
+      padding: var(--spacing-4) var(--spacing-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hours-title {
+      font-size: var(--font-size-5xl);
+    }
+
+    .hours-day__name {
+      font-size: var(--font-size-lg);
+    }
+
+    .hours-day__hours {
+      font-size: var(--font-size-lg);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .hours-status {
+    background: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .hours-grid {
+    background: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .hours-day--current {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb, 139, 0, 0), 0.15) 0%,
+      rgba(var(--color-accent-rgb, 194, 120, 86), 0.1) 100%
+    );
+    box-shadow: inset 0 0 0 2px rgba(var(--color-primary-rgb, 139, 0, 0), 0.3);
+  }
+
+  :global(html[data-theme="dark"]) .hours-day--current:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb, 139, 0, 0), 0.2) 0%,
+      rgba(var(--color-accent-rgb, 194, 120, 86), 0.15) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .hours-day__today-badge {
+    background: rgba(var(--color-primary-rgb, 139, 0, 0), 0.2);
+  }
+
+  :global(html[data-theme="dark"]) .hours-special {
+    background: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .hours-special__item {
+    background: var(--color-background-subtle);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .hours-status,
+    .hours-day {
+      transition: none;
+    }
+
+    .hours-status__dot {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .hours-status {
+      border: 2px solid CanvasText;
+    }
+
+    .hours-grid {
+      border: 2px solid CanvasText;
+    }
+
+    .hours-day--current {
+      border: 3px solid Highlight;
+      background: transparent;
+    }
+
+    .hours-special__item {
+      border: 1px solid CanvasText;
+    }
+
+    .status--open,
+    .status--closed,
+    .status--closing-soon,
+    .status--opening-soon {
+      border-left-width: 6px;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .hours-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .hours-status {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .hours-status__dot {
+      animation: none;
+    }
+
+    .hours-grid {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .hours-day--current {
+      background: none;
+      border: 2px solid var(--color-primary);
+    }
+
+    .hours-special {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Hours Display Client-Side Logic
+   * Handles real-time status updates and current day highlighting
+   */
+
+  interface TimeRange {
+    open: string;
+    close: string;
+  }
+
+  interface DailyHours {
+    day: string;
+    isOpen: boolean;
+    hours?: TimeRange[];
+  }
+
+  interface SpecialHours {
+    id: string;
+    name: string;
+    date: string;
+    type: string;
+    isOpen: boolean;
+    hours?: TimeRange[];
+    description?: string;
+  }
+
+  interface BusinessHoursConfig {
+    timezone: string;
+    regularHours: DailyHours[];
+    specialHours?: SpecialHours[];
+    closingSoonMinutes?: number;
+    openingSoonMinutes?: number;
+  }
+
+  interface HoursDisplayState {
+    container: HTMLElement;
+    config: BusinessHoursConfig;
+    timeFormat: '12h' | '24h';
+    updateInterval: number;
+    intervalId?: number;
+    statusElement: HTMLElement | null;
+    announcerElement: HTMLElement | null;
+  }
+
+  class HoursDisplay {
+    private state: HoursDisplayState;
+
+    constructor(container: HTMLElement) {
+      const configStr = container.dataset.config || '{}';
+      const config = JSON.parse(configStr) as BusinessHoursConfig;
+
+      this.state = {
+        container,
+        config,
+        timeFormat: (container.dataset.timeFormat || '12h') as '12h' | '24h',
+        updateInterval: parseInt(container.dataset.updateInterval || '60000', 10),
+        statusElement: container.querySelector('[data-hours-status]'),
+        announcerElement: container.querySelector('[data-hours-announcer]'),
+      };
+
+      this.initialize();
+    }
+
+    private initialize(): void {
+      // Update immediately
+      this.updateStatus();
+      this.updateCurrentDay();
+
+      // Set up interval for real-time updates
+      this.state.intervalId = window.setInterval(() => {
+        this.updateStatus();
+        this.updateCurrentDay();
+      }, this.state.updateInterval);
+    }
+
+    private getCurrentTimeInMinutes(): number {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    private getCurrentDayIndex(): number {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      return now.getDay();
+    }
+
+    private getTodayDateString(): string {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    private parseTimeToMinutes(time: string): number {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    private isWithinTimeRange(currentMinutes: number, range: TimeRange): boolean {
+      const openMinutes = this.parseTimeToMinutes(range.open);
+      let closeMinutes = this.parseTimeToMinutes(range.close);
+
+      // Handle times that cross midnight
+      if (closeMinutes < openMinutes) {
+        closeMinutes += 24 * 60;
+        if (currentMinutes < openMinutes) {
+          return currentMinutes + 24 * 60 >= openMinutes && currentMinutes + 24 * 60 < closeMinutes;
+        }
+      }
+
+      return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+    }
+
+    private isWithinAnyTimeRange(currentMinutes: number, ranges: TimeRange[]): boolean {
+      return ranges.some((range) => this.isWithinTimeRange(currentMinutes, range));
+    }
+
+    private getMinutesUntilClose(currentMinutes: number, ranges: TimeRange[]): number | null {
+      for (const range of ranges) {
+        if (this.isWithinTimeRange(currentMinutes, range)) {
+          let closeMinutes = this.parseTimeToMinutes(range.close);
+          const openMinutes = this.parseTimeToMinutes(range.open);
+
+          if (closeMinutes < openMinutes) {
+            closeMinutes += 24 * 60;
+            if (currentMinutes < openMinutes) {
+              return closeMinutes - (currentMinutes + 24 * 60);
+            }
+          }
+
+          return closeMinutes - currentMinutes;
+        }
+      }
+      return null;
+    }
+
+    private getMinutesUntilOpen(currentMinutes: number, ranges: TimeRange[]): number | null {
+      const sortedRanges = [...ranges].sort(
+        (a, b) => this.parseTimeToMinutes(a.open) - this.parseTimeToMinutes(b.open)
+      );
+
+      for (const range of sortedRanges) {
+        const openMinutes = this.parseTimeToMinutes(range.open);
+        if (openMinutes > currentMinutes) {
+          return openMinutes - currentMinutes;
+        }
+      }
+
+      if (sortedRanges.length > 0) {
+        const firstOpen = this.parseTimeToMinutes(sortedRanges[0].open);
+        return 24 * 60 - currentMinutes + firstOpen;
+      }
+
+      return null;
+    }
+
+    private formatDuration(minutes: number): string {
+      if (minutes < 60) {
+        return `${minutes} min`;
+      }
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      if (mins === 0) {
+        return `${hours} hr`;
+      }
+      return `${hours} hr ${mins} min`;
+    }
+
+    private getCurrentStatus(): {
+      status: string;
+      message: string;
+      nextChangeMessage?: string;
+    } {
+      const { config } = this.state;
+      const { regularHours, specialHours, closingSoonMinutes = 30, openingSoonMinutes = 30 } = config;
+
+      const todayString = this.getTodayDateString();
+      const currentMinutes = this.getCurrentTimeInMinutes();
+      const currentDayIndex = this.getCurrentDayIndex();
+
+      // Check for special hours first
+      const todaySpecial = specialHours?.find((sh) => sh.date === todayString);
+      const hours = todaySpecial
+        ? (todaySpecial.isOpen ? todaySpecial.hours || [] : [])
+        : regularHours[currentDayIndex].hours || [];
+      const isOpenDay = todaySpecial
+        ? todaySpecial.isOpen
+        : regularHours[currentDayIndex].isOpen;
+      const prefix = todaySpecial ? `${todaySpecial.name}: ` : '';
+
+      if (!isOpenDay || hours.length === 0) {
+        return {
+          status: 'closed',
+          message: `${prefix}Closed`,
+        };
+      }
+
+      const isOpen = this.isWithinAnyTimeRange(currentMinutes, hours);
+
+      if (isOpen) {
+        const minutesUntilClose = this.getMinutesUntilClose(currentMinutes, hours);
+
+        if (minutesUntilClose !== null && minutesUntilClose <= closingSoonMinutes) {
+          return {
+            status: 'closing-soon',
+            message: `${prefix}Closing Soon`,
+            nextChangeMessage: `Closes in ${minutesUntilClose} minutes`,
+          };
+        }
+
+        return {
+          status: 'open',
+          message: `${prefix}Open Now`,
+          nextChangeMessage: minutesUntilClose
+            ? `Open for ${this.formatDuration(minutesUntilClose)}`
+            : undefined,
+        };
+      }
+
+      const minutesUntilOpen = this.getMinutesUntilOpen(currentMinutes, hours);
+
+      if (minutesUntilOpen !== null && minutesUntilOpen <= openingSoonMinutes) {
+        return {
+          status: 'opening-soon',
+          message: `${prefix}Opening Soon`,
+          nextChangeMessage: `Opens in ${minutesUntilOpen} minutes`,
+        };
+      }
+
+      return {
+        status: 'closed',
+        message: `${prefix}Closed`,
+        nextChangeMessage: minutesUntilOpen
+          ? `Opens in ${this.formatDuration(minutesUntilOpen)}`
+          : undefined,
+      };
+    }
+
+    private updateStatus(): void {
+      const { statusElement, announcerElement } = this.state;
+      if (!statusElement) return;
+
+      const newStatus = this.getCurrentStatus();
+      const messageElement = statusElement.querySelector('[data-status-message]');
+      const nextElement = statusElement.querySelector('[data-status-next]');
+
+      // Update message
+      if (messageElement && messageElement.textContent !== newStatus.message) {
+        const previousMessage = messageElement.textContent;
+        messageElement.textContent = newStatus.message;
+
+        // Announce change to screen readers
+        if (announcerElement && previousMessage !== newStatus.message) {
+          announcerElement.textContent = `Status changed: ${newStatus.message}`;
+        }
+      }
+
+      // Update next change message
+      if (nextElement) {
+        nextElement.textContent = newStatus.nextChangeMessage || '';
+      } else if (newStatus.nextChangeMessage) {
+        const newNextElement = document.createElement('span');
+        newNextElement.className = 'hours-status__next';
+        newNextElement.setAttribute('data-status-next', '');
+        newNextElement.textContent = newStatus.nextChangeMessage;
+        statusElement.querySelector('.hours-status__content')?.appendChild(newNextElement);
+      }
+
+      // Update status classes
+      statusElement.className = 'hours-status';
+      statusElement.classList.add(`status--${newStatus.status}`);
+    }
+
+    private updateCurrentDay(): void {
+      const currentDayIndex = this.getCurrentDayIndex();
+      const dayElements = this.state.container.querySelectorAll('.hours-day');
+
+      dayElements.forEach((el, index) => {
+        const isCurrent = index === currentDayIndex;
+
+        if (isCurrent) {
+          el.classList.add('hours-day--current');
+          el.setAttribute('aria-current', 'true');
+
+          // Add today badge if not present
+          const nameEl = el.querySelector('.hours-day__name');
+          if (nameEl && !nameEl.querySelector('.hours-day__today-badge')) {
+            const badge = document.createElement('span');
+            badge.className = 'hours-day__today-badge';
+            badge.setAttribute('aria-label', '(Today)');
+            badge.textContent = 'Today';
+            nameEl.appendChild(badge);
+          }
+        } else {
+          el.classList.remove('hours-day--current');
+          el.removeAttribute('aria-current');
+
+          // Remove today badge if present
+          const badge = el.querySelector('.hours-day__today-badge');
+          if (badge) {
+            badge.remove();
+          }
+        }
+      });
+    }
+
+    public destroy(): void {
+      if (this.state.intervalId) {
+        clearInterval(this.state.intervalId);
+      }
+    }
+  }
+
+  // Store instances for cleanup
+  const instances = new Map<HTMLElement, HoursDisplay>();
+
+  // Initialize all hours displays on the page
+  function initHoursDisplays(): void {
+    // Clean up existing instances
+    instances.forEach((instance) => instance.destroy());
+    instances.clear();
+
+    // Initialize new instances
+    const containers = document.querySelectorAll('[data-hours-display]');
+    containers.forEach((container) => {
+      const instance = new HoursDisplay(container as HTMLElement);
+      instances.set(container as HTMLElement, instance);
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHoursDisplays);
+  } else {
+    initHoursDisplays();
+  }
+
+  // Re-initialize on Astro page transitions (for View Transitions)
+  document.addEventListener('astro:page-load', initHoursDisplays);
+</script>

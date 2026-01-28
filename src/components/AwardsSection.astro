@@ -1,0 +1,362 @@
+---
+/**
+ * AwardsSection Component
+ * A complete section for displaying awards, press mentions, best-of lists,
+ * and certifications. Builds credibility and trust with visitors.
+ *
+ * Features:
+ * - Section heading and subheading
+ * - Grid layout (responsive: 1-col mobile, 2-col tablet, 3-col desktop)
+ * - Optional list layout for compact display
+ * - Logo display support
+ * - Quote/excerpt display
+ * - Background variants (default, subtle, primary)
+ * - Accessible with proper semantic structure
+ * - Loading/empty state handling
+ * - Dark mode support
+ * - Reduced motion support
+ *
+ * @example Basic usage
+ * ```astro
+ * <AwardsSection awards={awards} />
+ * ```
+ *
+ * @example With custom heading and settings
+ * ```astro
+ * <AwardsSection
+ *   heading="Press & Recognition"
+ *   subheading="What the media is saying about us"
+ *   awards={awards}
+ *   layout="grid"
+ *   showLogos={true}
+ *   showQuotes={true}
+ * />
+ * ```
+ */
+
+import type { AwardsSectionProps } from '../types/award';
+import { AWARDS_CONFIG } from '../config/awards.config';
+import AwardCard from './AwardCard.astro';
+
+interface Props extends AwardsSectionProps {}
+
+const {
+  heading = AWARDS_CONFIG.defaultHeading,
+  subheading = AWARDS_CONFIG.defaultSubheading,
+  awards,
+  layout = AWARDS_CONFIG.defaultLayout,
+  maxItems = AWARDS_CONFIG.defaultMaxItems,
+  showLogos = AWARDS_CONFIG.defaultShowLogos,
+  showYears = AWARDS_CONFIG.defaultShowYears,
+  showQuotes = AWARDS_CONFIG.defaultShowQuotes,
+  id = 'awards',
+  class: className = '',
+  background = 'subtle',
+  testId = 'awards-section',
+} = Astro.props;
+
+// Build CSS classes
+const sectionClasses = [
+  'awards-section',
+  `awards-section--bg-${background}`,
+  `awards-section--layout-${layout}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Check if we have awards to display
+const hasAwards = awards && awards.length > 0;
+
+// Limit the number of awards to display
+const displayedAwards = hasAwards ? awards.slice(0, maxItems) : [];
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-testid={testId}
+>
+  <div class="awards-section__container">
+    <!-- Section Header -->
+    <header class="awards-section__header section-heading--decorated">
+      <h2 id={`${id}-heading`} class="awards-section__heading">{heading}</h2>
+      {subheading && (
+        <p class="awards-section__subheading">{subheading}</p>
+      )}
+    </header>
+
+    <!-- Awards Content -->
+    {hasAwards ? (
+      <div class:list={['awards-section__grid', layout === 'list' && 'awards-section__grid--list']}>
+        {displayedAwards.map((award, index) => (
+          <AwardCard
+            {...award}
+            showLogo={showLogos}
+            showYear={showYears}
+            showQuote={showQuotes}
+            testId={`award-card-${index}`}
+          />
+        ))}
+      </div>
+    ) : (
+      <!-- Empty State -->
+      <div class="awards-section__empty" role="status" aria-live="polite">
+        <p class="awards-section__empty-text">Awards and recognition coming soon.</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * AWARDS SECTION COMPONENT STYLES
+   * =================================================================
+   * Uses design system variables from variables.css
+   * Follows BEM naming convention for maintainability
+   */
+
+  .awards-section {
+    padding: var(--spacing-16) var(--spacing-4);
+  }
+
+  /* Background Variants */
+  .awards-section--bg-default {
+    background-color: var(--color-background);
+  }
+
+  .awards-section--bg-subtle {
+    background-color: var(--color-background-subtle);
+  }
+
+  .awards-section--bg-primary {
+    background: var(--gradient-hero);
+    color: var(--color-text-inverse);
+  }
+
+  .awards-section--bg-primary .awards-section__heading,
+  .awards-section--bg-primary .awards-section__subheading {
+    color: var(--color-text-inverse);
+  }
+
+  .awards-section__container {
+    max-width: var(--container-7xl);
+    margin: 0 auto;
+  }
+
+  /* Section Header */
+  .awards-section__header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+  }
+
+  .awards-section__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4);
+    line-height: var(--line-height-tight);
+  }
+
+  .awards-section__subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* Grid Container */
+  .awards-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  /* List Layout Variant */
+  .awards-section__grid--list {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Empty State */
+  .awards-section__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-16) var(--spacing-8);
+    background-color: var(--color-background-muted);
+    border-radius: var(--radius-xl);
+    border: 2px dashed var(--color-border);
+  }
+
+  .awards-section__empty-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    text-align: center;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * =================================================================
+   */
+
+  /* Tablet (640px) - 2 columns */
+  @media screen and (min-width: 640px) {
+    .awards-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-6);
+    }
+
+    .awards-section__grid--list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Tablet Large (768px) */
+  @media screen and (min-width: 768px) {
+    .awards-section {
+      padding: var(--spacing-20) var(--spacing-8);
+    }
+
+    .awards-section__header {
+      margin-bottom: var(--spacing-16);
+    }
+
+    .awards-section__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .awards-section__grid {
+      gap: var(--spacing-8);
+    }
+  }
+
+  /* Desktop (1024px) - 3 columns */
+  @media screen and (min-width: 1024px) {
+    .awards-section__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .awards-section__grid--list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Large Desktop (1280px) */
+  @media screen and (min-width: 1280px) {
+    .awards-section {
+      padding: var(--spacing-24) var(--spacing-8);
+    }
+  }
+
+  /* =================================================================
+   * ANIMATION - Staggered card appearance
+   * =================================================================
+   */
+  .awards-section__grid > :global(*) {
+    animation: fadeSlideUp 0.5s ease-out backwards;
+  }
+
+  .awards-section__grid > :global(*:nth-child(1)) {
+    animation-delay: 0.1s;
+  }
+
+  .awards-section__grid > :global(*:nth-child(2)) {
+    animation-delay: 0.2s;
+  }
+
+  .awards-section__grid > :global(*:nth-child(3)) {
+    animation-delay: 0.3s;
+  }
+
+  .awards-section__grid > :global(*:nth-child(4)) {
+    animation-delay: 0.4s;
+  }
+
+  .awards-section__grid > :global(*:nth-child(5)) {
+    animation-delay: 0.5s;
+  }
+
+  .awards-section__grid > :global(*:nth-child(6)) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT
+   * =================================================================
+   */
+
+  html[data-theme="dark"] .awards-section--bg-subtle {
+    background-color: var(--color-background-subtle);
+  }
+
+  html[data-theme="dark"] .awards-section__empty {
+    background-color: var(--color-background-muted);
+    border-color: var(--color-border);
+  }
+
+  html[data-theme="dark"] .awards-section__empty-text {
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * =================================================================
+   */
+
+  @media (prefers-reduced-motion: reduce) {
+    .awards-section__grid > :global(*) {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   */
+
+  @media print {
+    .awards-section {
+      padding: var(--spacing-8) 0;
+      background-color: transparent !important;
+      background: none !important;
+    }
+
+    .awards-section--bg-primary {
+      color: var(--color-text-primary);
+    }
+
+    .awards-section--bg-primary .awards-section__heading,
+    .awards-section--bg-primary .awards-section__subheading {
+      color: var(--color-text-primary);
+    }
+
+    .awards-section__grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-4);
+    }
+
+    .awards-section__grid > :global(*) {
+      animation: none;
+    }
+  }
+</style>

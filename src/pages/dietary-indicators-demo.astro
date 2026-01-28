@@ -1,0 +1,550 @@
+---
+/**
+ * Dietary Indicators Demo Page
+ * Demonstrates the DietaryIndicator, DietaryLegend, and Tooltip components
+ * with various configurations and use cases.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import DietaryIndicator from '../components/DietaryIndicator.astro';
+import DietaryLegend from '../components/DietaryLegend.astro';
+import Tooltip from '../components/Tooltip.astro';
+import MenuItem from '../components/MenuItem.astro';
+import { createPrice } from '../types/menu';
+import type { DietaryTag } from '../types/menu';
+
+// All dietary tags for demonstration
+const allTags: DietaryTag[] = [
+  'gluten-free',
+  'vegan',
+  'vegetarian',
+  'dairy-free',
+  'nut-free',
+  'spicy',
+  'egg-free',
+  'soy-free',
+  'halal',
+  'kosher',
+  'organic',
+  'locally-sourced',
+  'mild',
+];
+
+// Primary dietary tags (most common)
+const primaryTags: DietaryTag[] = [
+  'gluten-free',
+  'vegan',
+  'vegetarian',
+  'dairy-free',
+  'nut-free',
+  'spicy',
+];
+---
+
+<Layout
+  title="Dietary Indicators Demo"
+  description="Demonstration of dietary indicator components with icons, tooltips, and accessibility features"
+>
+  <main class="demo-page">
+    <div class="demo-container">
+      <h1 class="demo-title">Dietary Indicators Demo</h1>
+      <p class="demo-description">
+        This page demonstrates the dietary indicator components including icons,
+        tooltips, legends, and accessibility features. All indicators comply with
+        WCAG 2.1 AA standards.
+      </p>
+
+      <!-- Primary Dietary Legend -->
+      <section class="demo-section" data-testid="dietary-legend-section">
+        <h2 class="demo-section-title">Dietary Legend (Full Layout)</h2>
+        <p class="demo-intro">
+          A comprehensive legend showing all primary dietary indicators with descriptions.
+        </p>
+        <DietaryLegend
+          tags={primaryTags}
+          layout="full"
+          showDescriptions={true}
+          title="Dietary Information"
+          id="primary-legend"
+        />
+      </section>
+
+      <!-- Compact Legend -->
+      <section class="demo-section" data-testid="compact-legend-section">
+        <h2 class="demo-section-title">Dietary Legend (Compact Layout)</h2>
+        <p class="demo-intro">
+          A space-efficient legend for sidebars or smaller containers.
+        </p>
+        <DietaryLegend
+          tags={primaryTags}
+          layout="compact"
+          title="Key"
+          id="compact-legend"
+        />
+      </section>
+
+      <!-- Inline Legend -->
+      <section class="demo-section" data-testid="inline-legend-section">
+        <h2 class="demo-section-title">Dietary Legend (Inline Layout)</h2>
+        <p class="demo-intro">
+          An inline legend suitable for menu headers or footers.
+        </p>
+        <DietaryLegend
+          tags={primaryTags}
+          layout="inline"
+          title="Legend:"
+          id="inline-legend"
+        />
+      </section>
+
+      <!-- Individual Indicators - Size Variants -->
+      <section class="demo-section" data-testid="size-variants-section">
+        <h2 class="demo-section-title">Individual Indicators - Size Variants</h2>
+        <p class="demo-intro">
+          Dietary indicators come in three sizes: small, medium, and large.
+        </p>
+
+        <div class="indicator-showcase">
+          <div class="size-group" data-testid="size-small">
+            <h3 class="size-label">Small</h3>
+            <div class="indicators-row">
+              {primaryTags.map((tag) => (
+                <DietaryIndicator tag={tag} size="sm" />
+              ))}
+            </div>
+          </div>
+
+          <div class="size-group" data-testid="size-medium">
+            <h3 class="size-label">Medium (Default)</h3>
+            <div class="indicators-row">
+              {primaryTags.map((tag) => (
+                <DietaryIndicator tag={tag} size="md" />
+              ))}
+            </div>
+          </div>
+
+          <div class="size-group" data-testid="size-large">
+            <h3 class="size-label">Large</h3>
+            <div class="indicators-row">
+              {primaryTags.map((tag) => (
+                <DietaryIndicator tag={tag} size="lg" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- All Dietary Tags -->
+      <section class="demo-section" data-testid="all-tags-section">
+        <h2 class="demo-section-title">All Available Dietary Tags</h2>
+        <p class="demo-intro">
+          Complete set of all 13 dietary indicators available in the system.
+        </p>
+        <div class="all-tags-grid" data-testid="all-tags-grid">
+          {allTags.map((tag) => (
+            <div class="tag-card" data-testid={`tag-${tag}`}>
+              <DietaryIndicator tag={tag} size="lg" />
+              <span class="tag-name">{tag}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Tooltip Component Demo -->
+      <section class="demo-section" data-testid="tooltip-section">
+        <h2 class="demo-section-title">Tooltip Component</h2>
+        <p class="demo-intro">
+          Custom tooltips with various positioning options.
+        </p>
+
+        <div class="tooltip-showcase">
+          <div class="tooltip-group">
+            <h3 class="tooltip-label">Position: Top (Default)</h3>
+            <Tooltip text="This tooltip appears above the element" position="top">
+              <button class="demo-button">Hover for tooltip (top)</button>
+            </Tooltip>
+          </div>
+
+          <div class="tooltip-group">
+            <h3 class="tooltip-label">Position: Bottom</h3>
+            <Tooltip text="This tooltip appears below the element" position="bottom">
+              <button class="demo-button">Hover for tooltip (bottom)</button>
+            </Tooltip>
+          </div>
+
+          <div class="tooltip-group">
+            <h3 class="tooltip-label">Position: Left</h3>
+            <Tooltip text="This tooltip appears to the left" position="left">
+              <button class="demo-button">Hover for tooltip (left)</button>
+            </Tooltip>
+          </div>
+
+          <div class="tooltip-group">
+            <h3 class="tooltip-label">Position: Right</h3>
+            <Tooltip text="This tooltip appears to the right" position="right">
+              <button class="demo-button">Hover for tooltip (right)</button>
+            </Tooltip>
+          </div>
+        </div>
+      </section>
+
+      <!-- Menu Item Integration -->
+      <section class="demo-section" data-testid="menu-integration-section">
+        <h2 class="demo-section-title">Menu Item Integration</h2>
+        <p class="demo-intro">
+          Dietary indicators integrated with menu items for real-world usage.
+        </p>
+
+        <div class="menu-list" data-testid="menu-items-with-dietary">
+          <MenuItem
+            id="item-quinoa-salad"
+            name="Quinoa Power Bowl"
+            description="Organic quinoa with roasted vegetables, chickpeas, avocado, and lemon tahini dressing. A nutritious and satisfying plant-based meal."
+            price={createPrice(1695)}
+            dietaryTags={['vegan', 'gluten-free', 'dairy-free', 'nut-free']}
+            data-testid="menu-item-quinoa"
+          />
+
+          <MenuItem
+            id="item-grilled-chicken"
+            name="Herb-Crusted Chicken"
+            description="Free-range chicken breast with fresh herbs, served with seasonal vegetables and roasted potatoes."
+            price={createPrice(2295)}
+            dietaryTags={['gluten-free', 'dairy-free']}
+            chefRecommended={true}
+            data-testid="menu-item-chicken"
+          />
+
+          <MenuItem
+            id="item-spicy-curry"
+            name="Thai Red Curry"
+            description="Traditional red curry with coconut milk, Thai basil, vegetables, and your choice of protein. Medium spice level."
+            price={createPrice(1895)}
+            dietaryTags={['gluten-free', 'dairy-free', 'spicy']}
+            data-testid="menu-item-curry"
+          />
+
+          <MenuItem
+            id="item-vegetable-pasta"
+            name="Garden Vegetable Pasta"
+            description="House-made pasta with seasonal vegetables, garlic, olive oil, and fresh parmesan cheese."
+            price={createPrice(1795)}
+            dietaryTags={['vegetarian', 'nut-free']}
+            data-testid="menu-item-pasta"
+          />
+
+          <MenuItem
+            id="item-kosher-steak"
+            name="Kosher Ribeye Steak"
+            description="12oz certified kosher ribeye, grilled to perfection and served with herb butter and roasted vegetables."
+            price={createPrice(4295)}
+            dietaryTags={['kosher', 'gluten-free']}
+            featured={true}
+            data-testid="menu-item-steak"
+          />
+        </div>
+      </section>
+
+      <!-- Accessibility Information -->
+      <section class="demo-section demo-section--info" data-testid="accessibility-section">
+        <h2 class="demo-section-title">Accessibility Features</h2>
+        <ul class="accessibility-list">
+          <li>
+            <strong>ARIA Labels:</strong> All indicators include descriptive aria-labels for screen readers
+          </li>
+          <li>
+            <strong>Tooltips:</strong> Native HTML title attributes provide hover information
+          </li>
+          <li>
+            <strong>Keyboard Navigation:</strong> Indicators are focusable via keyboard (Tab key)
+          </li>
+          <li>
+            <strong>High Contrast:</strong> Supports Windows High Contrast Mode
+          </li>
+          <li>
+            <strong>Reduced Motion:</strong> Animations are disabled when user prefers reduced motion
+          </li>
+          <li>
+            <strong>Color + Text:</strong> Icons use both color AND text abbreviations (not color alone)
+          </li>
+          <li>
+            <strong>Print Friendly:</strong> Optimized styling for printed menus
+          </li>
+        </ul>
+      </section>
+
+      <!-- Print Preview Note -->
+      <section class="demo-section demo-section--print-info">
+        <h2 class="demo-section-title">Print Preview</h2>
+        <p>
+          This component includes print-optimized styles. Use your browser's print
+          function (Ctrl/Cmd + P) to preview how dietary indicators will appear
+          when printed.
+        </p>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .demo-page {
+    padding: var(--spacing-8) var(--spacing-4);
+    background-color: var(--color-background);
+    min-height: 100vh;
+  }
+
+  .demo-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .demo-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-12);
+  }
+
+  .demo-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-4);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 2px solid var(--color-primary-100);
+  }
+
+  .demo-intro {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-6);
+  }
+
+  /* Size Variants Section */
+  .indicator-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  .size-group {
+    padding: var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .size-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .indicators-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    align-items: center;
+  }
+
+  /* All Tags Grid */
+  .all-tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-4);
+  }
+
+  .tag-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
+    background-color: var(--color-background-elevated);
+    border: var(--border-width-1) solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    transition: box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .tag-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .tag-name {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-transform: capitalize;
+  }
+
+  /* Tooltip Section */
+  .tooltip-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-6);
+  }
+
+  .tooltip-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    align-items: center;
+    padding: var(--spacing-6);
+    background-color: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .tooltip-label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .demo-button {
+    padding: var(--spacing-2) var(--spacing-4);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: none;
+    border-radius: var(--radius-base);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: background-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .demo-button:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .demo-button:focus {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Menu List */
+  .menu-list {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Info Sections */
+  .demo-section--info {
+    background-color: var(--color-info-100);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-info-200);
+  }
+
+  .demo-section--info .demo-section-title {
+    color: var(--color-info-800);
+    border-bottom-color: var(--color-info-200);
+  }
+
+  .accessibility-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .accessibility-list li {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-info-800);
+    padding-left: var(--spacing-6);
+    position: relative;
+  }
+
+  .accessibility-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-success);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .demo-section--print-info {
+    background-color: var(--color-warning-100);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-warning-200);
+  }
+
+  .demo-section--print-info .demo-section-title {
+    color: var(--color-warning-800);
+    border-bottom-color: var(--color-warning-200);
+  }
+
+  .demo-section--print-info p {
+    font-family: var(--font-body);
+    color: var(--color-warning-800);
+    margin: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .demo-page {
+      padding: var(--spacing-4) var(--spacing-2);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .tooltip-showcase {
+      grid-template-columns: 1fr;
+    }
+
+    .all-tags-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .demo-page {
+      padding: 0;
+    }
+
+    .demo-title,
+    .demo-description,
+    .demo-section--print-info,
+    .tooltip-showcase {
+      display: none;
+    }
+
+    .demo-section-title {
+      font-size: 14pt;
+      margin-bottom: 12pt;
+    }
+
+    .menu-list {
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+</style>

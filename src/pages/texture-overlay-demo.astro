@@ -1,0 +1,671 @@
+---
+/**
+ * Texture Overlay Demo Page
+ * Demonstrates all variants and configurations of the TextureOverlay component
+ * for adding tactile warmth and analog photography aesthetics to sections.
+ */
+import Layout from '../layouts/Layout.astro';
+import TextureOverlay from '../components/TextureOverlay.astro';
+import WarmGradientOverlay from '../components/WarmGradientOverlay.astro';
+---
+
+<Layout
+  title="Texture Overlay Demo"
+  description="Demo page showcasing texture overlay variants for tactile warmth and analog photography aesthetics."
+>
+  <main class="texture-overlay-demo">
+    <!-- Page Header -->
+    <header class="demo-header">
+      <h1>Texture Overlays</h1>
+      <p>Add subtle paper, linen, canvas, and grain textures for tactile warmth and analog photography aesthetic.</p>
+    </header>
+
+    <!-- Texture Variants Section -->
+    <section class="demo-section">
+      <h2>Texture Variants</h2>
+      <p class="demo-description">Six preset texture styles for different visual effects - from organic paper to film grain.</p>
+
+      <div class="demo-grid">
+        <!-- Paper -->
+        <div class="demo-card" data-testid="demo-paper">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food plating with paper texture"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="paper"
+              intensity="medium"
+              testId="overlay-paper"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Paper</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Subtle organic fiber pattern for natural warmth</p>
+        </div>
+
+        <!-- Linen -->
+        <div class="demo-card" data-testid="demo-linen">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80"
+              alt="Intimate dinner with linen texture"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="linen"
+              intensity="medium"
+              testId="overlay-linen"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Linen</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Fabric weave pattern for elegant tactile feel</p>
+        </div>
+
+        <!-- Canvas -->
+        <div class="demo-card" data-testid="demo-canvas">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"
+              alt="Restaurant dish with canvas texture"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="canvas"
+              intensity="medium"
+              testId="overlay-canvas"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Canvas</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Artistic woven canvas for painterly effect</p>
+        </div>
+
+        <!-- Grain Fine -->
+        <div class="demo-card" data-testid="demo-grain-fine">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80"
+              alt="Rustic food with fine grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="medium"
+              testId="overlay-grain-fine"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Grain Fine</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Fine film grain for subtle analog feel</p>
+        </div>
+
+        <!-- Grain Coarse -->
+        <div class="demo-card" data-testid="demo-grain-coarse">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80"
+              alt="Grilled food with coarse grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-coarse"
+              intensity="medium"
+              testId="overlay-grain-coarse"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Grain Coarse</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Coarse film grain for vintage photography look</p>
+        </div>
+
+        <!-- Noise -->
+        <div class="demo-card" data-testid="demo-noise">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80"
+              alt="Pizza with noise texture"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="noise"
+              intensity="medium"
+              testId="overlay-noise"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Noise</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Very fine static for TV/digital aesthetic</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Intensity Levels Section -->
+    <section class="demo-section">
+      <h2>Intensity Levels</h2>
+      <p class="demo-description">Four intensity presets from barely visible to pronounced texture effect.</p>
+
+      <div class="demo-grid demo-grid--4col">
+        <!-- Subtle -->
+        <div class="demo-card" data-testid="demo-intensity-subtle">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with subtle grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="subtle"
+              testId="overlay-intensity-subtle"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Subtle (3%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Light -->
+        <div class="demo-card" data-testid="demo-intensity-light">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with light grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="light"
+              testId="overlay-intensity-light"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Light (6%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medium -->
+        <div class="demo-card" data-testid="demo-intensity-medium">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with medium grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="medium"
+              testId="overlay-intensity-medium"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Medium (10%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strong -->
+        <div class="demo-card" data-testid="demo-intensity-strong">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with strong grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="strong"
+              testId="overlay-intensity-strong"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Strong (15%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blend Modes Section -->
+    <section class="demo-section">
+      <h2>Blend Modes</h2>
+      <p class="demo-description">Different blend modes affect how textures interact with underlying images.</p>
+
+      <div class="demo-grid demo-grid--3col">
+        <!-- Overlay -->
+        <div class="demo-card" data-testid="demo-blend-overlay">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food with overlay blend"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="paper"
+              intensity="strong"
+              blendMode="overlay"
+              testId="overlay-blend-overlay"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Overlay</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Increases contrast while adding texture</p>
+        </div>
+
+        <!-- Soft Light -->
+        <div class="demo-card" data-testid="demo-blend-soft-light">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food with soft-light blend"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="paper"
+              intensity="strong"
+              blendMode="soft-light"
+              testId="overlay-blend-soft-light"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Soft Light</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Subtle, diffused texture effect</p>
+        </div>
+
+        <!-- Multiply -->
+        <div class="demo-card" data-testid="demo-blend-multiply">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food with multiply blend"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="paper"
+              intensity="strong"
+              blendMode="multiply"
+              testId="overlay-blend-multiply"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Multiply</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Darkens and adds depth</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animated Grain Section -->
+    <section class="demo-section">
+      <h2>Animated Grain</h2>
+      <p class="demo-description">Enable animation for a more organic, film-like grain effect.</p>
+
+      <div class="demo-grid demo-grid--2col">
+        <!-- Static Grain -->
+        <div class="demo-card" data-testid="demo-grain-static">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"
+              alt="Restaurant with static grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="medium"
+              animated={false}
+              testId="overlay-grain-static"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Static Grain</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Traditional still texture</p>
+        </div>
+
+        <!-- Animated Grain -->
+        <div class="demo-card" data-testid="demo-grain-animated">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"
+              alt="Restaurant with animated grain"
+              class="demo-card__image"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="medium"
+              animated={true}
+              testId="overlay-grain-animated"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Animated Grain</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Subtle movement for film camera effect</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combined with Warm Gradient Section -->
+    <section class="demo-section">
+      <h2>Combined Effects</h2>
+      <p class="demo-description">Layer texture overlays with warm gradients for maximum atmospheric effect.</p>
+
+      <div class="demo-grid demo-grid--2col">
+        <!-- Warm Gradient Only -->
+        <div class="demo-card" data-testid="demo-combined-gradient-only">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80"
+              alt="Dinner with gradient only"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="candlelight"
+              showLegibilityLayer={true}
+              testId="overlay-combined-gradient"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Gradient Only</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Warm candlelight gradient</p>
+        </div>
+
+        <!-- Gradient + Texture -->
+        <div class="demo-card" data-testid="demo-combined-both">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80"
+              alt="Dinner with gradient and texture"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="candlelight"
+              showLegibilityLayer={true}
+              zIndex={1}
+              testId="overlay-combined-gradient-layer"
+            />
+            <TextureOverlay
+              variant="grain-fine"
+              intensity="light"
+              zIndex={3}
+              testId="overlay-combined-texture"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Gradient + Grain</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Layered for cinematic analog look</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-width Hero Example -->
+    <section class="demo-section demo-section--hero" data-testid="demo-hero-section">
+      <div class="demo-hero">
+        <img
+          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80"
+          alt="Restaurant ambiance"
+          class="demo-hero__image"
+        />
+        <WarmGradientOverlay
+          variant="moody"
+          vignette="soft"
+          showLegibilityLayer={true}
+          opacity={0.85}
+          zIndex={1}
+          testId="overlay-hero-gradient"
+        />
+        <TextureOverlay
+          variant="grain-fine"
+          intensity="subtle"
+          animated={true}
+          zIndex={3}
+          testId="overlay-hero-texture"
+        />
+        <div class="demo-hero__content">
+          <h2 class="demo-hero__title">Full Cinematic Effect</h2>
+          <p class="demo-hero__subtitle">
+            Moody warm gradient with soft vignette, combined with subtle animated film grain
+            creates an authentic analog photography aesthetic while respecting performance budgets.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Usage Notes -->
+    <section class="demo-section demo-section--notes">
+      <h2>Usage Notes</h2>
+      <ul class="demo-notes">
+        <li><strong>Performance:</strong> All textures use inline SVG patterns - no external image files for optimal loading.</li>
+        <li><strong>Intensity:</strong> Start with <code>subtle</code> or <code>light</code> - textures should enhance, not distract.</li>
+        <li><strong>Layering:</strong> When combining with WarmGradientOverlay, place texture at higher z-index for best results.</li>
+        <li><strong>Animation:</strong> Use <code>animated</code> sparingly - it works best with grain variants for film effect.</li>
+        <li><strong>Accessibility:</strong> Overlays are marked with <code>aria-hidden="true"</code> as they're purely decorative.</li>
+        <li><strong>Reduced Motion:</strong> Animation is automatically disabled when users prefer reduced motion.</li>
+        <li><strong>High Contrast:</strong> Textures are hidden in forced-colors mode for accessibility.</li>
+      </ul>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .texture-overlay-demo {
+    padding: var(--spacing-8) var(--spacing-4);
+    max-width: var(--container-7xl);
+    margin: 0 auto;
+  }
+
+  .demo-header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    padding-top: var(--spacing-8);
+  }
+
+  .demo-header h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .demo-header p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-16);
+  }
+
+  .demo-section h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-6);
+  }
+
+  .demo-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .demo-grid--3col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .demo-grid--4col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    .demo-grid--2col,
+    .demo-grid--3col,
+    .demo-grid--4col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .demo-grid--2col,
+    .demo-grid--3col,
+    .demo-grid--4col {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .demo-card {
+    background: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-hover-lift);
+  }
+
+  .demo-card:hover {
+    transform: var(--transform-hover-lift-sm);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .demo-card__image-container {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+
+  .demo-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .demo-card__text-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .demo-card__label {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .demo-card__description {
+    padding: var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Hero Example Styles */
+  .demo-section--hero {
+    margin-left: calc(-1 * var(--spacing-4));
+    margin-right: calc(-1 * var(--spacing-4));
+    max-width: none;
+  }
+
+  .demo-hero {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .demo-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .demo-hero__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: var(--spacing-8);
+    max-width: 60ch;
+  }
+
+  .demo-hero__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    margin-bottom: var(--spacing-4);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .demo-hero__subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: var(--line-height-relaxed);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Notes Section */
+  .demo-section--notes {
+    background: var(--color-background-subtle);
+    padding: var(--spacing-8);
+    border-radius: var(--radius-xl);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .demo-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .demo-notes li {
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .demo-notes code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    background: var(--color-background-muted);
+    padding: var(--spacing-0-5) var(--spacing-1);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+  }
+</style>

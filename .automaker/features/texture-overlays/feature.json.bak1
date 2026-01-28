@@ -1,0 +1,12 @@
+{
+  "id": "texture-overlays",
+  "category": "Design System",
+  "title": "Paper and Linen Texture Overlays",
+  "description": "Add subtle paper, linen, or canvas texture overlays to sections for tactile warmth. Includes grain/noise overlay option for analog photography aesthetic. Respects performance budget.",
+  "status": "in_progress",
+  "priority": 3,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.109Z",
+  "updatedAt": "2026-01-27T15:33:20.247Z",
+  "descriptionHistory": []
+}

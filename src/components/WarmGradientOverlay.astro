@@ -1,0 +1,228 @@
+---
+/**
+ * Warm Gradient Overlay Component
+ *
+ * A reusable overlay component that enhances food photography with warm,
+ * moody tones (golden hour, candlelight). Ensures text legibility while
+ * maintaining atmosphere. Perfect for hero sections and feature backgrounds.
+ *
+ * Features:
+ * - Multiple preset gradient styles (golden-hour, candlelight, moody, terracotta, ember)
+ * - Optional vignette effect for edge darkening
+ * - Configurable opacity for fine-tuned control
+ * - Base legibility layer option for text contrast
+ * - Smooth gradient transitions
+ * - WCAG 2.1 AA compliant when used with legibility layer
+ * - Reduced motion support
+ *
+ * @example Basic usage with golden hour preset
+ * ```astro
+ * <div class="hero-section">
+ *   <img src="/food.jpg" alt="Food photography" />
+ *   <WarmGradientOverlay variant="golden-hour" />
+ *   <div class="content">Your content here</div>
+ * </div>
+ * ```
+ *
+ * @example With vignette and legibility layer
+ * ```astro
+ * <WarmGradientOverlay
+ *   variant="candlelight"
+ *   vignette="strong"
+ *   showLegibilityLayer={true}
+ *   opacity={0.8}
+ * />
+ * ```
+ *
+ * @example Layered for maximum effect
+ * ```astro
+ * <WarmGradientOverlay variant="moody" vignette="soft" showLegibilityLayer={true} />
+ * ```
+ */
+
+type WarmGradientVariant = 'golden-hour' | 'candlelight' | 'moody' | 'terracotta' | 'ember';
+
+type VignetteStyle = 'none' | 'soft' | 'strong';
+
+interface Props {
+  /** Warm gradient style preset */
+  variant?: WarmGradientVariant;
+  /** Vignette effect for edge darkening */
+  vignette?: VignetteStyle;
+  /** Show base dark overlay for text legibility (recommended when text is present) */
+  showLegibilityLayer?: boolean;
+  /** Overall opacity multiplier (0-1) for fine-tuning intensity */
+  opacity?: number;
+  /** Additional CSS class names */
+  class?: string;
+  /** Custom z-index for stacking (default: 1) */
+  zIndex?: number;
+  /** Test ID for automated testing */
+  testId?: string;
+}
+
+const {
+  variant = 'moody',
+  vignette = 'none',
+  showLegibilityLayer = false,
+  opacity = 1,
+  class: className = '',
+  zIndex = 1,
+  testId = 'warm-gradient-overlay',
+} = Astro.props;
+
+// Map variant to CSS custom property
+const gradientMap: Record<WarmGradientVariant, string> = {
+  'golden-hour': 'var(--gradient-warm-golden-hour)',
+  'candlelight': 'var(--gradient-warm-candlelight)',
+  'moody': 'var(--gradient-warm-moody)',
+  'terracotta': 'var(--gradient-warm-terracotta)',
+  'ember': 'var(--gradient-warm-ember)',
+};
+
+const vignetteMap: Record<VignetteStyle, string | null> = {
+  'none': null,
+  'soft': 'var(--gradient-vignette-soft)',
+  'strong': 'var(--gradient-vignette-strong)',
+};
+
+const gradientValue = gradientMap[variant];
+const vignetteValue = vignetteMap[vignette];
+
+// Build container classes
+const containerClasses = [
+  'warm-gradient-overlay',
+  `warm-gradient-overlay--${variant}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Calculate opacity as CSS custom property
+const overlayStyle = `--overlay-opacity: ${opacity}; --overlay-z-index: ${zIndex};`;
+---
+
+<div
+  class={containerClasses}
+  style={overlayStyle}
+  aria-hidden="true"
+  data-testid={testId}
+>
+  {/* Base legibility layer - ensures text contrast */}
+  {showLegibilityLayer && (
+    <div
+      class="warm-gradient-overlay__layer warm-gradient-overlay__layer--legibility"
+      data-testid={`${testId}-legibility`}
+    />
+  )}
+
+  {/* Main warm gradient layer */}
+  <div
+    class="warm-gradient-overlay__layer warm-gradient-overlay__layer--warm"
+    style={`background: ${gradientValue};`}
+    data-testid={`${testId}-warm`}
+  />
+
+  {/* Optional vignette layer */}
+  {vignetteValue && (
+    <div
+      class="warm-gradient-overlay__layer warm-gradient-overlay__layer--vignette"
+      style={`background: ${vignetteValue};`}
+      data-testid={`${testId}-vignette`}
+    />
+  )}
+</div>
+
+<style>
+  /* =================================================================
+   * WARM GRADIENT OVERLAY - BASE STYLES
+   * ================================================================= */
+  .warm-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--overlay-z-index, 1);
+    pointer-events: none;
+    opacity: var(--overlay-opacity, 1);
+  }
+
+  /* =================================================================
+   * OVERLAY LAYERS
+   * ================================================================= */
+  .warm-gradient-overlay__layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Base legibility layer - Ensures text contrast over images */
+  .warm-gradient-overlay__layer--legibility {
+    background: var(--gradient-overlay-legibility);
+    z-index: 1;
+  }
+
+  /* Main warm gradient layer with blend mode */
+  .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+    z-index: 2;
+  }
+
+  /* Vignette layer for moody edge darkening */
+  .warm-gradient-overlay__layer--vignette {
+    z-index: 3;
+  }
+
+  /* =================================================================
+   * VARIANT-SPECIFIC ADJUSTMENTS
+   * ================================================================= */
+
+  /* Golden Hour - Subtle warmth */
+  .warm-gradient-overlay--golden-hour .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+  }
+
+  /* Candlelight - Deeper warmth with soft-light blend */
+  .warm-gradient-overlay--candlelight .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+  }
+
+  /* Moody - Classic warm restaurant ambiance */
+  .warm-gradient-overlay--moody .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+  }
+
+  /* Terracotta - Earthy, rustic tones */
+  .warm-gradient-overlay--terracotta .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+  }
+
+  /* Ember - Radial warm glow from bottom */
+  .warm-gradient-overlay--ember .warm-gradient-overlay__layer--warm {
+    mix-blend-mode: multiply;
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .warm-gradient-overlay,
+    .warm-gradient-overlay__layer {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .warm-gradient-overlay {
+      display: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .warm-gradient-overlay {
+      display: none;
+    }
+  }
+</style>

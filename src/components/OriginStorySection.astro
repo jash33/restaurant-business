@@ -1,0 +1,559 @@
+---
+/**
+ * Origin Story Section Component
+ *
+ * A warm, personal homepage section showcasing the restaurant's origin story
+ * with owner/chef photo, pull quote styling, and CTA to the full About page.
+ *
+ * Features:
+ * - Restaurant origin story snippet with personal narrative tone
+ * - Owner/chef photo with decorative badge
+ * - Pull quote styling for emphasis
+ * - 'Read More' CTA button linking to /about
+ * - Reveal animations for scroll engagement
+ * - Responsive design (single column mobile, two columns desktop)
+ * - WCAG 2.1 AA accessible
+ *
+ * @example Basic usage:
+ * ```astro
+ * <OriginStorySection />
+ * ```
+ *
+ * @example With custom content:
+ * ```astro
+ * <OriginStorySection
+ *   heading="Our Heritage"
+ *   storySnippet="Custom origin story text..."
+ *   pullQuote="Custom pull quote..."
+ *   chefName="Chef Maria"
+ *   chefTitle="Executive Chef & Owner"
+ *   photoSrc="/images/chef.jpg"
+ *   photoAlt="Chef Maria in the kitchen"
+ * />
+ * ```
+ */
+
+import Button from './Button.astro';
+
+interface Props {
+  /** Section heading */
+  heading?: string;
+  /** Brief origin story snippet (2-3 paragraphs max) */
+  storySnippet?: string;
+  /** Pull quote for emphasis */
+  pullQuote?: string;
+  /** Chef/Owner name */
+  chefName?: string;
+  /** Chef/Owner title */
+  chefTitle?: string;
+  /** Photo source URL */
+  photoSrc?: string;
+  /** Photo alt text */
+  photoAlt?: string;
+  /** Year established for badge */
+  establishedYear?: string;
+  /** CTA button text */
+  ctaText?: string;
+  /** CTA button href */
+  ctaHref?: string;
+  /** Section ID for anchor linking */
+  id?: string;
+}
+
+const {
+  heading = "Our Story",
+  storySnippet = `What began as a dream in a small family kitchen has blossomed into a beloved gathering place for our Houston community. Every dish we serve carries the love, tradition, and passion that's been passed down through generations.
+
+Our founder's journey started with a simple belief: that food has the power to bring people together, to create memories, and to tell stories. From our grandmother's treasured recipes to our modern culinary innovations, we honor the past while embracing the future.`,
+  pullQuote = "Every plate we serve tells a story — of family, of tradition, of love poured into every ingredient.",
+  chefName = "The Family",
+  chefTitle = "Founders & Proprietors",
+  photoSrc,
+  photoAlt = "Our chef and founder in the restaurant kitchen",
+  establishedYear = "Est. 2016",
+  ctaText = "Read Our Full Story",
+  ctaHref = "/about",
+  id = "our-story",
+} = Astro.props;
+
+// Split story into paragraphs for proper formatting
+const storyParagraphs = storySnippet.split('\n\n').filter(p => p.trim());
+---
+
+<section class="origin-story" id={id} aria-labelledby="origin-story-heading">
+  <div class="origin-story__container">
+    <!-- Photo Column -->
+    <div class="origin-story__photo-column reveal reveal--left">
+      <div class="origin-story__photo-wrapper">
+        {photoSrc ? (
+          <img
+            src={photoSrc}
+            alt={photoAlt}
+            class="origin-story__photo"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <!-- Photo Placeholder -->
+          <div class="origin-story__photo-placeholder" role="img" aria-label={photoAlt}>
+            <svg class="origin-story__placeholder-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="200" height="200" fill="currentColor" opacity="0.08"/>
+              <!-- Chef hat icon -->
+              <path d="M100 40c-8.8 0-16 7.2-16 16v4c-11 0-20 9-20 20s9 20 20 20h32c11 0 20-9 20-20s-9-20-20-20v-4c0-8.8-7.2-16-16-16z" fill="currentColor" opacity="0.15"/>
+              <!-- Chef body -->
+              <ellipse cx="100" cy="145" rx="45" ry="35" fill="currentColor" opacity="0.12"/>
+              <!-- Decorative plate -->
+              <circle cx="100" cy="145" r="25" stroke="currentColor" stroke-width="2" opacity="0.15" fill="none"/>
+              <circle cx="100" cy="145" r="15" stroke="currentColor" stroke-width="1" opacity="0.1" fill="none"/>
+            </svg>
+            <span class="origin-story__placeholder-label">Photo Coming Soon</span>
+          </div>
+        )}
+
+        <!-- Decorative Badge -->
+        <div class="origin-story__badge" aria-hidden="true">
+          <span class="origin-story__badge-text">{establishedYear}</span>
+        </div>
+      </div>
+
+      <!-- Chef/Owner Info (below photo on mobile) -->
+      <div class="origin-story__chef-info">
+        <span class="origin-story__chef-name">{chefName}</span>
+        <span class="origin-story__chef-title">{chefTitle}</span>
+      </div>
+    </div>
+
+    <!-- Content Column -->
+    <div class="origin-story__content reveal reveal--up reveal--delay-1">
+      <span class="origin-story__eyebrow">About Us</span>
+      <h2 id="origin-story-heading" class="origin-story__heading">
+        {heading}
+      </h2>
+
+      <!-- Pull Quote -->
+      <blockquote class="origin-story__pullquote">
+        <svg class="origin-story__quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+        </svg>
+        <p>{pullQuote}</p>
+      </blockquote>
+
+      <!-- Story Paragraphs -->
+      <div class="origin-story__text">
+        {storyParagraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+
+      <!-- CTA Button -->
+      <div class="origin-story__cta">
+        <Button
+          text={ctaText}
+          href={ctaHref}
+          variant="primary"
+          size="large"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Elements -->
+  <div class="origin-story__decor origin-story__decor--top" aria-hidden="true"></div>
+  <div class="origin-story__decor origin-story__decor--bottom" aria-hidden="true"></div>
+</section>
+
+<style>
+  /* =================================================================
+   * ORIGIN STORY SECTION - BASE STYLES
+   * ================================================================= */
+  .origin-story {
+    position: relative;
+    padding: var(--spacing-20) var(--spacing-4);
+    background-color: var(--color-cream, var(--color-background-subtle));
+    overflow: hidden;
+  }
+
+  .origin-story__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-10);
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* =================================================================
+   * PHOTO COLUMN
+   * ================================================================= */
+  .origin-story__photo-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .origin-story__photo-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .origin-story__photo {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .origin-story__photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-background) 50%,
+      var(--color-primary-50) 100%
+    );
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .origin-story__placeholder-svg {
+    width: 60%;
+    height: auto;
+    color: var(--color-primary);
+  }
+
+  .origin-story__placeholder-label {
+    position: absolute;
+    bottom: var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-tertiary);
+  }
+
+  /* Decorative Badge */
+  .origin-story__badge {
+    position: absolute;
+    bottom: -0.75rem;
+    right: 10%;
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+    transform: rotate(-3deg);
+  }
+
+  .origin-story__badge-text {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* Chef Info */
+  .origin-story__chef-info {
+    margin-top: var(--spacing-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .origin-story__chef-name {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .origin-story__chef-title {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  /* =================================================================
+   * CONTENT COLUMN
+   * ================================================================= */
+  .origin-story__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  .origin-story__eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+  }
+
+  .origin-story__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  /* =================================================================
+   * PULL QUOTE STYLING
+   * ================================================================= */
+  .origin-story__pullquote {
+    position: relative;
+    margin: var(--spacing-4) 0;
+    padding: var(--spacing-6) var(--spacing-8);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--color-primary);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+
+  .origin-story__quote-icon {
+    position: absolute;
+    top: var(--spacing-3);
+    left: var(--spacing-3);
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-primary);
+    opacity: 0.3;
+  }
+
+  .origin-story__pullquote p {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    font-style: italic;
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * STORY TEXT
+   * ================================================================= */
+  .origin-story__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .origin-story__text p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * CTA BUTTON
+   * ================================================================= */
+  .origin-story__cta {
+    margin-top: var(--spacing-4);
+  }
+
+  /* =================================================================
+   * DECORATIVE ELEMENTS
+   * ================================================================= */
+  .origin-story__decor {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    opacity: 0.05;
+    background-color: var(--color-primary);
+    pointer-events: none;
+  }
+
+  .origin-story__decor--top {
+    top: -100px;
+    right: -100px;
+  }
+
+  .origin-story__decor--bottom {
+    bottom: -150px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES - TABLET & DESKTOP
+   * ================================================================= */
+  @media (min-width: 768px) {
+    .origin-story {
+      padding: var(--spacing-24) var(--spacing-6);
+    }
+
+    .origin-story__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .origin-story__pullquote {
+      padding: var(--spacing-8) var(--spacing-10);
+    }
+
+    .origin-story__pullquote p {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .origin-story__container {
+      grid-template-columns: 350px 1fr;
+      gap: var(--spacing-16);
+      align-items: center;
+    }
+
+    .origin-story__photo-column {
+      position: sticky;
+      top: var(--spacing-8);
+    }
+
+    .origin-story__photo-wrapper {
+      max-width: 100%;
+    }
+
+    .origin-story__chef-info {
+      margin-top: var(--spacing-10);
+    }
+
+    .origin-story__content {
+      gap: var(--spacing-6);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .origin-story__container {
+      grid-template-columns: 400px 1fr;
+      gap: var(--spacing-20);
+    }
+  }
+
+  /* =================================================================
+   * MOBILE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .origin-story {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .origin-story__container {
+      gap: var(--spacing-8);
+    }
+
+    .origin-story__photo-wrapper {
+      max-width: 280px;
+    }
+
+    .origin-story__heading {
+      font-size: var(--font-size-2xl);
+    }
+
+    .origin-story__pullquote {
+      padding: var(--spacing-4) var(--spacing-5);
+      margin: var(--spacing-2) 0;
+    }
+
+    .origin-story__pullquote p {
+      font-size: var(--font-size-base);
+    }
+
+    .origin-story__quote-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      top: var(--spacing-2);
+      left: var(--spacing-2);
+    }
+
+    .origin-story__text p {
+      font-size: var(--font-size-sm);
+    }
+
+    .origin-story__decor {
+      display: none;
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .origin-story {
+      background: none;
+      padding: var(--spacing-8) 0;
+    }
+
+    .origin-story__photo-placeholder {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .origin-story__badge,
+    .origin-story__decor {
+      display: none;
+    }
+
+    .origin-story__pullquote {
+      background: none;
+      border-left: 2px solid var(--color-text-primary);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT (if data-theme="dark" is used)
+   * ================================================================= */
+  [data-theme="dark"] .origin-story {
+    background-color: var(--color-background-subtle);
+  }
+
+  [data-theme="dark"] .origin-story__photo-placeholder {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background) 50%,
+      var(--color-primary-900) 100%
+    );
+  }
+
+  [data-theme="dark"] .origin-story__pullquote {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      transparent 100%
+    );
+  }
+</style>

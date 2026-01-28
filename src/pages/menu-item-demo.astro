@@ -1,0 +1,239 @@
+---
+/**
+ * Menu Item Demo Page
+ * Demonstrates the MenuItem component with various configurations.
+ * This page is for testing and verification purposes.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import MenuItem from '../components/MenuItem.astro';
+import { createPrice } from '../types/menu';
+---
+
+<Layout
+  title="Menu Item Component Demo"
+  description="Demonstration of the MenuItem component"
+>
+  <main class="demo-page">
+    <div class="demo-container">
+      <h1 class="demo-title">Menu Item Component Demo</h1>
+      <p class="demo-description">
+        This page demonstrates the MenuItem component with various configurations
+        including dietary tags, badges, and images.
+      </p>
+
+      <section class="demo-section" data-testid="basic-items">
+        <h2 class="demo-section-title">Basic Menu Items</h2>
+
+        <div class="menu-list">
+          <MenuItem
+            id="item-grilled-salmon"
+            name="Grilled Atlantic Salmon"
+            description="Fresh Atlantic salmon fillet, grilled to perfection with lemon herb butter, served with seasonal vegetables and wild rice pilaf."
+            price={createPrice(2895)}
+            dietaryTags={['gluten-free']}
+            data-testid="menu-item-salmon"
+          />
+
+          <MenuItem
+            id="item-caesar-salad"
+            name="Classic Caesar Salad"
+            description="Crisp romaine lettuce tossed with house-made Caesar dressing, shaved Parmesan, and garlic croutons."
+            price={createPrice(1295)}
+            dietaryTags={['vegetarian']}
+            data-testid="menu-item-caesar"
+          />
+
+          <MenuItem
+            id="item-vegan-bowl"
+            name="Buddha Bowl"
+            description="Quinoa, roasted chickpeas, avocado, sweet potato, kale, and tahini dressing. A nutritious and delicious plant-based meal."
+            price={createPrice(1695)}
+            dietaryTags={['vegan', 'gluten-free', 'dairy-free']}
+            data-testid="menu-item-buddha"
+          />
+        </div>
+      </section>
+
+      <section class="demo-section" data-testid="featured-items">
+        <h2 class="demo-section-title">Featured & Chef's Picks</h2>
+
+        <div class="menu-list">
+          <MenuItem
+            id="item-filet-mignon"
+            name="Prime Filet Mignon"
+            description="8oz center-cut filet, aged 28 days, served with truffle mashed potatoes and grilled asparagus. Our signature dish."
+            price={createPrice(4995)}
+            featured={true}
+            chefRecommended={true}
+            data-testid="menu-item-filet"
+          />
+
+          <MenuItem
+            id="item-lobster-tail"
+            name="Maine Lobster Tail"
+            description="Fresh Maine lobster tail, butter poached and served with drawn butter, lemon, and seasonal vegetables."
+            price={createPrice(5495)}
+            chefRecommended={true}
+            dietaryTags={['gluten-free']}
+            isNew={true}
+            data-testid="menu-item-lobster"
+          />
+
+          <MenuItem
+            id="item-seasonal-risotto"
+            name="Autumn Harvest Risotto"
+            description="Creamy arborio rice with roasted butternut squash, sage, toasted pecans, and aged Parmesan cheese."
+            price={createPrice(2295)}
+            seasonal={true}
+            dietaryTags={['vegetarian', 'gluten-free']}
+            data-testid="menu-item-risotto"
+          />
+        </div>
+      </section>
+
+      <section class="demo-section" data-testid="items-with-images">
+        <h2 class="demo-section-title">Items with Images</h2>
+
+        <div class="menu-list">
+          <MenuItem
+            id="item-bruschetta"
+            name="Bruschetta Trio"
+            description="Three classic Italian bruschetta: tomato basil, olive tapenade, and roasted garlic with ricotta."
+            price={createPrice(1295)}
+            dietaryTags={['vegetarian']}
+            showImage={true}
+            image={{
+              src: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=300&h=200&fit=crop",
+              alt: "Bruschetta trio on a wooden board",
+              width: 300,
+              height: 200
+            }}
+            data-testid="menu-item-bruschetta"
+          />
+
+          <MenuItem
+            id="item-tiramisu"
+            name="Classic Tiramisu"
+            description="Traditional Italian dessert with layers of espresso-soaked ladyfingers and mascarpone cream, dusted with cocoa."
+            price={createPrice(1095)}
+            dietaryTags={['vegetarian']}
+            showImage={true}
+            image={{
+              src: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=300&h=200&fit=crop",
+              alt: "Classic tiramisu dessert",
+              width: 300,
+              height: 200
+            }}
+            featured={true}
+            data-testid="menu-item-tiramisu"
+          />
+        </div>
+      </section>
+
+      <section class="demo-section" data-testid="dietary-showcase">
+        <h2 class="demo-section-title">Dietary Tags Showcase</h2>
+
+        <div class="menu-list">
+          <MenuItem
+            id="item-all-tags"
+            name="Special Dietary Item"
+            description="This item demonstrates all available dietary tags for visual reference."
+            price={createPrice(1999)}
+            dietaryTags={['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-free', 'organic']}
+            data-testid="menu-item-all-tags"
+          />
+        </div>
+      </section>
+
+      <section class="demo-section demo-section--print-info">
+        <h2 class="demo-section-title">Print-Friendly</h2>
+        <p>This component includes print-optimized styles. Use your browser's print function (Ctrl/Cmd + P) to preview how menu items will appear when printed.</p>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .demo-page {
+    padding: var(--spacing-8) var(--spacing-4);
+    background-color: var(--color-background);
+    min-height: 100vh;
+  }
+
+  .demo-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .demo-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-12);
+  }
+
+  .demo-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 2px solid var(--color-primary-100);
+  }
+
+  .menu-list {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-md);
+  }
+
+  .demo-section--print-info {
+    background-color: var(--color-info-100);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-info-200);
+  }
+
+  .demo-section--print-info p {
+    font-family: var(--font-body);
+    color: var(--color-info-800);
+    margin: 0;
+  }
+
+  @media print {
+    .demo-page {
+      padding: 0;
+    }
+
+    .demo-title,
+    .demo-description,
+    .demo-section--print-info {
+      display: none;
+    }
+
+    .demo-section-title {
+      font-size: 14pt;
+      margin-bottom: 12pt;
+    }
+
+    .menu-list {
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+</style>

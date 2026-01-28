@@ -1,0 +1,56 @@
+---
+/**
+ * Restaurant Hero Demo Page
+ * Demonstrates the RestaurantHeroSection component with full-viewport
+ * food photography and warm gradient overlays.
+ */
+import Layout from '../layouts/Layout.astro';
+import RestaurantHeroSection from '../components/RestaurantHeroSection.astro';
+---
+
+<Layout
+  title="Restaurant Hero Demo"
+  description="Demo page showcasing the RestaurantHeroSection component with full-viewport food photography."
+>
+  <main>
+    <!-- Restaurant Hero Section Demo -->
+    <RestaurantHeroSection
+      restaurantName="La Bella Cucina"
+      tagline="Authentic Italian cuisine crafted with passion in the heart of Houston"
+      backgroundImage={{
+        src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80",
+        alt: "Beautifully plated Italian pasta dish with fresh herbs and parmesan",
+        position: "center 40%"
+      }}
+      primaryCTA={{
+        text: "View Menu",
+        href: "/menu"
+      }}
+      secondaryCTA={{
+        text: "Find Us",
+        href: "/contact#location"
+      }}
+      hoursBadge={{
+        show: true,
+        statusText: "Open Now",
+        hoursText: "11am - 10pm",
+        isOpen: true
+      }}
+      warmGradient={true}
+      moodyLighting={true}
+      overlayOpacity={0.5}
+    />
+
+    <!-- Additional content to demonstrate scroll -->
+    <section style="padding: var(--spacing-16); background: var(--color-background); text-align: center;">
+      <h2 style="font-family: var(--font-heading); font-size: var(--font-size-3xl); color: var(--color-text-primary); margin-bottom: var(--spacing-4);">
+        Welcome to Our Restaurant
+      </h2>
+      <p style="font-family: var(--font-body); font-size: var(--font-size-lg); color: var(--color-text-secondary); max-width: 60ch; margin: 0 auto;">
+        This section demonstrates how content flows below the full-viewport hero section.
+        The warm gradient overlays and moody lighting aesthetic create an inviting atmosphere
+        that draws visitors into the dining experience.
+      </p>
+    </section>
+  </main>
+</Layout>

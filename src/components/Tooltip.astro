@@ -1,0 +1,284 @@
+---
+/**
+ * Tooltip Component
+ * An accessible tooltip component with customizable positioning and styling.
+ * Uses CSS-only implementation for better performance and accessibility.
+ *
+ * Features:
+ * - Multiple position options (top, bottom, left, right)
+ * - CSS-only implementation (no JavaScript required)
+ * - Accessible with aria attributes
+ * - Responsive design
+ * - Dark mode support
+ * - Print-friendly (hidden)
+ * - Reduced motion support
+ *
+ * @example Basic usage
+ * ```astro
+ * <Tooltip text="This is a tooltip">
+ *   <button>Hover me</button>
+ * </Tooltip>
+ * ```
+ *
+ * @example With position
+ * ```astro
+ * <Tooltip text="Appears on the left" position="left">
+ *   <span>Hover for info</span>
+ * </Tooltip>
+ * ```
+ */
+
+interface Props {
+  /** The tooltip text to display */
+  text: string;
+  /** Position of the tooltip relative to the trigger element */
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  /** Additional CSS class names */
+  class?: string;
+  /** Whether to show the tooltip on focus (for keyboard accessibility) */
+  showOnFocus?: boolean;
+  /** Maximum width of the tooltip */
+  maxWidth?: string;
+}
+
+const {
+  text,
+  position = 'top',
+  class: className = '',
+  showOnFocus = true,
+  maxWidth = '250px',
+} = Astro.props;
+
+// Generate a unique ID for accessibility
+const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<span
+  class:list={['tooltip-wrapper', `tooltip-wrapper--${position}`, className]}
+  style={`--tooltip-max-width: ${maxWidth}`}
+>
+  <span
+    class="tooltip-trigger"
+    aria-describedby={tooltipId}
+    tabindex={showOnFocus ? 0 : undefined}
+  >
+    <slot />
+  </span>
+  <span
+    class="tooltip-content"
+    id={tooltipId}
+    role="tooltip"
+    aria-hidden="true"
+  >
+    {text}
+  </span>
+</span>
+
+<style>
+  /* =================================================================
+   * TOOLTIP WRAPPER
+   * ================================================================= */
+  .tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* =================================================================
+   * TOOLTIP TRIGGER
+   * ================================================================= */
+  .tooltip-trigger {
+    display: inline-flex;
+    cursor: help;
+  }
+
+  .tooltip-trigger:focus {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-base);
+  }
+
+  /* =================================================================
+   * TOOLTIP CONTENT
+   * ================================================================= */
+  .tooltip-content {
+    position: absolute;
+    z-index: 1000;
+    max-width: var(--tooltip-max-width, 250px);
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: var(--color-primary-900);
+    color: var(--color-text-inverse);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+    text-align: center;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    white-space: normal;
+    word-wrap: break-word;
+
+    /* Hidden by default */
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity var(--duration-150) var(--ease-in-out),
+      visibility var(--duration-150) var(--ease-in-out);
+
+    /* Prevent tooltip from blocking interaction with other elements */
+    pointer-events: none;
+  }
+
+  /* Arrow */
+  .tooltip-content::after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+  }
+
+  /* =================================================================
+   * SHOW TOOLTIP ON HOVER AND FOCUS
+   * ================================================================= */
+  .tooltip-wrapper:hover .tooltip-content,
+  .tooltip-trigger:focus + .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* =================================================================
+   * POSITION: TOP (Default)
+   * ================================================================= */
+  .tooltip-wrapper--top .tooltip-content {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .tooltip-wrapper--top .tooltip-content::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--color-primary-900);
+  }
+
+  /* =================================================================
+   * POSITION: BOTTOM
+   * ================================================================= */
+  .tooltip-wrapper--bottom .tooltip-content {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: var(--spacing-2);
+  }
+
+  .tooltip-wrapper--bottom .tooltip-content::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--color-primary-900);
+  }
+
+  /* =================================================================
+   * POSITION: LEFT
+   * ================================================================= */
+  .tooltip-wrapper--left .tooltip-content {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: var(--spacing-2);
+  }
+
+  .tooltip-wrapper--left .tooltip-content::after {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--color-primary-900);
+  }
+
+  /* =================================================================
+   * POSITION: RIGHT
+   * ================================================================= */
+  .tooltip-wrapper--right .tooltip-content {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: var(--spacing-2);
+  }
+
+  .tooltip-wrapper--right .tooltip-content::after {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--color-primary-900);
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY - REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip-content {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .tooltip-content {
+      background-color: Canvas;
+      color: CanvasText;
+      border: 2px solid CanvasText;
+    }
+
+    .tooltip-content::after {
+      border-color: CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global([data-theme='dark']) .tooltip-content {
+    background-color: var(--color-background-elevated);
+    color: var(--color-text-primary);
+    border: var(--border-width-1) solid var(--color-border-dark);
+  }
+
+  :global([data-theme='dark']) .tooltip-wrapper--top .tooltip-content::after {
+    border-top-color: var(--color-background-elevated);
+  }
+
+  :global([data-theme='dark']) .tooltip-wrapper--bottom .tooltip-content::after {
+    border-bottom-color: var(--color-background-elevated);
+  }
+
+  :global([data-theme='dark']) .tooltip-wrapper--left .tooltip-content::after {
+    border-left-color: var(--color-background-elevated);
+  }
+
+  :global([data-theme='dark']) .tooltip-wrapper--right .tooltip-content::after {
+    border-right-color: var(--color-background-elevated);
+  }
+
+  /* =================================================================
+   * PRINT STYLES - Hide tooltips
+   * ================================================================= */
+  @media print {
+    .tooltip-content {
+      display: none !important;
+    }
+  }
+
+  /* =================================================================
+   * RESPONSIVE - Touch devices
+   * ================================================================= */
+  @media (hover: none) and (pointer: coarse) {
+    /* On touch devices, show tooltip on tap (focus) */
+    .tooltip-wrapper:active .tooltip-content {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+</style>

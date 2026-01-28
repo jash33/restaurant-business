@@ -1,0 +1,394 @@
+---
+/**
+ * Print-Optimized Menu Page
+ * A dedicated page for generating printer-friendly PDF versions of the menu.
+ * Features:
+ * - Restaurant branding header with logo and contact info
+ * - Clean, optimized layout for printing
+ * - No navigation, interactive elements, or non-essential UI
+ * - Automatic print dialog trigger on load
+ * - Support for different menu types via query parameter
+ * - Proper page break handling
+ * - Black & white optimized styling
+ */
+
+import MenuPDFHeader from '../components/MenuPDFHeader.astro';
+import MenuCategorySection from '../components/MenuCategorySection.astro';
+import '../styles/menu-print.css';
+
+import {
+  DINNER_MENU,
+  LUNCH_MENU,
+  BRUNCH_MENU,
+  KIDS_MENU,
+  type Menu,
+} from '../config/menu.config';
+import type { MenuType } from '../types/menu';
+import { restaurantSchema } from '../config/restaurant.config';
+
+// Get menu type from query parameter (default to dinner)
+const menuTypeParam = Astro.url.searchParams.get('type') as MenuType | null;
+
+// Map menu type to menu data
+const menuMap: Record<MenuType | string, Menu> = {
+  dinner: DINNER_MENU,
+  lunch: LUNCH_MENU,
+  brunch: BRUNCH_MENU,
+  kids: KIDS_MENU,
+};
+
+const selectedMenu = menuMap[menuTypeParam || 'dinner'] || DINNER_MENU;
+
+// Get current date for "Last Updated" display
+const currentDate = new Date().toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Generate page title
+const pageTitle = `${selectedMenu.name} - ${restaurantSchema.name}`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pageTitle}</title>
+
+    <!-- Preconnect to font services -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Load print-optimized fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Base styles for print view */
+      :root {
+        --color-espresso: #3c2415;
+        --color-burgundy: #722f37;
+        --color-cream: #f5f5dc;
+        --color-text-primary: #1a1a1a;
+        --color-text-secondary: #4a4a4a;
+        --color-border: #e0e0e0;
+        --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+        --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
+        --font-body: 'Lora', Georgia, serif;
+        --font-accent: 'Lora', Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        font-family: var(--font-body);
+        font-size: 10pt;
+        line-height: 1.4;
+        color: var(--color-text-primary);
+        background: white;
+      }
+
+      /* Print view container */
+      .menu-print-view {
+        max-width: 8.5in;
+        margin: 0 auto;
+        padding: 0.5in;
+        background: white;
+      }
+
+      /* Screen-only elements */
+      .screen-only {
+        display: block;
+      }
+
+      /* Print controls bar (screen only) */
+      .print-controls {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--color-espresso);
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .print-controls__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: white;
+        background: var(--color-burgundy);
+        border: none;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+
+      .print-controls__btn:hover {
+        background: #8a3a44;
+      }
+
+      .print-controls__btn--secondary {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .print-controls__btn--secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .print-controls__info {
+        font-size: 0.875rem;
+        opacity: 0.8;
+      }
+
+      /* Add top padding for fixed controls */
+      .menu-print-view {
+        padding-top: calc(0.5in + 70px);
+      }
+
+      /* Dietary legend for print */
+      .dietary-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--color-border);
+        font-size: 0.75rem;
+      }
+
+      .dietary-legend__label {
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+
+      .dietary-legend__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .dietary-legend__abbr {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.25rem;
+        padding: 0.125rem 0.25rem;
+        font-size: 0.625rem;
+        font-weight: 700;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+      }
+
+      .dietary-legend__name {
+        color: var(--color-text-secondary);
+      }
+
+      .dietary-legend__note {
+        width: 100%;
+        font-size: 0.625rem;
+        font-style: italic;
+        color: var(--color-text-secondary);
+        margin-top: 0.25rem;
+      }
+
+      /* Menu content */
+      .menu-content {
+        /* Allow natural flow for print */
+      }
+
+      /* Footer */
+      .menu-print-footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--color-border);
+        text-align: center;
+        font-size: 0.625rem;
+        color: var(--color-text-secondary);
+      }
+
+      .menu-print-footer__thank-you {
+        font-family: var(--font-accent);
+        font-style: italic;
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .menu-print-footer__updated {
+        font-size: 0.5rem;
+        opacity: 0.7;
+      }
+
+      /* Print-specific styles */
+      @media print {
+        .screen-only,
+        .print-controls {
+          display: none !important;
+        }
+
+        html, body {
+          background: white !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .menu-print-view {
+          max-width: none;
+          padding: 0;
+          padding-top: 0;
+        }
+
+        /* Page setup */
+        @page {
+          size: letter portrait;
+          margin: 0.5in 0.5in 0.75in 0.5in;
+        }
+
+        @page :first {
+          margin-top: 0.4in;
+        }
+
+        /* Ensure clean breaks */
+        .menu-category-section {
+          break-inside: avoid-column;
+        }
+
+        .menu-item {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        /* Footer positioning */
+        .menu-print-footer {
+          margin-top: 0.5in;
+          padding-top: 0.1in;
+        }
+      }
+
+      /* High DPI screen optimization */
+      @media screen and (min-resolution: 150dpi) {
+        .menu-print-view {
+          font-size: 11pt;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Print controls (screen only) -->
+    <div class="print-controls screen-only">
+      <span class="print-controls__info">Preview: {selectedMenu.name}</span>
+      <button type="button" class="print-controls__btn" id="print-btn" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9V2h12v7" />
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+          <rect x="6" y="14" width="12" height="8" />
+        </svg>
+        Print / Save as PDF
+      </button>
+      <a href="/menu" class="print-controls__btn print-controls__btn--secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Back to Menu
+      </a>
+    </div>
+
+    <div class="menu-print-view">
+      <!-- Restaurant branding header -->
+      <MenuPDFHeader
+        menuTitle={selectedMenu.name}
+        menuDescription={selectedMenu.description}
+        availableHours={selectedMenu.availableHours}
+        showLogo={true}
+        showContactInfo={true}
+      />
+
+      <!-- Dietary legend -->
+      <div class="dietary-legend">
+        <span class="dietary-legend__label">Dietary Key:</span>
+        <span class="dietary-legend__item">
+          <span class="dietary-legend__abbr">V</span>
+          <span class="dietary-legend__name">Vegetarian</span>
+        </span>
+        <span class="dietary-legend__item">
+          <span class="dietary-legend__abbr">VG</span>
+          <span class="dietary-legend__name">Vegan</span>
+        </span>
+        <span class="dietary-legend__item">
+          <span class="dietary-legend__abbr">GF</span>
+          <span class="dietary-legend__name">Gluten-Free</span>
+        </span>
+        <span class="dietary-legend__item">
+          <span class="dietary-legend__abbr">DF</span>
+          <span class="dietary-legend__name">Dairy-Free</span>
+        </span>
+        <p class="dietary-legend__note">
+          Please inform your server of any allergies or dietary restrictions.
+        </p>
+      </div>
+
+      <!-- Menu sections -->
+      <div class="menu-content">
+        {selectedMenu.sections.map((section) => (
+          <MenuCategorySection
+            category={section.category}
+            title={section.title}
+            description={section.description}
+            items={section.items}
+            layout="compact"
+            columns={1}
+            showImages={false}
+            showPrices={true}
+            showDietaryTags={true}
+            decoratedHeading={true}
+            id={`menu-${section.category}`}
+          />
+        ))}
+      </div>
+
+      <!-- Footer -->
+      <footer class="menu-print-footer">
+        <p class="menu-print-footer__thank-you">Thank you for dining with us</p>
+        <p class="menu-print-footer__updated">Menu last updated: {currentDate}</p>
+      </footer>
+    </div>
+
+    <!-- Auto-print script (optional - triggered by query param) -->
+    <script is:inline>
+      // Check if auto-print is requested via query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const autoPrint = urlParams.get('print');
+
+      if (autoPrint === 'true' || autoPrint === '1') {
+        // Wait for page to fully load before printing
+        window.addEventListener('load', function() {
+          // Small delay to ensure styles are applied
+          setTimeout(function() {
+            window.print();
+          }, 500);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,565 @@
+---
+/**
+ * Team Bios Component
+ *
+ * Displays team member cards with photos, names, titles, and bios.
+ * Founders can be highlighted separately at the top.
+ *
+ * Features:
+ * - Responsive card grid layout
+ * - Photo with placeholder fallback
+ * - Optional personal quotes
+ * - Founder highlight styling
+ * - Optional social links (LinkedIn, Instagram, Twitter, Email)
+ * - Emphasizes personality and passion for food
+ * - WCAG 2.1 AA accessible
+ * - Reveal animations for scroll engagement
+ *
+ * @example Basic usage:
+ * ```astro
+ * <TeamBios members={teamMembers} />
+ * ```
+ *
+ * @example With custom heading:
+ * ```astro
+ * <TeamBios
+ *   members={teamMembers}
+ *   heading="Our Team"
+ *   subheading="The passionate people behind every dish"
+ *   foundersFirst={true}
+ * />
+ * ```
+ */
+
+import type { TeamBiosProps, TeamMember } from '../types/about';
+
+interface Props extends TeamBiosProps {}
+
+const {
+  members,
+  heading = 'Meet Our Team',
+  subheading = 'The passionate individuals who bring our vision to life every day.',
+  foundersFirst = true,
+  class: className = '',
+} = Astro.props;
+
+// Sort members: founders first if enabled, then by order
+const sortedMembers = [...members].sort((a, b) => {
+  if (foundersFirst) {
+    if (a.isFounder && !b.isFounder) return -1;
+    if (!a.isFounder && b.isFounder) return 1;
+  }
+  return (a.order || 999) - (b.order || 999);
+});
+
+const sectionClasses = ['team-bios', className].filter(Boolean).join(' ');
+---
+
+<section class={sectionClasses} aria-labelledby="team-bios-heading">
+  <div class="team-bios__container">
+    <header class="team-bios__header reveal reveal--up">
+      <span class="team-bios__eyebrow">Our People</span>
+      <h2 id="team-bios-heading" class="team-bios__heading">{heading}</h2>
+      {subheading && <p class="team-bios__subheading">{subheading}</p>}
+    </header>
+
+    <div class="team-bios__grid">
+      {sortedMembers.map((member, index) => (
+        <article
+          class={`team-card ${member.isFounder ? 'team-card--founder' : ''} reveal reveal--up`}
+          style={`--card-index: ${index}`}
+        >
+          <div class="team-card__photo-wrapper">
+            {member.photoSrc ? (
+              <img
+                src={member.photoSrc}
+                alt={member.photoAlt || `${member.name}, ${member.title}`}
+                class="team-card__photo"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div class="team-card__photo-placeholder" role="img" aria-label={member.photoAlt || `${member.name}`}>
+                <svg class="team-card__placeholder-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="200" height="200" fill="currentColor" opacity="0.08"/>
+                  <circle cx="100" cy="70" r="35" fill="currentColor" opacity="0.15"/>
+                  <ellipse cx="100" cy="155" rx="50" ry="35" fill="currentColor" opacity="0.12"/>
+                </svg>
+              </div>
+            )}
+            {member.isFounder && (
+              <span class="team-card__founder-badge" aria-label="Founder">Founder</span>
+            )}
+          </div>
+
+          <div class="team-card__content">
+            <h3 class="team-card__name">{member.name}</h3>
+            <span class="team-card__title">{member.title}</span>
+
+            <p class="team-card__bio">{member.bio}</p>
+
+            {member.quote && (
+              <blockquote class="team-card__quote">
+                <svg class="team-card__quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+                </svg>
+                <p>{member.quote}</p>
+              </blockquote>
+            )}
+
+            {member.yearsWithRestaurant && (
+              <span class="team-card__tenure">
+                {member.yearsWithRestaurant} {member.yearsWithRestaurant === 1 ? 'year' : 'years'} with us
+              </span>
+            )}
+
+            {member.links && member.links.length > 0 && (
+              <div class="team-card__social-links" role="list" aria-label={`Social links for ${member.name}`}>
+                {member.links.map((link) => (
+                  <a
+                    href={link.url}
+                    class={`team-card__social-link team-card__social-link--${link.type}`}
+                    target={link.type !== 'email' ? '_blank' : undefined}
+                    rel={link.type !== 'email' ? 'noopener noreferrer' : undefined}
+                    aria-label={`${member.name}'s ${link.type === 'email' ? 'email' : link.type}`}
+                    role="listitem"
+                  >
+                    {link.type === 'linkedin' && (
+                      <svg class="team-card__social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                    )}
+                    {link.type === 'instagram' && (
+                      <svg class="team-card__social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                      </svg>
+                    )}
+                    {link.type === 'twitter' && (
+                      <svg class="team-card__social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    )}
+                    {link.type === 'email' && (
+                      <svg class="team-card__social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/>
+                        <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/>
+                      </svg>
+                    )}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * TEAM BIOS SECTION - BASE STYLES
+   * ================================================================= */
+  .team-bios {
+    padding: var(--spacing-20) var(--spacing-4);
+    background-color: var(--color-background);
+  }
+
+  .team-bios__container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER STYLES
+   * ================================================================= */
+  .team-bios__header {
+    text-align: center;
+    margin-bottom: var(--spacing-16);
+  }
+
+  .team-bios__eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .team-bios__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4) 0;
+    line-height: var(--line-height-tight);
+  }
+
+  .team-bios__subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 60ch;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * GRID LAYOUT
+   * ================================================================= */
+  .team-bios__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+  }
+
+  /* =================================================================
+   * TEAM CARD STYLES
+   * ================================================================= */
+  .team-card {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--duration-300) var(--ease-out),
+                box-shadow var(--duration-300) var(--ease-out);
+    animation: fadeInCard 0.5s ease-out calc(var(--card-index) * 0.1s) backwards;
+  }
+
+  .team-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .team-card--founder {
+    border: 2px solid var(--color-primary-200);
+  }
+
+  /* Photo Wrapper */
+  .team-card__photo-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: var(--color-background-muted);
+  }
+
+  .team-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-300) var(--ease-out);
+  }
+
+  .team-card:hover .team-card__photo {
+    transform: scale(1.05);
+  }
+
+  .team-card__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-background) 50%,
+      var(--color-primary-50) 100%
+    );
+  }
+
+  .team-card__placeholder-svg {
+    width: 50%;
+    height: auto;
+    color: var(--color-primary);
+  }
+
+  /* Founder Badge */
+  .team-card__founder-badge {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+  }
+
+  /* Content */
+  .team-card__content {
+    padding: var(--spacing-6);
+  }
+
+  .team-card__name {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-1) 0;
+    line-height: var(--line-height-tight);
+  }
+
+  .team-card__title {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .team-card__bio {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--spacing-4) 0;
+  }
+
+  /* Quote */
+  .team-card__quote {
+    position: relative;
+    margin: var(--spacing-4) 0;
+    padding: var(--spacing-4);
+    padding-left: var(--spacing-6);
+    background-color: var(--color-primary-50);
+    border-left: 3px solid var(--color-primary);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .team-card__quote-icon {
+    position: absolute;
+    top: var(--spacing-2);
+    left: var(--spacing-2);
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-primary);
+    opacity: 0.3;
+  }
+
+  .team-card__quote p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  /* Tenure Badge */
+  .team-card__tenure {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-tertiary);
+    background-color: var(--color-background-muted);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-md);
+  }
+
+  /* =================================================================
+   * SOCIAL LINKS
+   * ================================================================= */
+  .team-card__social-links {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  .team-card__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-background-muted);
+    color: var(--color-text-secondary);
+    transition: background-color var(--duration-200) var(--ease-out),
+                color var(--duration-200) var(--ease-out),
+                transform var(--duration-200) var(--ease-out);
+  }
+
+  .team-card__social-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .team-card__social-link:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
+
+  /* LinkedIn specific colors */
+  .team-card__social-link--linkedin:hover {
+    background-color: #0077b5;
+    color: var(--color-text-inverse);
+  }
+
+  /* Instagram specific colors */
+  .team-card__social-link--instagram:hover {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: var(--color-text-inverse);
+  }
+
+  /* Twitter/X specific colors */
+  .team-card__social-link--twitter:hover {
+    background-color: #000000;
+    color: var(--color-text-inverse);
+  }
+
+  /* Email specific colors */
+  .team-card__social-link--email:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+
+  .team-card__social-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* =================================================================
+   * ANIMATIONS
+   * ================================================================= */
+  @keyframes fadeInCard {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (min-width: 640px) {
+    .team-bios__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .team-bios {
+      padding: var(--spacing-24) var(--spacing-6);
+    }
+
+    .team-bios__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .team-card__photo-wrapper {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .team-bios__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-10);
+    }
+
+    /* Founders take full width on first row */
+    .team-card--founder:first-child {
+      grid-column: 1 / 2;
+    }
+
+    .team-card--founder:nth-child(2) {
+      grid-column: 2 / 3;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .team-bios__grid {
+      gap: var(--spacing-12);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .team-card {
+      animation: none;
+    }
+
+    .team-card:hover {
+      transform: none;
+    }
+
+    .team-card:hover .team-card__photo {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT
+   * ================================================================= */
+  [data-theme="dark"] .team-bios {
+    background-color: var(--color-background);
+  }
+
+  [data-theme="dark"] .team-card {
+    background-color: var(--color-background-elevated);
+  }
+
+  [data-theme="dark"] .team-card__photo-placeholder {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background-muted) 50%,
+      var(--color-primary-900) 100%
+    );
+  }
+
+  [data-theme="dark"] .team-card__quote {
+    background-color: var(--color-primary-900);
+  }
+
+  [data-theme="dark"] .team-card__social-links {
+    border-top-color: var(--color-border);
+  }
+
+  [data-theme="dark"] .team-card__social-link {
+    background-color: var(--color-background-muted);
+    color: var(--color-text-secondary);
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .team-bios {
+      padding: var(--spacing-8) 0;
+    }
+
+    .team-card {
+      break-inside: avoid;
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .team-card__founder-badge {
+      border: 1px solid var(--color-primary);
+    }
+
+    .team-card__social-links {
+      display: none;
+    }
+  }
+</style>

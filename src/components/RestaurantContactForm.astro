@@ -1,0 +1,1465 @@
+---
+/**
+ * Restaurant Contact Form Component
+ * A comprehensive contact form with toggle between general inquiries and catering requests.
+ *
+ * Features:
+ * - Toggle between general inquiry and catering form
+ * - Real-time client-side validation
+ * - Honeypot spam prevention
+ * - Time-based submission validation
+ * - WCAG 2.1 AA compliant accessibility
+ * - Loading and success/error states
+ * - Responsive design
+ * - Formspree integration for form handling
+ *
+ * @example
+ * ```astro
+ * <RestaurantContactForm formspreeId="your-formspree-id" />
+ * ```
+ */
+
+import {
+  INQUIRY_TYPE_OPTIONS,
+  CALLBACK_TIME_OPTIONS,
+  DEFAULT_RESTAURANT_CONTACT_VALIDATION_CONFIG,
+} from '../types/restaurant-contact';
+import {
+  EVENT_TYPE_OPTIONS,
+  CATERING_BUDGET_OPTIONS,
+  MENU_PREFERENCE_OPTIONS,
+  DIETARY_RESTRICTION_OPTIONS,
+  DEFAULT_CATERING_VALIDATION_CONFIG,
+} from '../types/catering-form';
+
+interface Props {
+  /** Formspree form ID for handling submissions */
+  formspreeId?: string;
+  /** Default form type to show */
+  defaultFormType?: 'general' | 'catering';
+  /** Custom heading */
+  heading?: string;
+  /** Custom description */
+  description?: string;
+}
+
+const {
+  formspreeId = 'xyzgvqkl',
+  defaultFormType = 'general',
+  heading = 'Get in Touch',
+  description = "Have a question or want to plan an event? We'd love to hear from you.",
+} = Astro.props;
+
+const generalConfig = DEFAULT_RESTAURANT_CONTACT_VALIDATION_CONFIG;
+const cateringConfig = DEFAULT_CATERING_VALIDATION_CONFIG;
+
+// Calculate minimum date (today)
+const today = new Date().toISOString().split('T')[0];
+---
+
+<section class="restaurant-contact-section" aria-labelledby="restaurant-contact-heading">
+  <div class="restaurant-contact-container">
+    <div class="restaurant-contact-header">
+      <h2 id="restaurant-contact-heading" class="restaurant-contact-title">{heading}</h2>
+      <p class="restaurant-contact-description">{description}</p>
+    </div>
+
+    <!-- Form Type Toggle -->
+    <div class="form-toggle" role="tablist" aria-label="Choose inquiry type">
+      <button
+        type="button"
+        role="tab"
+        id="tab-general"
+        aria-controls="panel-general"
+        aria-selected={defaultFormType === 'general' ? 'true' : 'false'}
+        class={`form-toggle__btn ${defaultFormType === 'general' ? 'form-toggle__btn--active' : ''}`}
+        data-form-toggle="general"
+      >
+        <svg class="form-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+        General Inquiry
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="tab-catering"
+        aria-controls="panel-catering"
+        aria-selected={defaultFormType === 'catering' ? 'true' : 'false'}
+        class={`form-toggle__btn ${defaultFormType === 'catering' ? 'form-toggle__btn--active' : ''}`}
+        data-form-toggle="catering"
+      >
+        <svg class="form-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+          <line x1="6" y1="1" x2="6" y2="4" />
+          <line x1="10" y1="1" x2="10" y2="4" />
+          <line x1="14" y1="1" x2="14" y2="4" />
+        </svg>
+        Catering Request
+      </button>
+    </div>
+
+    <!-- General Inquiry Form Panel -->
+    <div
+      id="panel-general"
+      role="tabpanel"
+      aria-labelledby="tab-general"
+      class={`form-panel ${defaultFormType === 'general' ? 'form-panel--active' : ''}`}
+      data-form-panel="general"
+    >
+      <form
+        id="general-inquiry-form"
+        class="restaurant-form"
+        action={`https://formspree.io/f/${formspreeId}`}
+        method="POST"
+        novalidate
+        aria-describedby="general-form-description"
+        data-form-type="general"
+      >
+        <!-- Hidden fields -->
+        <input type="hidden" id="general-form-start-time" name="_formStartTime" value="" />
+        <input type="hidden" name="_subject" value="New General Inquiry" />
+
+        <!-- Honeypot field -->
+        <div class="restaurant-form__honeypot" aria-hidden="true" tabindex="-1">
+          <label for="general-website-url">Website URL</label>
+          <input type="text" id="general-website-url" name="_gotcha" autocomplete="off" tabindex="-1" />
+        </div>
+
+        <p id="general-form-description" class="sr-only">
+          Required fields are marked with an asterisk (*).
+        </p>
+
+        <div class="restaurant-form__grid">
+          <!-- Name Field -->
+          <div class="restaurant-form__field">
+            <label for="general-name" class="restaurant-form__label">
+              Name <span class="restaurant-form__required" aria-label="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="general-name"
+              name="name"
+              class="restaurant-form__input"
+              required
+              autocomplete="name"
+              maxlength={generalConfig.maxNameLength}
+              aria-describedby="general-name-error"
+              aria-invalid="false"
+              placeholder="Your full name"
+            />
+            <span id="general-name-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Email Field -->
+          <div class="restaurant-form__field">
+            <label for="general-email" class="restaurant-form__label">
+              Email <span class="restaurant-form__required" aria-label="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="general-email"
+              name="email"
+              class="restaurant-form__input"
+              required
+              autocomplete="email"
+              maxlength={generalConfig.maxEmailLength}
+              aria-describedby="general-email-error"
+              aria-invalid="false"
+              placeholder="your@email.com"
+            />
+            <span id="general-email-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Phone Field -->
+          <div class="restaurant-form__field">
+            <label for="general-phone" class="restaurant-form__label">
+              Phone <span class="restaurant-form__optional">(optional)</span>
+            </label>
+            <input
+              type="tel"
+              id="general-phone"
+              name="phone"
+              class="restaurant-form__input"
+              autocomplete="tel"
+              maxlength={generalConfig.maxPhoneLength}
+              aria-describedby="general-phone-hint general-phone-error"
+              aria-invalid="false"
+              placeholder="(123) 456-7890"
+            />
+            <span id="general-phone-hint" class="restaurant-form__hint">For callbacks during office hours</span>
+            <span id="general-phone-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Inquiry Type Dropdown -->
+          <div class="restaurant-form__field">
+            <label for="general-inquiry-type" class="restaurant-form__label">
+              Inquiry Type <span class="restaurant-form__required" aria-label="required">*</span>
+            </label>
+            <select
+              id="general-inquiry-type"
+              name="inquiryType"
+              class="restaurant-form__select"
+              required
+              aria-describedby="general-inquiry-type-error"
+              aria-invalid="false"
+            >
+              {INQUIRY_TYPE_OPTIONS.map((option) => (
+                <option value={option.value} disabled={option.value === ''} selected={option.value === ''}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <span id="general-inquiry-type-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- Preferred Callback Time -->
+          <div class="restaurant-form__field">
+            <label for="general-callback-time" class="restaurant-form__label">
+              Preferred Callback Time <span class="restaurant-form__optional">(optional)</span>
+            </label>
+            <select
+              id="general-callback-time"
+              name="preferredCallbackTime"
+              class="restaurant-form__select"
+              aria-describedby="general-callback-time-hint general-callback-time-error"
+              aria-invalid="false"
+            >
+              {CALLBACK_TIME_OPTIONS.map((option) => (
+                <option value={option.value} selected={option.value === ''}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <span id="general-callback-time-hint" class="restaurant-form__hint">Mon-Fri, 10 AM - 6 PM</span>
+            <span id="general-callback-time-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- Message Textarea -->
+        <div class="restaurant-form__field restaurant-form__field--full">
+          <label for="general-message" class="restaurant-form__label">
+            Message <span class="restaurant-form__required" aria-label="required">*</span>
+          </label>
+          <textarea
+            id="general-message"
+            name="message"
+            class="restaurant-form__textarea"
+            required
+            rows="5"
+            minlength={generalConfig.minMessageLength}
+            maxlength={generalConfig.maxMessageLength}
+            aria-describedby="general-message-hint general-message-error general-message-count"
+            aria-invalid="false"
+            placeholder="How can we help you?"
+          ></textarea>
+          <div class="restaurant-form__textarea-footer">
+            <span id="general-message-hint" class="restaurant-form__hint">
+              Minimum {generalConfig.minMessageLength} characters
+            </span>
+            <span id="general-message-count" class="restaurant-form__char-count" aria-live="polite">
+              <span class="char-current">0</span>/<span class="char-max">{generalConfig.maxMessageLength}</span>
+            </span>
+          </div>
+          <span id="general-message-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Form Error -->
+        <div id="general-form-error" class="restaurant-form__form-error" role="alert" aria-live="assertive" hidden></div>
+
+        <!-- Form Success -->
+        <div id="general-form-success" class="restaurant-form__form-success" role="status" aria-live="polite" hidden>
+          <svg class="restaurant-form__success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <p class="restaurant-form__success-title">Thank you for your message!</p>
+          <p class="restaurant-form__success-text">We'll get back to you within 24 hours during business days.</p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="restaurant-form__submit"
+          data-submit-btn
+        >
+          <span class="restaurant-form__submit-text">Send Message</span>
+          <span class="restaurant-form__submit-loading" aria-hidden="true">
+            <svg class="restaurant-form__spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20" />
+            </svg>
+            Sending...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Catering Request Form Panel -->
+    <div
+      id="panel-catering"
+      role="tabpanel"
+      aria-labelledby="tab-catering"
+      class={`form-panel ${defaultFormType === 'catering' ? 'form-panel--active' : ''}`}
+      data-form-panel="catering"
+      hidden={defaultFormType !== 'catering'}
+    >
+      <form
+        id="catering-inquiry-form"
+        class="restaurant-form"
+        action={`https://formspree.io/f/${formspreeId}`}
+        method="POST"
+        novalidate
+        aria-describedby="catering-form-description"
+        data-form-type="catering"
+      >
+        <!-- Hidden fields -->
+        <input type="hidden" id="catering-form-start-time" name="_formStartTime" value="" />
+        <input type="hidden" name="_subject" value="New Catering Request" />
+
+        <!-- Honeypot field -->
+        <div class="restaurant-form__honeypot" aria-hidden="true" tabindex="-1">
+          <label for="catering-website-url">Website URL</label>
+          <input type="text" id="catering-website-url" name="_gotcha" autocomplete="off" tabindex="-1" />
+        </div>
+
+        <p id="catering-form-description" class="sr-only">
+          Required fields are marked with an asterisk (*).
+        </p>
+
+        <!-- Contact Information Section -->
+        <div class="restaurant-form__section">
+          <h3 class="restaurant-form__section-title">Contact Information</h3>
+          <div class="restaurant-form__grid">
+            <!-- Name Field -->
+            <div class="restaurant-form__field">
+              <label for="catering-name" class="restaurant-form__label">
+                Name <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="catering-name"
+                name="name"
+                class="restaurant-form__input"
+                required
+                autocomplete="name"
+                maxlength={cateringConfig.maxNameLength}
+                aria-describedby="catering-name-error"
+                aria-invalid="false"
+                placeholder="Your full name"
+              />
+              <span id="catering-name-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <!-- Email Field -->
+            <div class="restaurant-form__field">
+              <label for="catering-email" class="restaurant-form__label">
+                Email <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <input
+                type="email"
+                id="catering-email"
+                name="email"
+                class="restaurant-form__input"
+                required
+                autocomplete="email"
+                maxlength={cateringConfig.maxEmailLength}
+                aria-describedby="catering-email-error"
+                aria-invalid="false"
+                placeholder="your@email.com"
+              />
+              <span id="catering-email-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <!-- Phone Field -->
+            <div class="restaurant-form__field">
+              <label for="catering-phone" class="restaurant-form__label">
+                Phone <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <input
+                type="tel"
+                id="catering-phone"
+                name="phone"
+                class="restaurant-form__input"
+                required
+                autocomplete="tel"
+                maxlength={cateringConfig.maxPhoneLength}
+                aria-describedby="catering-phone-hint catering-phone-error"
+                aria-invalid="false"
+                placeholder="(123) 456-7890"
+              />
+              <span id="catering-phone-hint" class="restaurant-form__hint">We'll call to discuss your event details</span>
+              <span id="catering-phone-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Details Section -->
+        <div class="restaurant-form__section">
+          <h3 class="restaurant-form__section-title">Event Details</h3>
+          <div class="restaurant-form__grid">
+            <!-- Event Type Dropdown -->
+            <div class="restaurant-form__field">
+              <label for="catering-event-type" class="restaurant-form__label">
+                Event Type <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <select
+                id="catering-event-type"
+                name="eventType"
+                class="restaurant-form__select"
+                required
+                aria-describedby="catering-event-type-error"
+                aria-invalid="false"
+              >
+                {EVENT_TYPE_OPTIONS.map((option) => (
+                  <option value={option.value} disabled={option.value === ''} selected={option.value === ''}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <span id="catering-event-type-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <!-- Event Date -->
+            <div class="restaurant-form__field">
+              <label for="catering-event-date" class="restaurant-form__label">
+                Event Date <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <input
+                type="date"
+                id="catering-event-date"
+                name="eventDate"
+                class="restaurant-form__input"
+                required
+                min={today}
+                aria-describedby="catering-event-date-hint catering-event-date-error"
+                aria-invalid="false"
+              />
+              <span id="catering-event-date-hint" class="restaurant-form__hint">We recommend booking at least 2 weeks in advance</span>
+              <span id="catering-event-date-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <!-- Guest Count -->
+            <div class="restaurant-form__field">
+              <label for="catering-guest-count" class="restaurant-form__label">
+                Expected Guests <span class="restaurant-form__required" aria-label="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="catering-guest-count"
+                name="guestCount"
+                class="restaurant-form__input"
+                required
+                min={cateringConfig.minGuestCount}
+                max={cateringConfig.maxGuestCount}
+                aria-describedby="catering-guest-count-hint catering-guest-count-error"
+                aria-invalid="false"
+                placeholder="Number of guests"
+              />
+              <span id="catering-guest-count-hint" class="restaurant-form__hint">{cateringConfig.minGuestCount}-{cateringConfig.maxGuestCount} guests</span>
+              <span id="catering-guest-count-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <!-- Budget Range -->
+            <div class="restaurant-form__field">
+              <label for="catering-budget" class="restaurant-form__label">
+                Budget Range <span class="restaurant-form__optional">(optional)</span>
+              </label>
+              <select
+                id="catering-budget"
+                name="budgetRange"
+                class="restaurant-form__select"
+                aria-describedby="catering-budget-error"
+                aria-invalid="false"
+              >
+                {CATERING_BUDGET_OPTIONS.map((option) => (
+                  <option value={option.value} selected={option.value === ''}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <span id="catering-budget-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Preferences Section -->
+        <div class="restaurant-form__section">
+          <h3 class="restaurant-form__section-title">Menu Preferences</h3>
+          <fieldset class="restaurant-form__fieldset">
+            <legend class="restaurant-form__legend">Service Style <span class="restaurant-form__optional">(select all that interest you)</span></legend>
+            <div class="restaurant-form__checkbox-grid">
+              {MENU_PREFERENCE_OPTIONS.map((option) => (
+                <label class="restaurant-form__checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="menuPreferences"
+                    value={option.value}
+                    class="restaurant-form__checkbox"
+                  />
+                  <span class="restaurant-form__checkbox-custom" aria-hidden="true"></span>
+                  <span class="restaurant-form__checkbox-content">
+                    <span class="restaurant-form__checkbox-text">{option.label}</span>
+                    {option.description && (
+                      <span class="restaurant-form__checkbox-desc">{option.description}</span>
+                    )}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="restaurant-form__fieldset">
+            <legend class="restaurant-form__legend">Dietary Requirements <span class="restaurant-form__optional">(select all that apply)</span></legend>
+            <div class="restaurant-form__tag-grid">
+              {DIETARY_RESTRICTION_OPTIONS.map((option) => (
+                <label class="restaurant-form__tag-label">
+                  <input
+                    type="checkbox"
+                    name="dietaryRestrictions"
+                    value={option.value}
+                    class="restaurant-form__tag-input"
+                  />
+                  <span class="restaurant-form__tag">{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="restaurant-form__field restaurant-form__field--full">
+          <label for="catering-message" class="restaurant-form__label">
+            Additional Details <span class="restaurant-form__required" aria-label="required">*</span>
+          </label>
+          <textarea
+            id="catering-message"
+            name="message"
+            class="restaurant-form__textarea"
+            required
+            rows="5"
+            minlength={cateringConfig.minMessageLength}
+            maxlength={cateringConfig.maxMessageLength}
+            aria-describedby="catering-message-hint catering-message-error catering-message-count"
+            aria-invalid="false"
+            placeholder="Tell us more about your event - venue, time preferences, special requests, etc."
+          ></textarea>
+          <div class="restaurant-form__textarea-footer">
+            <span id="catering-message-hint" class="restaurant-form__hint">
+              Minimum {cateringConfig.minMessageLength} characters
+            </span>
+            <span id="catering-message-count" class="restaurant-form__char-count" aria-live="polite">
+              <span class="char-current">0</span>/<span class="char-max">{cateringConfig.maxMessageLength}</span>
+            </span>
+          </div>
+          <span id="catering-message-error" class="restaurant-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Form Error -->
+        <div id="catering-form-error" class="restaurant-form__form-error" role="alert" aria-live="assertive" hidden></div>
+
+        <!-- Form Success -->
+        <div id="catering-form-success" class="restaurant-form__form-success" role="status" aria-live="polite" hidden>
+          <svg class="restaurant-form__success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <p class="restaurant-form__success-title">Thank you for your catering request!</p>
+          <p class="restaurant-form__success-text">Our events team will contact you within 48 hours to discuss your event.</p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="restaurant-form__submit"
+          data-submit-btn
+        >
+          <span class="restaurant-form__submit-text">Submit Catering Request</span>
+          <span class="restaurant-form__submit-loading" aria-hidden="true">
+            <svg class="restaurant-form__spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20" />
+            </svg>
+            Sending...
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * SECTION CONTAINER
+   * ================================================================= */
+  .restaurant-contact-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background);
+  }
+
+  .restaurant-contact-container {
+    max-width: var(--container-4xl);
+    margin: 0 auto;
+  }
+
+  .restaurant-contact-header {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+  }
+
+  .restaurant-contact-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .restaurant-contact-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * FORM TOGGLE
+   * ================================================================= */
+  .form-toggle {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-8);
+    padding: var(--spacing-1);
+    background-color: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .form-toggle__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    flex: 1;
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: transparent;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-200) var(--ease-in-out);
+  }
+
+  .form-toggle__btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-background-muted);
+  }
+
+  .form-toggle__btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .form-toggle__btn--active {
+    background-color: var(--color-background-elevated);
+    color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .form-toggle__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * FORM PANELS
+   * ================================================================= */
+  .form-panel {
+    display: none;
+    animation: fadeIn var(--duration-200) var(--ease-out);
+  }
+
+  .form-panel--active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * FORM STYLES
+   * ================================================================= */
+  .restaurant-form {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-md);
+  }
+
+  .restaurant-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .restaurant-form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-5);
+  }
+
+  @media (min-width: 640px) {
+    .restaurant-form__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .restaurant-form__section {
+    margin-bottom: var(--spacing-8);
+    padding-bottom: var(--spacing-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .restaurant-form__section:last-of-type {
+    border-bottom: none;
+  }
+
+  .restaurant-form__section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .restaurant-form__field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .restaurant-form__field--full {
+    grid-column: 1 / -1;
+    margin-top: var(--spacing-4);
+  }
+
+  .restaurant-form__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .restaurant-form__required {
+    color: var(--color-error);
+  }
+
+  .restaurant-form__optional {
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .restaurant-form__input,
+  .restaurant-form__select,
+  .restaurant-form__textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--duration-150) var(--ease-in-out),
+                box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .restaurant-form__input:hover,
+  .restaurant-form__select:hover,
+  .restaurant-form__textarea:hover {
+    border-color: var(--color-border-hover);
+  }
+
+  .restaurant-form__input:focus,
+  .restaurant-form__select:focus,
+  .restaurant-form__textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+  }
+
+  .restaurant-form__input[aria-invalid="true"],
+  .restaurant-form__select[aria-invalid="true"],
+  .restaurant-form__textarea[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+
+  .restaurant-form__input[aria-invalid="true"]:focus,
+  .restaurant-form__select[aria-invalid="true"]:focus,
+  .restaurant-form__textarea[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px var(--color-error-100);
+  }
+
+  .restaurant-form__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-3) center;
+    background-size: 1.25rem;
+    padding-right: var(--spacing-10);
+    cursor: pointer;
+  }
+
+  .restaurant-form__textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  .restaurant-form__textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-2);
+  }
+
+  .restaurant-form__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin-top: var(--spacing-1);
+  }
+
+  .restaurant-form__char-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .restaurant-form__error {
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+    margin-top: var(--spacing-1);
+    min-height: 1.25rem;
+  }
+
+  /* =================================================================
+   * FIELDSETS & CHECKBOXES
+   * ================================================================= */
+  .restaurant-form__fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-6) 0;
+  }
+
+  .restaurant-form__legend {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .restaurant-form__checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  @media (min-width: 640px) {
+    .restaurant-form__checkbox-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .restaurant-form__checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--duration-150) var(--ease-in-out);
+  }
+
+  .restaurant-form__checkbox-label:hover {
+    border-color: var(--color-primary-200);
+    background-color: var(--color-primary-50);
+  }
+
+  .restaurant-form__checkbox-label:has(.restaurant-form__checkbox:checked) {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-50);
+  }
+
+  .restaurant-form__checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .restaurant-form__checkbox-custom {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin-top: 0.125rem;
+    transition: all var(--duration-150) var(--ease-in-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .restaurant-form__checkbox:checked + .restaurant-form__checkbox-custom {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  .restaurant-form__checkbox:checked + .restaurant-form__checkbox-custom::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
+    border-radius: 1px;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: contain;
+  }
+
+  .restaurant-form__checkbox:focus-visible + .restaurant-form__checkbox-custom {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .restaurant-form__checkbox-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .restaurant-form__checkbox-text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  .restaurant-form__checkbox-desc {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  /* Tag-style checkboxes for dietary restrictions */
+  .restaurant-form__tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .restaurant-form__tag-label {
+    cursor: pointer;
+  }
+
+  .restaurant-form__tag-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .restaurant-form__tag {
+    display: inline-block;
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    transition: all var(--duration-150) var(--ease-in-out);
+  }
+
+  .restaurant-form__tag:hover {
+    border-color: var(--color-primary-200);
+    color: var(--color-primary);
+  }
+
+  .restaurant-form__tag-input:checked + .restaurant-form__tag {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+
+  .restaurant-form__tag-input:focus-visible + .restaurant-form__tag {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* =================================================================
+   * FORM MESSAGES
+   * ================================================================= */
+  .restaurant-form__form-error {
+    padding: var(--spacing-4);
+    background-color: var(--color-error-50);
+    border: 1px solid var(--color-error-200);
+    border-radius: var(--radius-lg);
+    color: var(--color-error-700);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .restaurant-form__form-success {
+    text-align: center;
+    padding: var(--spacing-8);
+  }
+
+  .restaurant-form__success-icon {
+    width: 3rem;
+    height: 3rem;
+    color: var(--color-success);
+    margin: 0 auto var(--spacing-4);
+  }
+
+  .restaurant-form__success-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .restaurant-form__success-text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+  }
+
+  /* =================================================================
+   * SUBMIT BUTTON
+   * ================================================================= */
+  .restaurant-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--spacing-4) var(--spacing-6);
+    margin-top: var(--spacing-6);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--duration-200) var(--ease-in-out);
+  }
+
+  .restaurant-form__submit:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .restaurant-form__submit:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .restaurant-form__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .restaurant-form__submit-loading {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .restaurant-form__submit[data-loading="true"] .restaurant-form__submit-text {
+    display: none;
+  }
+
+  .restaurant-form__submit[data-loading="true"] .restaurant-form__submit-loading {
+    display: flex;
+  }
+
+  .restaurant-form__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 639px) {
+    .restaurant-contact-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .restaurant-contact-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .restaurant-form {
+      padding: var(--spacing-5);
+    }
+
+    .form-toggle {
+      flex-direction: column;
+    }
+
+    .form-toggle__btn {
+      justify-content: center;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .restaurant-contact-section {
+    background-color: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .restaurant-form {
+    background-color: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .form-toggle {
+    background-color: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .form-toggle__btn--active {
+    background-color: var(--color-background-elevated);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .form-panel--active {
+      animation: none;
+    }
+
+    .restaurant-form__submit:hover {
+      transform: none;
+    }
+
+    .restaurant-form__spinner {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Restaurant Contact Form Client-Side Logic
+   * Handles form toggle, validation, and submission
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.querySelector('.restaurant-contact-section');
+    if (!section) return;
+
+    // Form toggle functionality
+    const toggleButtons = section.querySelectorAll('[data-form-toggle]');
+    const formPanels = section.querySelectorAll('[data-form-panel]');
+
+    toggleButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetPanel = btn.getAttribute('data-form-toggle');
+
+        // Update toggle buttons
+        toggleButtons.forEach((b) => {
+          const isActive = b.getAttribute('data-form-toggle') === targetPanel;
+          b.classList.toggle('form-toggle__btn--active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        // Update panels
+        formPanels.forEach((panel) => {
+          const isActive = panel.getAttribute('data-form-panel') === targetPanel;
+          panel.classList.toggle('form-panel--active', isActive);
+          panel.hidden = !isActive;
+        });
+      });
+    });
+
+    // Initialize form start times for spam prevention
+    const generalStartTime = document.getElementById('general-form-start-time') as HTMLInputElement;
+    const cateringStartTime = document.getElementById('catering-form-start-time') as HTMLInputElement;
+    const now = Date.now().toString();
+    if (generalStartTime) generalStartTime.value = now;
+    if (cateringStartTime) cateringStartTime.value = now;
+
+    // Validation patterns
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[\d\s\-\(\)\+]{10,20}$/;
+
+    // Validation functions
+    const validators = {
+      name: (value: string) => {
+        if (!value.trim()) return 'Name is required';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        return null;
+      },
+      email: (value: string) => {
+        if (!value.trim()) return 'Email is required';
+        if (!emailRegex.test(value)) return 'Please enter a valid email address';
+        return null;
+      },
+      phone: (value: string, required = false) => {
+        if (!value.trim() && required) return 'Phone number is required';
+        if (value.trim() && !phoneRegex.test(value)) return 'Please enter a valid phone number';
+        return null;
+      },
+      inquiryType: (value: string) => {
+        if (!value) return 'Please select an inquiry type';
+        return null;
+      },
+      eventType: (value: string) => {
+        if (!value) return 'Please select an event type';
+        return null;
+      },
+      eventDate: (value: string) => {
+        if (!value) return 'Event date is required';
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) return 'Event date must be in the future';
+        return null;
+      },
+      guestCount: (value: string) => {
+        if (!value) return 'Number of guests is required';
+        const count = parseInt(value, 10);
+        if (isNaN(count) || count < 10) return 'Minimum 10 guests required';
+        if (count > 1000) return 'Maximum 1000 guests allowed';
+        return null;
+      },
+      message: (value: string, minLength: number) => {
+        if (!value.trim()) return 'Message is required';
+        if (value.trim().length < minLength) return `Message must be at least ${minLength} characters`;
+        return null;
+      },
+    };
+
+    // Setup form handlers
+    const forms = section.querySelectorAll('form[data-form-type]');
+    forms.forEach((form) => {
+      const formType = form.getAttribute('data-form-type');
+      const isGeneralForm = formType === 'general';
+      const minMessageLength = isGeneralForm ? 10 : 10;
+
+      // Real-time validation on input
+      form.querySelectorAll('input, select, textarea').forEach((field) => {
+        const input = field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+        input.addEventListener('input', () => {
+          clearFieldError(input);
+          if (input.tagName === 'TEXTAREA') {
+            updateCharCount(input as HTMLTextAreaElement);
+          }
+        });
+
+        input.addEventListener('blur', () => {
+          validateField(input, isGeneralForm, minMessageLength);
+        });
+      });
+
+      // Form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Check honeypot
+        const honeypot = form.querySelector('input[name="_gotcha"]') as HTMLInputElement;
+        if (honeypot && honeypot.value) {
+          console.warn('Spam detected');
+          return;
+        }
+
+        // Check submission time
+        const startTimeInput = form.querySelector('input[name="_formStartTime"]') as HTMLInputElement;
+        if (startTimeInput) {
+          const startTime = parseInt(startTimeInput.value, 10);
+          if (Date.now() - startTime < 3000) {
+            showFormError(form, 'Please wait a moment before submitting.');
+            return;
+          }
+        }
+
+        // Validate all fields
+        let isValid = true;
+        form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]), select, textarea').forEach((field) => {
+          const input = field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+          if (!validateField(input, isGeneralForm, minMessageLength)) {
+            isValid = false;
+          }
+        });
+
+        if (!isValid) {
+          const firstError = form.querySelector('[aria-invalid="true"]') as HTMLElement;
+          if (firstError) firstError.focus();
+          return;
+        }
+
+        // Submit form
+        const submitBtn = form.querySelector('[data-submit-btn]') as HTMLButtonElement;
+        submitBtn.setAttribute('data-loading', 'true');
+        submitBtn.disabled = true;
+
+        try {
+          const formData = new FormData(form as HTMLFormElement);
+          const response = await fetch((form as HTMLFormElement).action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              Accept: 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            showFormSuccess(form);
+          } else {
+            throw new Error('Form submission failed');
+          }
+        } catch (error) {
+          showFormError(form, 'Something went wrong. Please try again or contact us directly.');
+        } finally {
+          submitBtn.setAttribute('data-loading', 'false');
+          submitBtn.disabled = false;
+        }
+      });
+    });
+
+    function validateField(
+      input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+      isGeneralForm: boolean,
+      minMessageLength: number
+    ): boolean {
+      const name = input.name;
+      const value = input.value;
+      let error: string | null = null;
+
+      switch (name) {
+        case 'name':
+          error = validators.name(value);
+          break;
+        case 'email':
+          error = validators.email(value);
+          break;
+        case 'phone':
+          error = validators.phone(value, !isGeneralForm);
+          break;
+        case 'inquiryType':
+          error = validators.inquiryType(value);
+          break;
+        case 'eventType':
+          error = validators.eventType(value);
+          break;
+        case 'eventDate':
+          error = validators.eventDate(value);
+          break;
+        case 'guestCount':
+          error = validators.guestCount(value);
+          break;
+        case 'message':
+          error = validators.message(value, minMessageLength);
+          break;
+      }
+
+      if (error) {
+        showFieldError(input, error);
+        return false;
+      }
+
+      clearFieldError(input);
+      return true;
+    }
+
+    function showFieldError(input: HTMLElement, message: string) {
+      input.setAttribute('aria-invalid', 'true');
+      const errorId = input.getAttribute('aria-describedby')?.split(' ').find((id) => id.includes('error'));
+      if (errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (errorEl) errorEl.textContent = message;
+      }
+    }
+
+    function clearFieldError(input: HTMLElement) {
+      input.setAttribute('aria-invalid', 'false');
+      const errorId = input.getAttribute('aria-describedby')?.split(' ').find((id) => id.includes('error'));
+      if (errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (errorEl) errorEl.textContent = '';
+      }
+    }
+
+    function updateCharCount(textarea: HTMLTextAreaElement) {
+      const countId = textarea.getAttribute('aria-describedby')?.split(' ').find((id) => id.includes('count'));
+      if (countId) {
+        const countEl = document.getElementById(countId);
+        if (countEl) {
+          const currentEl = countEl.querySelector('.char-current');
+          if (currentEl) currentEl.textContent = textarea.value.length.toString();
+        }
+      }
+    }
+
+    function showFormError(form: Element, message: string) {
+      const errorEl = form.querySelector('[id$="-form-error"]') as HTMLElement;
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.hidden = false;
+      }
+    }
+
+    function showFormSuccess(form: Element) {
+      const successEl = form.querySelector('[id$="-form-success"]') as HTMLElement;
+      const formFields = form.querySelectorAll('.restaurant-form__grid, .restaurant-form__section, .restaurant-form__field--full, .restaurant-form__submit');
+
+      formFields.forEach((el) => {
+        (el as HTMLElement).style.display = 'none';
+      });
+
+      if (successEl) {
+        successEl.hidden = false;
+      }
+    }
+  });
+</script>

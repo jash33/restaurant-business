@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="steakGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513"/>
+      <stop offset="50%" style="stop-color:#654321"/>
+      <stop offset="100%" style="stop-color:#4a3728"/>
+    </linearGradient>
+    <linearGradient id="grillMarks" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d1810"/>
+      <stop offset="100%" style="stop-color:#3d2820"/>
+    </linearGradient>
+    <linearGradient id="asparagusGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#228b22"/>
+      <stop offset="100%" style="stop-color:#2e8b57"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background - dark elegant -->
+  <rect width="800" height="600" fill="#1a1a2e"/>
+
+  <!-- Dark slate plate -->
+  <rect x="100" y="150" width="600" height="350" rx="20" fill="#2d2d2d"/>
+  <rect x="110" y="160" width="580" height="330" rx="15" fill="#3d3d3d"/>
+
+  <!-- Steak -->
+  <ellipse cx="350" cy="320" rx="150" ry="80" fill="url(#steakGrad)"/>
+
+  <!-- Grill marks -->
+  <line x1="220" y1="290" x2="480" y2="290" stroke="#2d1810" stroke-width="8" stroke-linecap="round"/>
+  <line x1="230" y1="320" x2="470" y2="320" stroke="#2d1810" stroke-width="8" stroke-linecap="round"/>
+  <line x1="220" y1="350" x2="480" y2="350" stroke="#2d1810" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Steak juices -->
+  <ellipse cx="320" cy="400" rx="30" ry="10" fill="#8b0000" opacity="0.6"/>
+  <ellipse cx="380" cy="395" rx="20" ry="8" fill="#8b0000" opacity="0.5"/>
+
+  <!-- Herb butter pat -->
+  <ellipse cx="350" cy="310" rx="25" ry="12" fill="#f5deb3"/>
+  <circle cx="340" cy="308" r="3" fill="#228b22"/>
+  <circle cx="355" cy="312" r="2" fill="#228b22"/>
+  <circle cx="360" cy="305" r="2" fill="#228b22"/>
+
+  <!-- Asparagus bundle -->
+  <rect x="530" y="250" width="12" height="150" rx="6" fill="url(#asparagusGrad)" transform="rotate(15, 536, 325)"/>
+  <rect x="550" y="245" width="12" height="155" rx="6" fill="#2e8b57" transform="rotate(10, 556, 322)"/>
+  <rect x="570" y="250" width="12" height="150" rx="6" fill="url(#asparagusGrad)" transform="rotate(5, 576, 325)"/>
+  <rect x="590" y="255" width="12" height="145" rx="6" fill="#228b22"/>
+  <rect x="610" y="260" width="12" height="140" rx="6" fill="url(#asparagusGrad)" transform="rotate(-5, 616, 330)"/>
+
+  <!-- Asparagus tips -->
+  <ellipse cx="540" cy="230" rx="8" ry="15" fill="#1d6b1d" transform="rotate(15, 540, 230)"/>
+  <ellipse cx="558" cy="225" rx="8" ry="15" fill="#1d6b1d" transform="rotate(10, 558, 225)"/>
+  <ellipse cx="576" cy="230" rx="8" ry="15" fill="#1d6b1d" transform="rotate(5, 576, 230)"/>
+  <ellipse cx="596" cy="238" rx="8" ry="15" fill="#1d6b1d"/>
+  <ellipse cx="616" cy="245" rx="8" ry="15" fill="#1d6b1d" transform="rotate(-5, 616, 245)"/>
+
+  <!-- Rosemary sprig -->
+  <line x1="180" y1="380" x2="250" y2="350" stroke="#4a3728" stroke-width="3"/>
+  <ellipse cx="195" cy="375" rx="8" ry="3" fill="#228b22" transform="rotate(-20, 195, 375)"/>
+  <ellipse cx="210" cy="368" rx="8" ry="3" fill="#2e8b57" transform="rotate(-20, 210, 368)"/>
+  <ellipse cx="225" cy="360" rx="8" ry="3" fill="#228b22" transform="rotate(-20, 225, 360)"/>
+  <ellipse cx="240" cy="353" rx="8" ry="3" fill="#2e8b57" transform="rotate(-20, 240, 353)"/>
+
+  <!-- Garlic cloves -->
+  <ellipse cx="200" cy="420" rx="15" ry="20" fill="#f5f5dc" transform="rotate(-30, 200, 420)"/>
+  <ellipse cx="230" cy="430" rx="12" ry="18" fill="#f5f5dc" transform="rotate(-45, 230, 430)"/>
+
+  <!-- Red wine reduction drizzle -->
+  <path d="M280 380 Q300 390 320 380 Q340 370 360 385 Q380 400 400 385" stroke="#4a0e0e" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Steak knife -->
+  <rect x="50" y="280" width="15" height="120" fill="#8b4513" rx="3"/>
+  <polygon points="57,280 80,200 90,200 67,280" fill="#c0c0c0"/>
+
+  <!-- Ambient lighting effect -->
+  <circle cx="400" cy="300" r="250" fill="url(#radial)" opacity="0.1">
+    <animate attributeName="opacity" values="0.1;0.15;0.1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Title -->
+  <text x="400" y="550" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#d4af37">Prime Ribeye Steak</text>
+</svg>

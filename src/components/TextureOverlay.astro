@@ -1,0 +1,257 @@
+---
+/**
+ * Texture Overlay Component
+ *
+ * A reusable overlay component that adds subtle paper, linen, canvas, or grain
+ * textures to sections for tactile warmth and analog photography aesthetic.
+ * Perfect for adding organic, handcrafted feel to hero sections and backgrounds.
+ *
+ * Features:
+ * - Multiple texture variants (paper, linen, canvas, grain-fine, grain-coarse, noise)
+ * - Configurable intensity levels (subtle, light, medium, strong)
+ * - Customizable blend modes (overlay, soft-light, multiply, screen)
+ * - Performance-optimized CSS-only textures (no image files)
+ * - WCAG 2.1 AA compliant (decorative, aria-hidden)
+ * - Reduced motion support
+ * - Can be layered with WarmGradientOverlay
+ *
+ * @example Basic usage with paper texture
+ * ```astro
+ * <div class="hero-section">
+ *   <img src="/food.jpg" alt="Food photography" />
+ *   <TextureOverlay variant="paper" />
+ *   <div class="content">Your content here</div>
+ * </div>
+ * ```
+ *
+ * @example Film grain for analog aesthetic
+ * ```astro
+ * <TextureOverlay
+ *   variant="grain-fine"
+ *   intensity="medium"
+ *   blendMode="overlay"
+ * />
+ * ```
+ *
+ * @example Layered with warm gradient
+ * ```astro
+ * <WarmGradientOverlay variant="candlelight" />
+ * <TextureOverlay variant="grain-fine" intensity="subtle" />
+ * ```
+ */
+
+type TextureVariant = 'paper' | 'linen' | 'canvas' | 'grain-fine' | 'grain-coarse' | 'noise';
+
+type IntensityLevel = 'subtle' | 'light' | 'medium' | 'strong';
+
+type BlendMode = 'overlay' | 'soft-light' | 'multiply' | 'screen' | 'hard-light';
+
+interface Props {
+  /** Texture style preset */
+  variant?: TextureVariant;
+  /** Texture visibility intensity */
+  intensity?: IntensityLevel;
+  /** CSS blend mode for texture layer */
+  blendMode?: BlendMode;
+  /** Custom opacity override (0-1), takes precedence over intensity */
+  opacity?: number;
+  /** Additional CSS class names */
+  class?: string;
+  /** Custom z-index for stacking (default: 2) */
+  zIndex?: number;
+  /** Enable animated grain effect (for grain variants only) */
+  animated?: boolean;
+  /** Test ID for automated testing */
+  testId?: string;
+}
+
+const {
+  variant = 'paper',
+  intensity = 'subtle',
+  blendMode = 'overlay',
+  opacity,
+  class: className = '',
+  zIndex = 2,
+  animated = false,
+  testId = 'texture-overlay',
+} = Astro.props;
+
+// Map variant to CSS custom property
+const textureMap: Record<TextureVariant, string> = {
+  'paper': 'var(--texture-paper)',
+  'linen': 'var(--texture-linen)',
+  'canvas': 'var(--texture-canvas)',
+  'grain-fine': 'var(--texture-grain-fine)',
+  'grain-coarse': 'var(--texture-grain-coarse)',
+  'noise': 'var(--texture-noise)',
+};
+
+// Map intensity to CSS custom property
+const intensityMap: Record<IntensityLevel, string> = {
+  'subtle': 'var(--texture-opacity-subtle)',
+  'light': 'var(--texture-opacity-light)',
+  'medium': 'var(--texture-opacity-medium)',
+  'strong': 'var(--texture-opacity-strong)',
+};
+
+const textureValue = textureMap[variant];
+const intensityValue = opacity !== undefined ? opacity : intensityMap[intensity];
+
+// Build container classes
+const containerClasses = [
+  'texture-overlay',
+  `texture-overlay--${variant}`,
+  `texture-overlay--blend-${blendMode}`,
+  animated && variant.startsWith('grain') ? 'texture-overlay--animated' : '',
+  className,
+].filter(Boolean).join(' ');
+
+// Calculate style as CSS custom properties
+const overlayStyle = `--texture-z-index: ${zIndex}; --texture-opacity: ${intensityValue}; --texture-blend: ${blendMode};`;
+---
+
+<div
+  class={containerClasses}
+  style={overlayStyle}
+  aria-hidden="true"
+  data-testid={testId}
+>
+  <div
+    class="texture-overlay__layer"
+    style={`background-image: ${textureValue};`}
+    data-testid={`${testId}-layer`}
+  />
+</div>
+
+<style>
+  /* =================================================================
+   * TEXTURE OVERLAY - BASE STYLES
+   * ================================================================= */
+  .texture-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--texture-z-index, 2);
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* =================================================================
+   * TEXTURE LAYER
+   * ================================================================= */
+  .texture-overlay__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: var(--texture-opacity, 0.03);
+    background-size: 200px 200px;
+    background-repeat: repeat;
+  }
+
+  /* =================================================================
+   * BLEND MODE VARIANTS
+   * ================================================================= */
+  .texture-overlay--blend-overlay .texture-overlay__layer {
+    mix-blend-mode: overlay;
+  }
+
+  .texture-overlay--blend-soft-light .texture-overlay__layer {
+    mix-blend-mode: soft-light;
+  }
+
+  .texture-overlay--blend-multiply .texture-overlay__layer {
+    mix-blend-mode: multiply;
+  }
+
+  .texture-overlay--blend-screen .texture-overlay__layer {
+    mix-blend-mode: screen;
+  }
+
+  .texture-overlay--blend-hard-light .texture-overlay__layer {
+    mix-blend-mode: hard-light;
+  }
+
+  /* =================================================================
+   * TEXTURE VARIANT ADJUSTMENTS
+   * ================================================================= */
+
+  /* Paper - Slightly larger pattern for natural look */
+  .texture-overlay--paper .texture-overlay__layer {
+    background-size: 300px 300px;
+  }
+
+  /* Linen - Tighter weave pattern */
+  .texture-overlay--linen .texture-overlay__layer {
+    background-size: 150px 150px;
+  }
+
+  /* Canvas - Medium pattern size */
+  .texture-overlay--canvas .texture-overlay__layer {
+    background-size: 250px 250px;
+  }
+
+  /* Grain variants - Smaller for fine detail */
+  .texture-overlay--grain-fine .texture-overlay__layer {
+    background-size: 100px 100px;
+  }
+
+  .texture-overlay--grain-coarse .texture-overlay__layer {
+    background-size: 150px 150px;
+  }
+
+  /* Noise - Very small for fine detail */
+  .texture-overlay--noise .texture-overlay__layer {
+    background-size: 80px 80px;
+  }
+
+  /* =================================================================
+   * ANIMATED GRAIN EFFECT
+   * Creates subtle movement for more organic feel
+   * ================================================================= */
+  .texture-overlay--animated .texture-overlay__layer {
+    animation: texture-grain-shift 0.5s steps(4) infinite;
+  }
+
+  @keyframes texture-grain-shift {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(-2px, 2px);
+    }
+    50% {
+      transform: translate(2px, -2px);
+    }
+    75% {
+      transform: translate(-1px, -1px);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .texture-overlay--animated .texture-overlay__layer {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .texture-overlay {
+      display: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .texture-overlay {
+      display: none;
+    }
+  }
+</style>

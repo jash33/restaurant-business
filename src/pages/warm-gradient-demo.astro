@@ -1,0 +1,530 @@
+---
+/**
+ * Warm Gradient Overlay Demo Page
+ * Demonstrates all variants and configurations of the WarmGradientOverlay component
+ * for enhancing food photography with warm, moody tones.
+ */
+import Layout from '../layouts/Layout.astro';
+import WarmGradientOverlay from '../components/WarmGradientOverlay.astro';
+---
+
+<Layout
+  title="Warm Gradient Overlay Demo"
+  description="Demo page showcasing warm gradient overlay variants for food photography enhancement."
+>
+  <main class="warm-gradient-demo">
+    <!-- Page Header -->
+    <header class="demo-header">
+      <h1>Warm Gradient Overlays</h1>
+      <p>Enhance food photography with warm, moody tones. Perfect for hero sections and feature backgrounds.</p>
+    </header>
+
+    <!-- Variant Showcase Section -->
+    <section class="demo-section">
+      <h2>Gradient Variants</h2>
+      <p class="demo-description">Five preset gradient styles for different moods and atmospheres.</p>
+
+      <div class="demo-grid">
+        <!-- Golden Hour -->
+        <div class="demo-card" data-testid="demo-golden-hour">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food plating with golden hour lighting"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="golden-hour"
+              showLegibilityLayer={true}
+              testId="overlay-golden-hour"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Golden Hour</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Warm sunset tones for outdoor/natural lighting feel</p>
+        </div>
+
+        <!-- Candlelight -->
+        <div class="demo-card" data-testid="demo-candlelight">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80"
+              alt="Intimate dinner setting"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="candlelight"
+              showLegibilityLayer={true}
+              testId="overlay-candlelight"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Candlelight</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Intimate, warm restaurant ambiance</p>
+        </div>
+
+        <!-- Moody -->
+        <div class="demo-card" data-testid="demo-moody">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"
+              alt="Elegant restaurant dish"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="moody"
+              showLegibilityLayer={true}
+              testId="overlay-moody"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Moody</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Sophisticated wine/restaurant tones</p>
+        </div>
+
+        <!-- Terracotta -->
+        <div class="demo-card" data-testid="demo-terracotta">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80"
+              alt="Rustic food presentation"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="terracotta"
+              showLegibilityLayer={true}
+              testId="overlay-terracotta"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Terracotta</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Earthy, rustic tones</p>
+        </div>
+
+        <!-- Ember -->
+        <div class="demo-card" data-testid="demo-ember">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80"
+              alt="Grilled food with warm glow"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="ember"
+              showLegibilityLayer={true}
+              testId="overlay-ember"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Ember</span>
+            </div>
+          </div>
+          <p class="demo-card__description">Warm hearth/fireplace glow (radial)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vignette Options Section -->
+    <section class="demo-section">
+      <h2>Vignette Effects</h2>
+      <p class="demo-description">Add edge darkening for a more dramatic, focused effect.</p>
+
+      <div class="demo-grid demo-grid--3col">
+        <!-- No Vignette -->
+        <div class="demo-card" data-testid="demo-vignette-none">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80"
+              alt="Pizza presentation"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="moody"
+              vignette="none"
+              showLegibilityLayer={true}
+              testId="overlay-vignette-none"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">No Vignette</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soft Vignette -->
+        <div class="demo-card" data-testid="demo-vignette-soft">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80"
+              alt="Pizza presentation"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="moody"
+              vignette="soft"
+              showLegibilityLayer={true}
+              testId="overlay-vignette-soft"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Soft Vignette</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strong Vignette -->
+        <div class="demo-card" data-testid="demo-vignette-strong">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80"
+              alt="Pizza presentation"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="moody"
+              vignette="strong"
+              showLegibilityLayer={true}
+              testId="overlay-vignette-strong"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">Strong Vignette</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opacity Control Section -->
+    <section class="demo-section">
+      <h2>Opacity Control</h2>
+      <p class="demo-description">Fine-tune the intensity with the opacity multiplier (0-1).</p>
+
+      <div class="demo-grid demo-grid--4col">
+        <!-- 25% Opacity -->
+        <div class="demo-card" data-testid="demo-opacity-25">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with berries"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="golden-hour"
+              opacity={0.25}
+              showLegibilityLayer={true}
+              testId="overlay-opacity-25"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">25%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 50% Opacity -->
+        <div class="demo-card" data-testid="demo-opacity-50">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with berries"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="golden-hour"
+              opacity={0.5}
+              showLegibilityLayer={true}
+              testId="overlay-opacity-50"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">50%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 75% Opacity -->
+        <div class="demo-card" data-testid="demo-opacity-75">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with berries"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="golden-hour"
+              opacity={0.75}
+              showLegibilityLayer={true}
+              testId="overlay-opacity-75"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">75%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 100% Opacity -->
+        <div class="demo-card" data-testid="demo-opacity-100">
+          <div class="demo-card__image-container">
+            <img
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80"
+              alt="Pancakes with berries"
+              class="demo-card__image"
+            />
+            <WarmGradientOverlay
+              variant="golden-hour"
+              opacity={1}
+              showLegibilityLayer={true}
+              testId="overlay-opacity-100"
+            />
+            <div class="demo-card__text-overlay">
+              <span class="demo-card__label">100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-width Hero Example -->
+    <section class="demo-section demo-section--hero" data-testid="demo-hero-section">
+      <div class="demo-hero">
+        <img
+          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80"
+          alt="Restaurant ambiance"
+          class="demo-hero__image"
+        />
+        <WarmGradientOverlay
+          variant="candlelight"
+          vignette="strong"
+          showLegibilityLayer={true}
+          opacity={0.9}
+          testId="overlay-hero-example"
+        />
+        <div class="demo-hero__content">
+          <h2 class="demo-hero__title">Full-Width Hero Example</h2>
+          <p class="demo-hero__subtitle">
+            Candlelight variant with strong vignette and legibility layer ensures text remains readable
+            while maintaining the warm, inviting atmosphere.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Usage Notes -->
+    <section class="demo-section demo-section--notes">
+      <h2>Usage Notes</h2>
+      <ul class="demo-notes">
+        <li><strong>Legibility Layer:</strong> Always enable <code>showLegibilityLayer</code> when text is present over the image.</li>
+        <li><strong>Accessibility:</strong> The overlay is marked with <code>aria-hidden="true"</code> as it's decorative.</li>
+        <li><strong>Reduced Motion:</strong> Transitions are disabled when users prefer reduced motion.</li>
+        <li><strong>High Contrast Mode:</strong> Overlays are hidden in forced-colors mode for accessibility.</li>
+        <li><strong>Print Styles:</strong> Overlays are hidden when printing.</li>
+      </ul>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .warm-gradient-demo {
+    padding: var(--spacing-8) var(--spacing-4);
+    max-width: var(--container-7xl);
+    margin: 0 auto;
+  }
+
+  .demo-header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    padding-top: var(--spacing-8);
+  }
+
+  .demo-header h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .demo-header p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-16);
+  }
+
+  .demo-section h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-6);
+  }
+
+  .demo-grid--3col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .demo-grid--4col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    .demo-grid--3col,
+    .demo-grid--4col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .demo-grid--3col,
+    .demo-grid--4col {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .demo-card {
+    background: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-hover-lift);
+  }
+
+  .demo-card:hover {
+    transform: var(--transform-hover-lift-sm);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .demo-card__image-container {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+
+  .demo-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .demo-card__text-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .demo-card__label {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .demo-card__description {
+    padding: var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Hero Example Styles */
+  .demo-section--hero {
+    margin-left: calc(-1 * var(--spacing-4));
+    margin-right: calc(-1 * var(--spacing-4));
+    max-width: none;
+  }
+
+  .demo-hero {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .demo-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .demo-hero__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: var(--spacing-8);
+    max-width: 60ch;
+  }
+
+  .demo-hero__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    margin-bottom: var(--spacing-4);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .demo-hero__subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: var(--line-height-relaxed);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Notes Section */
+  .demo-section--notes {
+    background: var(--color-background-subtle);
+    padding: var(--spacing-8);
+    border-radius: var(--radius-xl);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .demo-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .demo-notes li {
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .demo-notes code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    background: var(--color-background-muted);
+    padding: var(--spacing-0-5) var(--spacing-1);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+  }
+</style>

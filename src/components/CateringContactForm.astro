@@ -1,0 +1,1503 @@
+---
+/**
+ * Catering Contact Form Component
+ * A fully accessible, validated catering inquiry form with Formspree integration.
+ *
+ * Features:
+ * - Event type, date picker, guest count
+ * - Menu preferences and dietary restrictions
+ * - Real-time client-side validation
+ * - Honeypot spam prevention
+ * - Time-based submission validation
+ * - WCAG 2.1 AA compliant accessibility
+ * - Loading and success/error states
+ * - Responsive design
+ * - Formspree integration for form handling
+ *
+ * @example
+ * ```astro
+ * <CateringContactForm formspreeId="your-formspree-id" />
+ * ```
+ */
+
+import {
+  EVENT_TYPE_OPTIONS,
+  CATERING_BUDGET_OPTIONS,
+  MENU_PREFERENCE_OPTIONS,
+  DIETARY_RESTRICTION_OPTIONS,
+  DEFAULT_CATERING_VALIDATION_CONFIG,
+} from '../types/catering-form';
+
+interface Props {
+  /** Formspree form ID for handling submissions */
+  formspreeId?: string;
+}
+
+const { formspreeId = 'xyzgvqkl' } = Astro.props;
+
+const eventTypeOptions = EVENT_TYPE_OPTIONS;
+const budgetOptions = CATERING_BUDGET_OPTIONS;
+const menuOptions = MENU_PREFERENCE_OPTIONS;
+const dietaryOptions = DIETARY_RESTRICTION_OPTIONS;
+const config = DEFAULT_CATERING_VALIDATION_CONFIG;
+
+// Calculate minimum date (today)
+const today = new Date().toISOString().split('T')[0];
+---
+
+<section class="catering-form-section" aria-labelledby="catering-form-heading">
+  <div class="catering-form-container">
+    <div class="catering-form-header">
+      <h2 id="catering-form-heading" class="catering-form-title">Plan Your Event</h2>
+      <p class="catering-form-description">
+        Tell us about your upcoming event and we'll create a custom catering experience for you and your guests.
+      </p>
+    </div>
+
+    <form
+      id="catering-form"
+      class="catering-form"
+      action={`https://formspree.io/f/${formspreeId}`}
+      method="POST"
+      novalidate
+      aria-describedby="catering-form-description"
+    >
+      <!-- Hidden field for spam prevention timing -->
+      <input type="hidden" id="catering-form-start-time" name="_formStartTime" value="" />
+
+      <!-- Honeypot field - hidden from real users -->
+      <div class="catering-form__honeypot" aria-hidden="true" tabindex="-1">
+        <label for="catering-website-url">Website URL</label>
+        <input
+          type="text"
+          id="catering-website-url"
+          name="_gotcha"
+          autocomplete="off"
+          tabindex="-1"
+        />
+      </div>
+
+      <p id="catering-form-description" class="sr-only">
+        Required fields are marked with an asterisk (*).
+      </p>
+
+      <!-- Section: Contact Information -->
+      <div class="catering-form__section">
+        <h3 class="catering-form__section-title">Contact Information</h3>
+
+        <!-- Name Field -->
+        <div class="catering-form__field">
+          <label for="catering-name" class="catering-form__label">
+            Name <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="catering-name"
+            name="name"
+            class="catering-form__input"
+            required
+            autocomplete="name"
+            maxlength={config.maxNameLength}
+            aria-describedby="catering-name-error"
+            aria-invalid="false"
+            placeholder="Your full name"
+          />
+          <span id="catering-name-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Email Field -->
+        <div class="catering-form__field">
+          <label for="catering-email" class="catering-form__label">
+            Email <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="email"
+            id="catering-email"
+            name="email"
+            class="catering-form__input"
+            required
+            autocomplete="email"
+            maxlength={config.maxEmailLength}
+            aria-describedby="catering-email-error"
+            aria-invalid="false"
+            placeholder="your@email.com"
+          />
+          <span id="catering-email-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="catering-form__field">
+          <label for="catering-phone" class="catering-form__label">
+            Phone <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="tel"
+            id="catering-phone"
+            name="phone"
+            class="catering-form__input"
+            required
+            autocomplete="tel"
+            maxlength={config.maxPhoneLength}
+            aria-describedby="catering-phone-hint catering-phone-error"
+            aria-invalid="false"
+            placeholder="(123) 456-7890"
+          />
+          <span id="catering-phone-hint" class="catering-form__hint">We'll call to discuss your event details</span>
+          <span id="catering-phone-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Section: Event Details -->
+      <div class="catering-form__section">
+        <h3 class="catering-form__section-title">Event Details</h3>
+
+        <!-- Event Type Dropdown -->
+        <div class="catering-form__field">
+          <label for="catering-event-type" class="catering-form__label">
+            Event Type <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <select
+            id="catering-event-type"
+            name="eventType"
+            class="catering-form__select"
+            required
+            aria-describedby="catering-event-type-error"
+            aria-invalid="false"
+          >
+            {eventTypeOptions.map((option) => (
+              <option value={option.value} disabled={option.value === ''} selected={option.value === ''}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <span id="catering-event-type-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Event Date -->
+        <div class="catering-form__field">
+          <label for="catering-event-date" class="catering-form__label">
+            Event Date <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="date"
+            id="catering-event-date"
+            name="eventDate"
+            class="catering-form__input"
+            required
+            min={today}
+            aria-describedby="catering-event-date-hint catering-event-date-error"
+            aria-invalid="false"
+          />
+          <span id="catering-event-date-hint" class="catering-form__hint">We recommend booking at least 2 weeks in advance</span>
+          <span id="catering-event-date-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Guest Count -->
+        <div class="catering-form__field">
+          <label for="catering-guest-count" class="catering-form__label">
+            Expected Number of Guests <span class="catering-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="number"
+            id="catering-guest-count"
+            name="guestCount"
+            class="catering-form__input"
+            required
+            min={config.minGuestCount}
+            max={config.maxGuestCount}
+            aria-describedby="catering-guest-count-hint catering-guest-count-error"
+            aria-invalid="false"
+            placeholder="e.g., 50"
+          />
+          <span id="catering-guest-count-hint" class="catering-form__hint">Minimum {config.minGuestCount} guests for catering services</span>
+          <span id="catering-guest-count-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Budget Range Dropdown (Optional) -->
+        <div class="catering-form__field">
+          <label for="catering-budget-range" class="catering-form__label">
+            Budget Range <span class="catering-form__optional">(optional)</span>
+          </label>
+          <select
+            id="catering-budget-range"
+            name="budgetRange"
+            class="catering-form__select"
+            aria-describedby="catering-budget-range-error"
+            aria-invalid="false"
+          >
+            {budgetOptions.map((option) => (
+              <option value={option.value} selected={option.value === ''}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <span id="catering-budget-range-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Section: Menu Preferences -->
+      <div class="catering-form__section catering-form__section--full">
+        <h3 class="catering-form__section-title">Menu Preferences</h3>
+        <p class="catering-form__section-description">Select your preferred service style(s)</p>
+
+        <fieldset class="catering-form__fieldset">
+          <legend class="sr-only">Menu Preferences</legend>
+          <div class="catering-form__checkbox-grid">
+            {menuOptions.map((option) => (
+              <label class="catering-form__checkbox-label" for={`menu-${option.value}`}>
+                <input
+                  type="checkbox"
+                  id={`menu-${option.value}`}
+                  name="menuPreferences"
+                  value={option.value}
+                  class="catering-form__checkbox"
+                />
+                <span class="catering-form__checkbox-content">
+                  <span class="catering-form__checkbox-title">{option.label}</span>
+                  {option.description && (
+                    <span class="catering-form__checkbox-description">{option.description}</span>
+                  )}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Section: Dietary Restrictions -->
+      <div class="catering-form__section catering-form__section--full">
+        <h3 class="catering-form__section-title">Dietary Restrictions</h3>
+        <p class="catering-form__section-description">Select any dietary requirements for your guests</p>
+
+        <fieldset class="catering-form__fieldset">
+          <legend class="sr-only">Dietary Restrictions</legend>
+          <div class="catering-form__tag-grid">
+            {dietaryOptions.map((option) => (
+              <label class="catering-form__tag-label" for={`dietary-${option.value}`}>
+                <input
+                  type="checkbox"
+                  id={`dietary-${option.value}`}
+                  name="dietaryRestrictions"
+                  value={option.value}
+                  class="catering-form__tag-checkbox"
+                />
+                <span class="catering-form__tag">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Message Textarea -->
+      <div class="catering-form__field catering-form__field--full">
+        <label for="catering-message" class="catering-form__label">
+          Additional Details <span class="catering-form__required" aria-label="required">*</span>
+        </label>
+        <textarea
+          id="catering-message"
+          name="message"
+          class="catering-form__textarea"
+          required
+          rows="5"
+          minlength={config.minMessageLength}
+          maxlength={config.maxMessageLength}
+          aria-describedby="catering-message-hint catering-message-error catering-message-count"
+          aria-invalid="false"
+          placeholder="Tell us about your vision for the event, specific dishes you'd like, timing preferences, venue details, etc."
+        ></textarea>
+        <div class="catering-form__textarea-footer">
+          <span id="catering-message-hint" class="catering-form__hint">
+            Include venue address, timing, and any special requests
+          </span>
+          <span id="catering-message-count" class="catering-form__char-count" aria-live="polite">
+            <span class="catering-form__char-current">0</span>/<span class="catering-form__char-max">{config.maxMessageLength}</span>
+          </span>
+        </div>
+        <span id="catering-message-error" class="catering-form__error" role="alert" aria-live="polite"></span>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div class="catering-form__privacy">
+        <p>
+          By submitting this form, you agree to our
+          <a href="/privacy" class="catering-form__link">Privacy Policy</a>.
+          Your information will only be used to respond to your inquiry and plan your event.
+        </p>
+      </div>
+
+      <!-- Form Error Message (general) -->
+      <div
+        id="catering-form-error"
+        class="catering-form__message catering-form__message--error"
+        role="alert"
+        aria-live="assertive"
+        hidden
+      >
+        <svg class="catering-form__message-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+        </svg>
+        <span id="catering-form-error-text">An error occurred. Please try again.</span>
+      </div>
+
+      <!-- Success Message -->
+      <div
+        id="catering-form-success"
+        class="catering-form__message catering-form__message--success"
+        role="status"
+        aria-live="polite"
+        hidden
+      >
+        <svg class="catering-form__message-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+        </svg>
+        <div class="catering-form__success-content">
+          <strong>Thank you for your catering inquiry!</strong>
+          <p>We'll review your event details and contact you within 24-48 hours to discuss your custom menu.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="catering-form__actions">
+        <button
+          type="submit"
+          id="catering-submit-button"
+          class="catering-form__submit"
+          aria-describedby="catering-submit-hint"
+        >
+          <span class="catering-form__submit-text">Submit Inquiry</span>
+          <span class="catering-form__submit-loading" aria-hidden="true">
+            <svg class="catering-form__spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4 31.4" />
+            </svg>
+            <span>Sending...</span>
+          </span>
+        </button>
+        <span id="catering-submit-hint" class="sr-only">
+          Submitting will send your catering inquiry for review
+        </span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * CATERING FORM SECTION
+   * ================================================================= */
+  .catering-form-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+  }
+
+  .catering-form-container {
+    max-width: var(--container-4xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER
+   * ================================================================= */
+  .catering-form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .catering-form-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .catering-form-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * FORM LAYOUT
+   * ================================================================= */
+  .catering-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+    background-color: var(--color-background);
+    padding: var(--spacing-8);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media (min-width: 768px) {
+    .catering-form {
+      grid-template-columns: 1fr 1fr;
+      padding: var(--spacing-10);
+    }
+  }
+
+  /* =================================================================
+   * SECTION GROUPING
+   * ================================================================= */
+  .catering-form__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+  }
+
+  .catering-form__section--full {
+    grid-column: 1 / -1;
+  }
+
+  .catering-form__section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    padding-bottom: var(--spacing-2);
+    border-bottom: var(--border-width-1) solid var(--color-border);
+  }
+
+  .catering-form__section-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * HONEYPOT (SPAM PREVENTION)
+   * ================================================================= */
+  .catering-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  /* =================================================================
+   * FORM FIELD
+   * ================================================================= */
+  .catering-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .catering-form__field--full {
+    grid-column: 1 / -1;
+  }
+
+  /* =================================================================
+   * FIELDSET
+   * ================================================================= */
+  .catering-form__fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* =================================================================
+   * LABEL
+   * ================================================================= */
+  .catering-form__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  .catering-form__required {
+    color: var(--color-error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .catering-form__optional {
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-normal);
+  }
+
+  /* =================================================================
+   * INPUT & SELECT BASE STYLES
+   * ================================================================= */
+  .catering-form__input,
+  .catering-form__select,
+  .catering-form__textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    border: var(--border-width-1) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      border-color var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .catering-form__input::placeholder,
+  .catering-form__textarea::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  /* Hover State */
+  .catering-form__input:hover:not(:focus):not([aria-invalid="true"]),
+  .catering-form__select:hover:not(:focus):not([aria-invalid="true"]),
+  .catering-form__textarea:hover:not(:focus):not([aria-invalid="true"]) {
+    border-color: var(--color-border-dark);
+  }
+
+  /* Focus State */
+  .catering-form__input:focus,
+  .catering-form__select:focus,
+  .catering-form__textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-primary-100);
+  }
+
+  /* Error State */
+  .catering-form__input[aria-invalid="true"],
+  .catering-form__select[aria-invalid="true"],
+  .catering-form__textarea[aria-invalid="true"] {
+    border-color: var(--color-error);
+    background-color: var(--color-error-light);
+  }
+
+  .catering-form__input[aria-invalid="true"]:focus,
+  .catering-form__select[aria-invalid="true"]:focus,
+  .catering-form__textarea[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-error-light);
+  }
+
+  /* Valid State */
+  .catering-form__input[data-valid="true"],
+  .catering-form__select[data-valid="true"],
+  .catering-form__textarea[data-valid="true"] {
+    border-color: var(--color-success);
+  }
+
+  /* =================================================================
+   * SELECT SPECIFIC STYLES
+   * ================================================================= */
+  .catering-form__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right var(--spacing-3) center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+    padding-right: var(--spacing-10);
+    cursor: pointer;
+  }
+
+  /* =================================================================
+   * DATE INPUT STYLES
+   * ================================================================= */
+  .catering-form__input[type="date"] {
+    cursor: pointer;
+  }
+
+  .catering-form__input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--duration-150) var(--ease-in-out);
+  }
+
+  .catering-form__input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* =================================================================
+   * NUMBER INPUT STYLES
+   * ================================================================= */
+  .catering-form__input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .catering-form__input[type="number"]::-webkit-outer-spin-button,
+  .catering-form__input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* =================================================================
+   * TEXTAREA SPECIFIC STYLES
+   * ================================================================= */
+  .catering-form__textarea {
+    min-height: 8rem;
+    resize: vertical;
+  }
+
+  .catering-form__textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-4);
+  }
+
+  .catering-form__char-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .catering-form__char-count[data-over="true"] {
+    color: var(--color-error);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .catering-form__char-count[data-near="true"] {
+    color: var(--color-warning-dark);
+  }
+
+  /* =================================================================
+   * CHECKBOX GRID (Menu Preferences)
+   * ================================================================= */
+  .catering-form__checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  @media (min-width: 640px) {
+    .catering-form__checkbox-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .catering-form__checkbox-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .catering-form__checkbox-label {
+    display: flex;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    border: var(--border-width-1) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-150) var(--ease-in-out),
+      background-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .catering-form__checkbox-label:hover {
+    border-color: var(--color-primary-300);
+    background-color: var(--color-primary-50);
+  }
+
+  .catering-form__checkbox-label:has(.catering-form__checkbox:checked) {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-50);
+  }
+
+  .catering-form__checkbox-label:has(.catering-form__checkbox:focus-visible) {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .catering-form__checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .catering-form__checkbox-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .catering-form__checkbox-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  .catering-form__checkbox-description {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * TAG GRID (Dietary Restrictions)
+   * ================================================================= */
+  .catering-form__tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .catering-form__tag-label {
+    cursor: pointer;
+  }
+
+  .catering-form__tag-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .catering-form__tag {
+    display: inline-block;
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    background-color: var(--color-background-subtle);
+    border: var(--border-width-1) solid var(--color-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-150) var(--ease-in-out),
+      background-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out);
+  }
+
+  .catering-form__tag:hover {
+    border-color: var(--color-primary-300);
+    background-color: var(--color-primary-50);
+  }
+
+  .catering-form__tag-checkbox:checked + .catering-form__tag {
+    color: var(--color-primary);
+    background-color: var(--color-primary-100);
+    border-color: var(--color-primary);
+  }
+
+  .catering-form__tag-checkbox:focus-visible + .catering-form__tag {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* =================================================================
+   * HINT TEXT
+   * ================================================================= */
+  .catering-form__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * ERROR MESSAGE
+   * ================================================================= */
+  .catering-form__error {
+    font-size: var(--font-size-sm);
+    color: var(--color-error-text);
+    min-height: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+  }
+
+  .catering-form__error:empty {
+    display: none;
+  }
+
+  .catering-form__error::before {
+    content: '';
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23991b1b'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  .catering-form__error:empty::before {
+    display: none;
+  }
+
+  /* =================================================================
+   * PRIVACY NOTICE
+   * ================================================================= */
+  .catering-form__privacy {
+    grid-column: 1 / -1;
+    padding: var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .catering-form__privacy p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  .catering-form__link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .catering-form__link:hover {
+    color: var(--color-primary-hover);
+  }
+
+  /* =================================================================
+   * FORM MESSAGES (SUCCESS/ERROR)
+   * ================================================================= */
+  .catering-form__message {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+  }
+
+  .catering-form__message[hidden] {
+    display: none;
+  }
+
+  .catering-form__message--success {
+    background-color: var(--color-success-light);
+    border: var(--border-width-1) solid var(--color-success-border);
+    color: var(--color-success-text);
+  }
+
+  .catering-form__message--error {
+    background-color: var(--color-error-light);
+    border: var(--border-width-1) solid var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  .catering-form__message-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .catering-form__success-content p {
+    margin: var(--spacing-1) 0 0;
+    font-weight: var(--font-weight-normal);
+  }
+
+  /* =================================================================
+   * SUBMIT BUTTON
+   * ================================================================= */
+  .catering-form__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .catering-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    min-width: 12rem;
+    padding: var(--spacing-3) var(--spacing-8);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-inverse);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      transform var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .catering-form__submit:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .catering-form__submit:active:not(:disabled) {
+    background-color: var(--color-primary-active);
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .catering-form__submit:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 var(--focus-ring-offset) var(--color-background),
+      0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-primary-900);
+  }
+
+  .catering-form__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .catering-form__submit-loading {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .catering-form__submit[data-loading="true"] .catering-form__submit-text {
+    display: none;
+  }
+
+  .catering-form__submit[data-loading="true"] .catering-form__submit-loading {
+    display: flex;
+  }
+
+  .catering-form__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .catering-form-section {
+      padding: var(--spacing-10) var(--spacing-4);
+    }
+
+    .catering-form-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .catering-form {
+      padding: var(--spacing-6);
+    }
+
+    .catering-form__submit {
+      width: 100%;
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .catering-form__submit {
+      transition: none;
+    }
+
+    .catering-form__submit:hover:not(:disabled) {
+      transform: none;
+    }
+
+    .catering-form__spinner {
+      animation: none;
+    }
+
+    .catering-form__input,
+    .catering-form__select,
+    .catering-form__textarea,
+    .catering-form__checkbox-label,
+    .catering-form__tag {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .catering-form__input,
+    .catering-form__select,
+    .catering-form__textarea {
+      border: 2px solid CanvasText;
+    }
+
+    .catering-form__input:focus,
+    .catering-form__select:focus,
+    .catering-form__textarea:focus {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    .catering-form__submit {
+      border: 2px solid currentColor;
+    }
+
+    .catering-form__checkbox-label,
+    .catering-form__tag {
+      border: 2px solid CanvasText;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Catering Contact Form Client-Side Logic
+   * Handles validation, spam prevention, and form submission to Formspree
+   */
+
+  // Import validation config constants
+  const VALIDATION_CONFIG = {
+    minMessageLength: 10,
+    maxMessageLength: 2000,
+    maxNameLength: 100,
+    maxEmailLength: 254,
+    maxPhoneLength: 20,
+    minGuestCount: 10,
+    maxGuestCount: 1000,
+    minSubmitTime: 3000, // 3 seconds
+  };
+
+  // Regex patterns
+  const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const US_PHONE_REGEX = /^(\+1\s?)?(\([0-9]{3}\)|[0-9]{3})[\s.\-]?[0-9]{3}[\s.\-]?[0-9]{4}$/;
+  const DANGEROUS_CONTENT_REGEX = /<script|<\/script|javascript:|on\w+\s*=/i;
+
+  // Form elements
+  const form = document.getElementById('catering-form') as HTMLFormElement;
+  const formStartTimeInput = document.getElementById('catering-form-start-time') as HTMLInputElement;
+  const honeypotInput = document.getElementById('catering-website-url') as HTMLInputElement;
+  const submitButton = document.getElementById('catering-submit-button') as HTMLButtonElement;
+  const formError = document.getElementById('catering-form-error') as HTMLDivElement;
+  const formErrorText = document.getElementById('catering-form-error-text') as HTMLSpanElement;
+  const formSuccess = document.getElementById('catering-form-success') as HTMLDivElement;
+
+  // Field elements
+  const nameInput = document.getElementById('catering-name') as HTMLInputElement;
+  const emailInput = document.getElementById('catering-email') as HTMLInputElement;
+  const phoneInput = document.getElementById('catering-phone') as HTMLInputElement;
+  const eventTypeSelect = document.getElementById('catering-event-type') as HTMLSelectElement;
+  const eventDateInput = document.getElementById('catering-event-date') as HTMLInputElement;
+  const guestCountInput = document.getElementById('catering-guest-count') as HTMLInputElement;
+  const budgetRangeSelect = document.getElementById('catering-budget-range') as HTMLSelectElement;
+  const messageTextarea = document.getElementById('catering-message') as HTMLTextAreaElement;
+  const charCountSpan = document.getElementById('catering-message-count') as HTMLSpanElement;
+  const charCurrentSpan = charCountSpan?.querySelector('.catering-form__char-current') as HTMLSpanElement;
+
+  // Error elements
+  const errorElements: Record<string, HTMLSpanElement | null> = {
+    name: document.getElementById('catering-name-error') as HTMLSpanElement,
+    email: document.getElementById('catering-email-error') as HTMLSpanElement,
+    phone: document.getElementById('catering-phone-error') as HTMLSpanElement,
+    eventType: document.getElementById('catering-event-type-error') as HTMLSpanElement,
+    eventDate: document.getElementById('catering-event-date-error') as HTMLSpanElement,
+    guestCount: document.getElementById('catering-guest-count-error') as HTMLSpanElement,
+    budgetRange: document.getElementById('catering-budget-range-error') as HTMLSpanElement,
+    message: document.getElementById('catering-message-error') as HTMLSpanElement,
+  };
+
+  // Track form start time for spam prevention
+  let formStartTime: number;
+
+  // Initialize form
+  function initForm(): void {
+    formStartTime = Date.now();
+    formStartTimeInput.value = formStartTime.toString();
+
+    // Add event listeners for real-time validation
+    nameInput?.addEventListener('blur', () => validateField('name'));
+    nameInput?.addEventListener('input', () => clearFieldError('name'));
+
+    emailInput?.addEventListener('blur', () => validateField('email'));
+    emailInput?.addEventListener('input', () => clearFieldError('email'));
+
+    phoneInput?.addEventListener('blur', () => validateField('phone'));
+    phoneInput?.addEventListener('input', () => clearFieldError('phone'));
+
+    eventTypeSelect?.addEventListener('change', () => validateField('eventType'));
+    eventTypeSelect?.addEventListener('blur', () => validateField('eventType'));
+
+    eventDateInput?.addEventListener('change', () => validateField('eventDate'));
+    eventDateInput?.addEventListener('blur', () => validateField('eventDate'));
+
+    guestCountInput?.addEventListener('blur', () => validateField('guestCount'));
+    guestCountInput?.addEventListener('input', () => clearFieldError('guestCount'));
+
+    budgetRangeSelect?.addEventListener('change', () => validateField('budgetRange'));
+
+    messageTextarea?.addEventListener('blur', () => validateField('message'));
+    messageTextarea?.addEventListener('input', () => {
+      clearFieldError('message');
+      updateCharCount();
+    });
+
+    // Form submission
+    form?.addEventListener('submit', handleSubmit);
+
+    // Initial char count
+    updateCharCount();
+  }
+
+  // Validation functions
+  function validateName(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Name is required';
+    if (trimmed.length < 2) return 'Name must be at least 2 characters';
+    if (trimmed.length > VALIDATION_CONFIG.maxNameLength) {
+      return `Name must be less than ${VALIDATION_CONFIG.maxNameLength} characters`;
+    }
+    if (DANGEROUS_CONTENT_REGEX.test(trimmed)) return 'Name contains invalid characters';
+    return null;
+  }
+
+  function validateEmail(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Email is required';
+    if (trimmed.length > VALIDATION_CONFIG.maxEmailLength) {
+      return `Email must be less than ${VALIDATION_CONFIG.maxEmailLength} characters`;
+    }
+    if (!EMAIL_REGEX.test(trimmed)) return 'Please enter a valid email address';
+    return null;
+  }
+
+  function validatePhone(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Phone number is required for catering inquiries';
+    if (trimmed.length > VALIDATION_CONFIG.maxPhoneLength) {
+      return `Phone must be less than ${VALIDATION_CONFIG.maxPhoneLength} characters`;
+    }
+    if (!US_PHONE_REGEX.test(trimmed)) return 'Please enter a valid US phone number';
+    return null;
+  }
+
+  function validateEventType(value: string): string | null {
+    if (!value) return 'Please select an event type';
+    return null;
+  }
+
+  function validateEventDate(value: string): string | null {
+    if (!value) return 'Please select an event date';
+
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return 'Event date must be in the future';
+    }
+    return null;
+  }
+
+  function validateGuestCount(value: string): string | null {
+    if (!value) return 'Please enter the expected number of guests';
+
+    const count = parseInt(value, 10);
+    if (isNaN(count)) return 'Please enter a valid number';
+    if (count < VALIDATION_CONFIG.minGuestCount) {
+      return `Minimum ${VALIDATION_CONFIG.minGuestCount} guests required for catering`;
+    }
+    if (count > VALIDATION_CONFIG.maxGuestCount) {
+      return `Maximum ${VALIDATION_CONFIG.maxGuestCount} guests. Please contact us directly for larger events.`;
+    }
+    return null;
+  }
+
+  function validateMessage(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Please provide additional details about your event';
+    if (trimmed.length < VALIDATION_CONFIG.minMessageLength) {
+      return `Please provide at least ${VALIDATION_CONFIG.minMessageLength} characters`;
+    }
+    if (trimmed.length > VALIDATION_CONFIG.maxMessageLength) {
+      return `Message must be less than ${VALIDATION_CONFIG.maxMessageLength} characters`;
+    }
+    if (DANGEROUS_CONTENT_REGEX.test(trimmed)) return 'Message contains invalid content';
+    return null;
+  }
+
+  // Validate a single field
+  function validateField(fieldName: string): boolean {
+    let error: string | null = null;
+    let inputElement: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null = null;
+
+    switch (fieldName) {
+      case 'name':
+        inputElement = nameInput;
+        error = validateName(nameInput?.value || '');
+        break;
+      case 'email':
+        inputElement = emailInput;
+        error = validateEmail(emailInput?.value || '');
+        break;
+      case 'phone':
+        inputElement = phoneInput;
+        error = validatePhone(phoneInput?.value || '');
+        break;
+      case 'eventType':
+        inputElement = eventTypeSelect;
+        error = validateEventType(eventTypeSelect?.value || '');
+        break;
+      case 'eventDate':
+        inputElement = eventDateInput;
+        error = validateEventDate(eventDateInput?.value || '');
+        break;
+      case 'guestCount':
+        inputElement = guestCountInput;
+        error = validateGuestCount(guestCountInput?.value || '');
+        break;
+      case 'budgetRange':
+        // Budget is optional, no validation needed
+        inputElement = budgetRangeSelect;
+        error = null;
+        break;
+      case 'message':
+        inputElement = messageTextarea;
+        error = validateMessage(messageTextarea?.value || '');
+        break;
+    }
+
+    const errorElement = errorElements[fieldName];
+
+    if (error) {
+      if (errorElement) errorElement.textContent = error;
+      inputElement?.setAttribute('aria-invalid', 'true');
+      inputElement?.removeAttribute('data-valid');
+      return false;
+    } else {
+      if (errorElement) errorElement.textContent = '';
+      inputElement?.setAttribute('aria-invalid', 'false');
+      // Only show valid state for required fields that have content
+      if (inputElement?.value.trim() && fieldName !== 'budgetRange') {
+        inputElement?.setAttribute('data-valid', 'true');
+      }
+      return true;
+    }
+  }
+
+  // Clear field error (for real-time feedback)
+  function clearFieldError(fieldName: string): void {
+    const errorElement = errorElements[fieldName];
+    if (errorElement) {
+      errorElement.textContent = '';
+    }
+
+    let inputElement: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null = null;
+    switch (fieldName) {
+      case 'name': inputElement = nameInput; break;
+      case 'email': inputElement = emailInput; break;
+      case 'phone': inputElement = phoneInput; break;
+      case 'eventType': inputElement = eventTypeSelect; break;
+      case 'eventDate': inputElement = eventDateInput; break;
+      case 'guestCount': inputElement = guestCountInput; break;
+      case 'budgetRange': inputElement = budgetRangeSelect; break;
+      case 'message': inputElement = messageTextarea; break;
+    }
+
+    inputElement?.setAttribute('aria-invalid', 'false');
+    inputElement?.removeAttribute('data-valid');
+  }
+
+  // Update character count
+  function updateCharCount(): void {
+    const currentLength = messageTextarea?.value.length || 0;
+    if (charCurrentSpan) {
+      charCurrentSpan.textContent = currentLength.toString();
+    }
+
+    // Update visual state
+    if (charCountSpan) {
+      const isOver = currentLength > VALIDATION_CONFIG.maxMessageLength;
+      const isNear = currentLength > VALIDATION_CONFIG.maxMessageLength * 0.9;
+
+      charCountSpan.setAttribute('data-over', isOver.toString());
+      charCountSpan.setAttribute('data-near', (!isOver && isNear).toString());
+    }
+  }
+
+  // Validate all fields
+  function validateAllFields(): boolean {
+    const fields = ['name', 'email', 'phone', 'eventType', 'eventDate', 'guestCount', 'message'];
+    let allValid = true;
+
+    for (const field of fields) {
+      const isValid = validateField(field);
+      if (!isValid) allValid = false;
+    }
+
+    return allValid;
+  }
+
+  // Check honeypot (spam prevention)
+  function isHoneypotFilled(): boolean {
+    return honeypotInput?.value.trim() !== '';
+  }
+
+  // Check submission time (spam prevention)
+  function isSubmittedTooQuickly(): boolean {
+    const elapsedTime = Date.now() - formStartTime;
+    return elapsedTime < VALIDATION_CONFIG.minSubmitTime;
+  }
+
+  // Set loading state
+  function setLoadingState(loading: boolean): void {
+    if (submitButton) {
+      submitButton.disabled = loading;
+      submitButton.setAttribute('data-loading', loading.toString());
+    }
+  }
+
+  // Show form error
+  function showFormError(message: string): void {
+    if (formError && formErrorText) {
+      formErrorText.textContent = message;
+      formError.hidden = false;
+      formSuccess.hidden = true;
+
+      // Focus on error for screen readers
+      formError.focus();
+    }
+  }
+
+  // Show form success
+  function showFormSuccess(): void {
+    if (formSuccess && formError) {
+      formSuccess.hidden = false;
+      formError.hidden = true;
+
+      // Focus on success message for screen readers
+      formSuccess.focus();
+    }
+  }
+
+  // Hide all messages
+  function hideMessages(): void {
+    if (formError) formError.hidden = true;
+    if (formSuccess) formSuccess.hidden = true;
+  }
+
+  // Reset form
+  function resetForm(): void {
+    form?.reset();
+    formStartTime = Date.now();
+    formStartTimeInput.value = formStartTime.toString();
+    updateCharCount();
+
+    // Clear all error states
+    const fields = ['name', 'email', 'phone', 'eventType', 'eventDate', 'guestCount', 'budgetRange', 'message'];
+    for (const field of fields) {
+      clearFieldError(field);
+    }
+  }
+
+  // Handle form submission
+  async function handleSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    hideMessages();
+
+    // Check honeypot (spam)
+    if (isHoneypotFilled()) {
+      // Silently reject spam - don't reveal detection
+      showFormSuccess();
+      return;
+    }
+
+    // Check submission time (spam)
+    if (isSubmittedTooQuickly()) {
+      showFormError('Please take a moment to fill out the form completely.');
+      return;
+    }
+
+    // Validate all fields
+    if (!validateAllFields()) {
+      showFormError('Please correct the errors above before submitting.');
+
+      // Focus on first invalid field
+      const firstInvalidField = form?.querySelector('[aria-invalid="true"]') as HTMLElement;
+      firstInvalidField?.focus();
+      return;
+    }
+
+    // Set loading state
+    setLoadingState(true);
+
+    try {
+      // Collect form data
+      const formData = new FormData(form);
+
+      // Get checkbox values as arrays
+      const menuPreferences = formData.getAll('menuPreferences').join(', ');
+      const dietaryRestrictions = formData.getAll('dietaryRestrictions').join(', ');
+
+      // Create a new FormData with formatted values
+      const submitData = new FormData();
+      submitData.append('name', formData.get('name')?.toString().trim() || '');
+      submitData.append('email', formData.get('email')?.toString().trim() || '');
+      submitData.append('phone', formData.get('phone')?.toString().trim() || '');
+      submitData.append('eventType', formData.get('eventType')?.toString() || '');
+      submitData.append('eventDate', formData.get('eventDate')?.toString() || '');
+      submitData.append('guestCount', formData.get('guestCount')?.toString() || '');
+      submitData.append('budgetRange', formData.get('budgetRange')?.toString() || '');
+      submitData.append('menuPreferences', menuPreferences || 'None specified');
+      submitData.append('dietaryRestrictions', dietaryRestrictions || 'None specified');
+      submitData.append('message', formData.get('message')?.toString().trim() || '');
+
+      // Submit to Formspree
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: submitData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        // Show success
+        showFormSuccess();
+        resetForm();
+      } else {
+        const data = await response.json();
+        if (data.errors) {
+          showFormError(data.errors.map((e: {message: string}) => e.message).join(', '));
+        } else {
+          showFormError('An error occurred. Please try again later.');
+        }
+      }
+
+    } catch (error) {
+      console.error('Form submission error:', error);
+
+      if (error instanceof Error) {
+        if (error.message.includes('network') || error.message.includes('fetch')) {
+          showFormError('Unable to connect. Please check your internet connection and try again.');
+        } else {
+          showFormError('An unexpected error occurred. Please try again later.');
+        }
+      } else {
+        showFormError('An unexpected error occurred. Please try again later.');
+      }
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initForm);
+  } else {
+    initForm();
+  }
+</script>

@@ -1,0 +1,852 @@
+---
+/**
+ * MenuItem Component
+ * A reusable menu item component with name, price, description, dietary indicators,
+ * optional photo thumbnail, and semantic markup. Includes print-friendly styling.
+ *
+ * Features:
+ * - Semantic HTML structure for accessibility
+ * - Dietary indicator icons (GF, V, VG, DF, etc.)
+ * - Optional photo thumbnail with lazy loading
+ * - Price display with variants support
+ * - Chef recommended and featured badges
+ * - Print-friendly styling
+ * - Responsive design
+ * - WCAG 2.1 AA compliant
+ *
+ * @example Basic usage
+ * ```astro
+ * <MenuItem
+ *   name="Grilled Salmon"
+ *   description="Fresh Atlantic salmon with herbs"
+ *   price={{ amount: 2495, currency: 'USD', display: '$24.95' }}
+ * />
+ * ```
+ *
+ * @example With dietary tags and image
+ * ```astro
+ * <MenuItem
+ *   name="Garden Salad"
+ *   description="Mixed greens with vinaigrette"
+ *   price={{ amount: 1295, currency: 'USD', display: '$12.95' }}
+ *   dietaryTags={['vegetarian', 'gluten-free', 'vegan']}
+ *   image={{ src: '/menu/salad.jpg', alt: 'Garden salad' }}
+ *   showImage={true}
+ * />
+ * ```
+ */
+
+import type {
+  MenuItem as MenuItemType,
+  MenuItemCardProps,
+  DietaryTag,
+  AllergenTag,
+  MenuItemImage,
+  MenuItemPrice,
+  SignatureDishStyle,
+  DIETARY_TAG_OPTIONS,
+} from '../types/menu';
+import DietaryIndicator from './DietaryIndicator.astro';
+
+interface Props {
+  /** Menu item name */
+  name: string;
+  /** Full description of the item */
+  description: string;
+  /** Short description for compact displays */
+  shortDescription?: string;
+  /** Primary price (or base price if variants exist) */
+  price: MenuItemPrice;
+  /** Dietary tags (vegetarian, vegan, gluten-free, dairy-free, etc.) */
+  dietaryTags?: DietaryTag[];
+  /** Allergen tags for the item */
+  allergens?: AllergenTag[];
+  /** Main image */
+  image?: MenuItemImage;
+  /** Whether to show the image */
+  showImage?: boolean;
+  /** Whether this is a featured/signature item */
+  featured?: boolean;
+  /** Whether this is a chef's recommendation */
+  chefRecommended?: boolean;
+  /** Whether this is a new item */
+  isNew?: boolean;
+  /** Whether this is a seasonal item */
+  seasonal?: boolean;
+  /** Additional CSS class names */
+  class?: string;
+  /** Whether to show the full description or short description */
+  showFullDescription?: boolean;
+  /** Unique identifier for the item */
+  id?: string;
+  /** Whether this is a signature dish with premium presentation */
+  isSignatureDish?: boolean;
+  /** Chef's story or inspiration behind the dish */
+  chefStory?: string;
+  /** Visual style for the signature dish badge/presentation */
+  signatureStyle?: SignatureDishStyle;
+}
+
+const {
+  name,
+  description,
+  shortDescription,
+  price,
+  dietaryTags = [],
+  allergens = [],
+  image,
+  showImage = false,
+  featured = false,
+  chefRecommended = false,
+  isNew = false,
+  seasonal = false,
+  class: className = '',
+  showFullDescription = true,
+  id,
+  isSignatureDish = false,
+  chefStory,
+  signatureStyle = 'gold',
+} = Astro.props;
+
+// Build CSS classes
+const menuItemClasses = [
+  'menu-item',
+  showImage && image && 'menu-item--with-image',
+  featured && 'menu-item--featured',
+  chefRecommended && 'menu-item--chef-recommended',
+  isNew && 'menu-item--new',
+  seasonal && 'menu-item--seasonal',
+  isSignatureDish && 'menu-item--signature',
+  isSignatureDish && `menu-item--signature-${signatureStyle}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Get the description to display
+const displayDescription = showFullDescription ? description : (shortDescription || description);
+---
+
+<article
+  class={menuItemClasses}
+  id={id}
+  itemscope
+  itemtype="https://schema.org/MenuItem"
+  data-allergens={JSON.stringify(allergens)}
+>
+  {/* Image Section */}
+  {showImage && image && (
+    <div class="menu-item__image-container">
+      <img
+        src={image.src}
+        alt={image.alt}
+        width={image.width || 120}
+        height={image.height || 80}
+        loading="lazy"
+        decoding="async"
+        class="menu-item__image"
+        itemprop="image"
+      />
+    </div>
+  )}
+
+  {/* Content Section */}
+  <div class="menu-item__content">
+    {/* Header: Name, Badges, Price */}
+    <header class="menu-item__header">
+      <div class="menu-item__title-row">
+        <h3 class="menu-item__name" itemprop="name">{name}</h3>
+
+        {/* Badges */}
+        <div class="menu-item__badges" aria-label="Item badges">
+          {isSignatureDish && (
+            <span class={`menu-item__badge menu-item__badge--signature menu-item__badge--signature-${signatureStyle}`} title="Chef's Signature Dish">
+              <span class="menu-item__badge-icon menu-item__badge-icon--signature" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+              </span>
+              <span class="menu-item__badge-text">Signature</span>
+            </span>
+          )}
+          {chefRecommended && !isSignatureDish && (
+            <span class="menu-item__badge menu-item__badge--chef" title="Chef's Recommendation">
+              <span class="menu-item__badge-icon" aria-hidden="true">👨‍🍳</span>
+              <span class="menu-item__badge-text">Chef's Pick</span>
+            </span>
+          )}
+          {featured && !isSignatureDish && (
+            <span class="menu-item__badge menu-item__badge--featured" title="Featured Item">
+              <span class="menu-item__badge-icon" aria-hidden="true">⭐</span>
+              <span class="menu-item__badge-text">Featured</span>
+            </span>
+          )}
+          {isNew && (
+            <span class="menu-item__badge menu-item__badge--new" title="New Item">
+              <span class="menu-item__badge-text">New</span>
+            </span>
+          )}
+          {seasonal && (
+            <span class="menu-item__badge menu-item__badge--seasonal" title="Seasonal Item">
+              <span class="menu-item__badge-icon" aria-hidden="true">🍂</span>
+              <span class="menu-item__badge-text">Seasonal</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Price with dots leader */}
+      <div class="menu-item__price-row">
+        <span class="menu-item__dots" aria-hidden="true"></span>
+        <span class="menu-item__price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+          <meta itemprop="priceCurrency" content={price.currency} />
+          <span itemprop="price" content={String(price.amount / 100)}>{price.display}</span>
+          {price.unit && <span class="menu-item__price-unit">{price.unit}</span>}
+        </span>
+      </div>
+    </header>
+
+    {/* Description */}
+    <p class="menu-item__description" itemprop="description">
+      {displayDescription}
+    </p>
+
+    {/* Chef Story (for signature dishes) */}
+    {isSignatureDish && chefStory && (
+      <div class="menu-item__chef-story">
+        <div class="menu-item__chef-story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <p class="menu-item__chef-story-text">
+          <span class="menu-item__chef-story-label">Chef's Inspiration:</span> {chefStory}
+        </p>
+      </div>
+    )}
+
+    {/* Dietary Tags */}
+    {dietaryTags.length > 0 && (
+      <div class="menu-item__dietary-tags" role="list" aria-label="Dietary information">
+        {dietaryTags.map((tag) => (
+          <span role="listitem">
+            <DietaryIndicator tag={tag} size="md" />
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  /* =================================================================
+   * MENU ITEM BASE STYLES
+   * ================================================================= */
+  .menu-item {
+    display: flex;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) 0;
+    border-bottom: var(--border-width-1) solid var(--color-border-light);
+    position: relative;
+    transition: background-color var(--duration-150) var(--ease-in-out);
+  }
+
+  .menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .menu-item:hover {
+    background-color: var(--color-background-subtle);
+  }
+
+  /* =================================================================
+   * IMAGE STYLES
+   * ================================================================= */
+  .menu-item__image-container {
+    flex-shrink: 0;
+    width: 100px;
+    height: 75px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--color-background-muted);
+  }
+
+  .menu-item__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-300) var(--ease-in-out);
+  }
+
+  .menu-item:hover .menu-item__image {
+    transform: scale(1.05);
+  }
+
+  /* =================================================================
+   * CONTENT STYLES
+   * ================================================================= */
+  .menu-item__content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .menu-item__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .menu-item__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+  }
+
+  .menu-item__name {
+    font-family: var(--font-menu-item);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+  }
+
+  /* =================================================================
+   * PRICE ROW WITH DOTS LEADER
+   * ================================================================= */
+  .menu-item__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-2);
+  }
+
+  .menu-item__dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--color-border-dark);
+    margin-bottom: 4px;
+    min-width: var(--spacing-8);
+  }
+
+  .menu-item__price {
+    font-family: var(--font-menu-item);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    white-space: nowrap;
+  }
+
+  .menu-item__price-unit {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    margin-left: var(--spacing-1);
+  }
+
+  /* =================================================================
+   * DESCRIPTION STYLES
+   * ================================================================= */
+  .menu-item__description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  /* =================================================================
+   * BADGES STYLES
+   * ================================================================= */
+  .menu-item__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1-5);
+    align-items: center;
+  }
+
+  .menu-item__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-0-5) var(--spacing-2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    white-space: nowrap;
+  }
+
+  .menu-item__badge-icon {
+    font-size: 0.875em;
+  }
+
+  .menu-item__badge--chef {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+    border: var(--border-width-1) solid var(--color-primary-200);
+  }
+
+  .menu-item__badge--featured {
+    background-color: var(--color-terracotta-subtle);
+    color: var(--color-terracotta-dark);
+    border: var(--border-width-1) solid var(--color-terracotta);
+  }
+
+  .menu-item__badge--new {
+    background-color: var(--color-success-100);
+    color: var(--color-success-800);
+    border: var(--border-width-1) solid var(--color-success-200);
+  }
+
+  .menu-item__badge--seasonal {
+    background-color: var(--color-warning-100);
+    color: var(--color-warning-800);
+    border: var(--border-width-1) solid var(--color-warning-200);
+  }
+
+  /* =================================================================
+   * DIETARY TAGS STYLES
+   * ================================================================= */
+  .menu-item__dietary-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1-5);
+    margin-top: var(--spacing-1);
+  }
+
+   * ================================================================= */
+
+  /* Featured Item */
+  .menu-item--featured {
+    background-color: var(--color-terracotta-subtle);
+    padding: var(--spacing-4);
+    margin: 0 calc(-1 * var(--spacing-4));
+    border-radius: var(--radius-lg);
+    border-bottom: none;
+  }
+
+  .menu-item--featured + .menu-item {
+    border-top: var(--border-width-1) solid var(--color-border-light);
+  }
+
+  /* Chef Recommended */
+  .menu-item--chef-recommended .menu-item__name {
+    color: var(--color-primary);
+  }
+
+  /* New Item */
+  .menu-item--new::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background-color: var(--color-success-500);
+    border-radius: var(--radius-full);
+  }
+
+  /* =================================================================
+   * SIGNATURE DISH STYLES - Premium Visual Treatment
+   * ================================================================= */
+  .menu-item--signature {
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      var(--color-background-elevated) 0%,
+      var(--color-background-warm) 100%
+    );
+    padding: var(--spacing-5);
+    margin: var(--spacing-2) calc(-1 * var(--spacing-4));
+    border-radius: var(--radius-xl);
+    border: var(--border-width-2) solid transparent;
+    box-shadow: var(--shadow-md), var(--glow-warm-sm);
+    border-bottom: none;
+    overflow: hidden;
+  }
+
+  .menu-item--signature::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--color-primary) 0%,
+      var(--color-terracotta) 50%,
+      var(--color-primary) 100%
+    );
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .menu-item--signature:hover {
+    box-shadow: var(--shadow-lg), var(--glow-warm-md);
+    transform: translateY(-2px);
+  }
+
+  .menu-item--signature + .menu-item {
+    border-top: var(--border-width-1) solid var(--color-border-light);
+    margin-top: var(--spacing-2);
+  }
+
+  /* Signature Item Name */
+  .menu-item--signature .menu-item__name {
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* Signature Item Description */
+  .menu-item--signature .menu-item__description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * SIGNATURE BADGE STYLES
+   * ================================================================= */
+  .menu-item__badge--signature {
+    position: relative;
+    background: linear-gradient(135deg, #b8860b 0%, #daa520 50%, #b8860b 100%);
+    color: #ffffff;
+    border: none;
+    padding: var(--spacing-1) var(--spacing-3);
+    font-weight: var(--font-weight-bold);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.4);
+  }
+
+  .menu-item__badge--signature .menu-item__badge-icon--signature {
+    display: inline-flex;
+    animation: signature-sparkle 2s ease-in-out infinite;
+  }
+
+  @keyframes signature-sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+  }
+
+  /* Gold Style (default) */
+  .menu-item__badge--signature-gold {
+    background: linear-gradient(135deg, #b8860b 0%, #ffd700 50%, #b8860b 100%);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+  }
+
+  .menu-item--signature-gold::before {
+    background: linear-gradient(90deg, #b8860b 0%, #ffd700 50%, #b8860b 100%);
+  }
+
+  .menu-item--signature-gold {
+    border-color: rgba(255, 215, 0, 0.3);
+  }
+
+  /* Classic Style - Burgundy */
+  .menu-item__badge--signature-classic {
+    background: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-500) 50%, var(--color-primary-700) 100%);
+    box-shadow: 0 2px 8px rgba(114, 47, 55, 0.4);
+  }
+
+  .menu-item--signature-classic::before {
+    background: linear-gradient(90deg, var(--color-primary-700) 0%, var(--color-primary-400) 50%, var(--color-primary-700) 100%);
+  }
+
+  .menu-item--signature-classic {
+    border-color: rgba(114, 47, 55, 0.2);
+  }
+
+  /* Artisan Style - Terracotta/Espresso */
+  .menu-item__badge--signature-artisan {
+    background: linear-gradient(135deg, var(--color-espresso) 0%, var(--color-terracotta) 50%, var(--color-espresso) 100%);
+    box-shadow: 0 2px 8px rgba(60, 36, 21, 0.4);
+  }
+
+  .menu-item--signature-artisan::before {
+    background: linear-gradient(90deg, var(--color-espresso) 0%, var(--color-terracotta) 50%, var(--color-espresso) 100%);
+  }
+
+  .menu-item--signature-artisan {
+    border-color: rgba(196, 167, 125, 0.3);
+  }
+
+  /* =================================================================
+   * CHEF STORY STYLES
+   * ================================================================= */
+  .menu-item__chef-story {
+    display: flex;
+    gap: var(--spacing-2);
+    align-items: flex-start;
+    margin-top: var(--spacing-3);
+    padding: var(--spacing-3);
+    background-color: var(--color-background-muted);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .menu-item__chef-story-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: var(--color-primary-100);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+  }
+
+  .menu-item__chef-story-text {
+    margin: 0;
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .menu-item__chef-story-label {
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .menu-item {
+      flex-direction: column;
+      gap: var(--spacing-3);
+    }
+
+    .menu-item__image-container {
+      width: 100%;
+      height: 160px;
+    }
+
+    .menu-item__title-row {
+      flex-direction: column;
+      gap: var(--spacing-1);
+    }
+
+    .menu-item__badges {
+      order: -1;
+    }
+
+    .menu-item--featured {
+      margin: 0;
+      border-radius: var(--radius-md);
+    }
+
+    /* Signature dish responsive adjustments */
+    .menu-item--signature {
+      margin: var(--spacing-2) 0;
+      padding: var(--spacing-4);
+    }
+
+    .menu-item--signature .menu-item__name {
+      font-size: var(--font-size-lg);
+    }
+
+    .menu-item__chef-story {
+      flex-direction: column;
+      padding: var(--spacing-2);
+    }
+
+    .menu-item__chef-story-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY - REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .menu-item,
+    .menu-item__image,
+
+    .menu-item--signature {
+      transition: none;
+    }
+
+    .menu-item:hover .menu-item__image {
+      transform: none;
+    }
+
+
+    .menu-item--signature:hover {
+      transform: none;
+    }
+
+    .menu-item__badge--signature .menu-item__badge-icon--signature {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .menu-item__badge,
+
+      border: 2px solid currentColor;
+    }
+
+    .menu-item--new::before {
+      background-color: Highlight;
+    }
+
+    .menu-item--signature {
+      border: 3px solid Highlight;
+    }
+
+    .menu-item--signature::before {
+      background-color: Highlight;
+    }
+
+    .menu-item__badge--signature {
+      border: 2px solid currentColor;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .menu-item__chef-story {
+      border: 2px solid currentColor;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .menu-item {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      padding: var(--spacing-2) 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .menu-item:hover {
+      background-color: transparent;
+    }
+
+    .menu-item__image-container {
+      width: 80px;
+      height: 60px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item__image {
+      filter: grayscale(0);
+    }
+
+    .menu-item__name {
+      font-size: 12pt;
+    }
+
+    .menu-item__price {
+      font-size: 12pt;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item__description {
+      font-size: 10pt;
+      color: #333;
+    }
+
+    .menu-item__dots {
+      border-bottom-color: #999;
+    }
+
+    .menu-item__badges {
+      gap: var(--spacing-1);
+    }
+
+    .menu-item__badge {
+      font-size: 8pt;
+      padding: 1px 4px;
+      background-color: #f5f5f5 !important;
+      color: #333 !important;
+      border: 1px solid #ccc !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item__badge-icon {
+      display: none;
+    }
+
+    .menu-item__dietary-tags {
+      gap: var(--spacing-1);
+    }
+
+
+      font-size: 8pt;
+      min-width: 20px;
+      height: 16px;
+      padding: 0 3px;
+      background-color: #f0f0f0 !important;
+      color: #333 !important;
+      border: 1px solid #999 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item--featured {
+      background-color: #f9f9f9 !important;
+      border: 1px solid #ddd;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item--new::before {
+      background-color: #333 !important;
+      width: 2px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Signature dish print styles */
+    .menu-item--signature {
+      background: #fafafa !important;
+      border: 2px solid #999 !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item--signature::before {
+      background: #666 !important;
+      height: 3px;
+    }
+
+    .menu-item__badge--signature {
+      background: #666 !important;
+      color: #fff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item__chef-story {
+      background: #f5f5f5 !important;
+      border-left-color: #666 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .menu-item__chef-story-icon {
+      background: #e0e0e0 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>

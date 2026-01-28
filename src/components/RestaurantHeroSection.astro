@@ -1,0 +1,655 @@
+---
+/**
+ * Restaurant Hero Section Component
+ * A full-viewport hero section featuring food photography with warm gradient
+ * overlays and moody lighting aesthetic, perfect for restaurant websites.
+ *
+ * Features:
+ * - Full-viewport background food photography
+ * - Restaurant name overlay with elegant typography
+ * - Tagline support
+ * - View Menu / Find Us CTAs
+ * - Optional hours badge with open/closed status
+ * - Warm gradient overlays for moody lighting aesthetic
+ * - WCAG 2.1 AA compliant contrast and touch targets
+ * - Mobile-first responsive design
+ * - Reduced motion support
+ *
+ * @example Basic usage
+ * ```astro
+ * <RestaurantHeroSection
+ *   restaurantName="La Bella Cucina"
+ *   tagline="Authentic Italian cuisine in the heart of Houston"
+ *   backgroundImage={{
+ *     src: "/images/hero-food.jpg",
+ *     alt: "Delicious pasta dish with fresh ingredients"
+ *   }}
+ *   primaryCTA={{ text: "View Menu", href: "/menu" }}
+ *   secondaryCTA={{ text: "Find Us", href: "/contact#location" }}
+ * />
+ * ```
+ *
+ * @example With hours badge
+ * ```astro
+ * <RestaurantHeroSection
+ *   restaurantName="La Bella Cucina"
+ *   tagline="Authentic Italian cuisine"
+ *   backgroundImage={{ src: "/images/hero.jpg", alt: "Food photo" }}
+ *   primaryCTA={{ text: "View Menu", href: "/menu" }}
+ *   hoursBadge={{
+ *     show: true,
+ *     statusText: "Open Now",
+ *     hoursText: "11am - 10pm",
+ *     isOpen: true
+ *   }}
+ * />
+ * ```
+ */
+
+import type { RestaurantHeroSectionProps } from '../types/restaurant-hero';
+import Button from './Button.astro';
+
+interface Props extends RestaurantHeroSectionProps {}
+
+const {
+  restaurantName,
+  tagline,
+  backgroundImage,
+  primaryCTA,
+  secondaryCTA,
+  hoursBadge,
+  id = 'restaurant-hero',
+  class: className = '',
+  warmGradient = true,
+  overlayOpacity = 0.5,
+  moodyLighting = true,
+  minHeight = '100vh',
+} = Astro.props;
+
+const sectionClasses = [
+  'restaurant-hero',
+  warmGradient && 'restaurant-hero--warm-gradient',
+  moodyLighting && 'restaurant-hero--moody',
+  className,
+].filter(Boolean).join(' ');
+
+// Calculate overlay opacity as CSS custom property
+const overlayStyle = `--overlay-opacity: ${overlayOpacity}; --min-height: ${minHeight};`;
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  style={overlayStyle}
+>
+  <!-- Background Image Layer -->
+  <div class="restaurant-hero__background" aria-hidden="true">
+    <img
+      src={backgroundImage.src}
+      alt=""
+      class="restaurant-hero__image"
+      style={backgroundImage.position ? `object-position: ${backgroundImage.position}` : ''}
+      loading="eager"
+      decoding="async"
+    />
+    <!-- Screen reader description for context -->
+    <span class="sr-only">{backgroundImage.alt}</span>
+  </div>
+
+  <!-- Gradient Overlays -->
+  <div class="restaurant-hero__overlay restaurant-hero__overlay--base" aria-hidden="true"></div>
+  {warmGradient && (
+    <div class="restaurant-hero__overlay restaurant-hero__overlay--warm" aria-hidden="true"></div>
+  )}
+  {moodyLighting && (
+    <div class="restaurant-hero__overlay restaurant-hero__overlay--vignette" aria-hidden="true"></div>
+  )}
+
+  <!-- Content Container -->
+  <div class="restaurant-hero__container">
+    <div class="restaurant-hero__content">
+      <!-- Optional Hours Badge -->
+      {hoursBadge?.show && (
+        <div
+          class={`restaurant-hero__hours-badge ${hoursBadge.isOpen ? 'restaurant-hero__hours-badge--open' : 'restaurant-hero__hours-badge--closed'}`}
+          role="status"
+          aria-live="polite"
+        >
+          <span class="restaurant-hero__hours-status">
+            <span class="restaurant-hero__hours-dot" aria-hidden="true"></span>
+            <span>{hoursBadge.statusText || (hoursBadge.isOpen ? 'Open Now' : 'Closed')}</span>
+          </span>
+          {hoursBadge.hoursText && (
+            <span class="restaurant-hero__hours-time">{hoursBadge.hoursText}</span>
+          )}
+        </div>
+      )}
+
+      <!-- Restaurant Name (H1) -->
+      <h1 id={`${id}-heading`} class="restaurant-hero__name">
+        {restaurantName}
+      </h1>
+
+      <!-- Tagline -->
+      {tagline && (
+        <p class="restaurant-hero__tagline">{tagline}</p>
+      )}
+
+      <!-- CTA Buttons -->
+      {(primaryCTA || secondaryCTA) && (
+        <div class="restaurant-hero__cta-group">
+          {primaryCTA && (
+            <Button
+              text={primaryCTA.text}
+              href={primaryCTA.href}
+              variant="primary"
+              size="large"
+              class="restaurant-hero__cta restaurant-hero__cta--primary"
+            />
+          )}
+          {secondaryCTA && (
+            <Button
+              text={secondaryCTA.text}
+              href={secondaryCTA.href}
+              variant="secondary"
+              size="large"
+              class="restaurant-hero__cta restaurant-hero__cta--secondary"
+            />
+          )}
+        </div>
+      )}
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="restaurant-hero__scroll-indicator" aria-hidden="true">
+      <span class="restaurant-hero__scroll-text">Scroll</span>
+      <svg
+        class="restaurant-hero__scroll-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * RESTAURANT HERO SECTION - BASE STYLES
+   * ================================================================= */
+  .restaurant-hero {
+    position: relative;
+    min-height: var(--min-height, 100vh);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--color-charcoal);
+  }
+
+  /* =================================================================
+   * BACKGROUND IMAGE
+   * ================================================================= */
+  .restaurant-hero__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .restaurant-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* Subtle zoom for moody effect */
+    transform: scale(1.02);
+    transition: transform var(--animation-duration-slowest) var(--ease-out);
+  }
+
+  .restaurant-hero:hover .restaurant-hero__image {
+    transform: scale(1);
+  }
+
+  /* =================================================================
+   * GRADIENT OVERLAYS
+   * ================================================================= */
+  .restaurant-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Base dark overlay for text readability */
+  .restaurant-hero__overlay--base {
+    background: linear-gradient(
+      180deg,
+      rgba(26, 20, 18, calc(var(--overlay-opacity) * 0.6)) 0%,
+      rgba(26, 20, 18, calc(var(--overlay-opacity) * 0.4)) 30%,
+      rgba(26, 20, 18, calc(var(--overlay-opacity) * 0.5)) 60%,
+      rgba(26, 20, 18, calc(var(--overlay-opacity) * 0.85)) 100%
+    );
+  }
+
+  /* Warm gradient overlay - burgundy/terracotta tones */
+  .restaurant-hero__overlay--warm {
+    background: linear-gradient(
+      135deg,
+      rgba(114, 47, 55, 0.25) 0%,
+      rgba(196, 167, 125, 0.15) 30%,
+      rgba(60, 36, 21, 0.2) 60%,
+      rgba(114, 47, 55, 0.35) 100%
+    );
+    mix-blend-mode: multiply;
+  }
+
+  /* Vignette effect for moody lighting */
+  .restaurant-hero__overlay--vignette {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      transparent 40%,
+      rgba(26, 20, 18, 0.3) 70%,
+      rgba(26, 20, 18, 0.6) 100%
+    );
+  }
+
+  /* =================================================================
+   * CONTENT CONTAINER
+   * ================================================================= */
+  .restaurant-hero__container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+    padding: var(--spacing-8) var(--spacing-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: var(--min-height, 100vh);
+  }
+
+  .restaurant-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-6);
+    animation: fadeInUp var(--animation-duration-hero) var(--ease-enter-emphasized) forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * HOURS BADGE
+   * ================================================================= */
+  .restaurant-hero__hours-badge {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2) var(--spacing-4);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: rgba(255, 251, 235, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 251, 235, 0.2);
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-cream);
+    animation-delay: var(--animation-delay-1);
+  }
+
+  .restaurant-hero__hours-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .restaurant-hero__hours-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .restaurant-hero__hours-badge--open .restaurant-hero__hours-dot {
+    background-color: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success);
+  }
+
+  .restaurant-hero__hours-badge--closed .restaurant-hero__hours-dot {
+    background-color: var(--color-error);
+    box-shadow: 0 0 8px var(--color-error);
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.85);
+    }
+  }
+
+  .restaurant-hero__hours-time {
+    color: rgba(255, 251, 235, 0.8);
+    padding-left: var(--spacing-2);
+    border-left: 1px solid rgba(255, 251, 235, 0.3);
+  }
+
+  /* =================================================================
+   * RESTAURANT NAME (H1)
+   * ================================================================= */
+  .restaurant-hero__name {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, var(--font-size-6xl));
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-cream);
+    margin: 0;
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      0 4px 20px rgba(0, 0, 0, 0.2);
+    animation-delay: var(--animation-delay-2);
+  }
+
+  /* =================================================================
+   * TAGLINE
+   * ================================================================= */
+  .restaurant-hero__tagline {
+    font-family: var(--font-body);
+    font-size: clamp(var(--font-size-md), 3vw, var(--font-size-xl));
+    font-weight: var(--font-weight-normal);
+    font-style: italic;
+    line-height: var(--line-height-relaxed);
+    color: rgba(255, 251, 235, 0.9);
+    max-width: 40ch;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    animation-delay: var(--animation-delay-3);
+  }
+
+  /* =================================================================
+   * CTA BUTTONS
+   * ================================================================= */
+  .restaurant-hero__cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+    justify-content: center;
+    margin-top: var(--spacing-4);
+    animation-delay: var(--animation-delay-4);
+  }
+
+  /* Primary CTA - Warm burgundy fill */
+  .restaurant-hero__cta--primary {
+    background-color: var(--color-burgundy);
+    border-color: var(--color-burgundy);
+    box-shadow: var(--shadow-lg), var(--glow-primary-sm);
+  }
+
+  .restaurant-hero__cta--primary:hover {
+    background-color: var(--color-burgundy-light);
+    border-color: var(--color-burgundy-light);
+    box-shadow: var(--shadow-xl), var(--glow-primary-md);
+    transform: translateY(-2px);
+  }
+
+  /* Secondary CTA - Ghost style for dark backgrounds */
+  .restaurant-hero__cta--secondary {
+    background-color: transparent;
+    border-color: var(--color-cream);
+    color: var(--color-cream);
+  }
+
+  .restaurant-hero__cta--secondary:hover {
+    background-color: rgba(255, 251, 235, 0.15);
+    border-color: var(--color-cream);
+    color: var(--color-cream);
+  }
+
+  /* =================================================================
+   * SCROLL INDICATOR
+   * ================================================================= */
+  .restaurant-hero__scroll-indicator {
+    position: absolute;
+    bottom: var(--spacing-8);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: rgba(255, 251, 235, 0.6);
+    animation: float 3s ease-in-out infinite;
+    animation-delay: 1.5s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes float {
+    0% {
+      opacity: 0.6;
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(8px);
+    }
+    100% {
+      opacity: 0.6;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .restaurant-hero__scroll-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+  }
+
+  .restaurant-hero__scroll-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .restaurant-hero__container {
+      padding: var(--spacing-6) var(--spacing-4);
+    }
+
+    .restaurant-hero__content {
+      gap: var(--spacing-4);
+    }
+
+    .restaurant-hero__hours-badge {
+      font-size: var(--font-size-xs);
+      padding: var(--spacing-1-5) var(--spacing-3);
+    }
+
+    .restaurant-hero__cta-group {
+      flex-direction: column;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .restaurant-hero__cta-group :global(.btn) {
+      width: 100%;
+    }
+
+    .restaurant-hero__scroll-indicator {
+      bottom: var(--spacing-4);
+    }
+  }
+
+  /* Tablet */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .restaurant-hero__container {
+      padding: var(--spacing-8) var(--spacing-6);
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1025px) {
+    .restaurant-hero__container {
+      padding: var(--spacing-12) var(--spacing-8);
+    }
+
+    .restaurant-hero__content {
+      gap: var(--spacing-8);
+    }
+
+    .restaurant-hero__tagline {
+      max-width: 50ch;
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .restaurant-hero__content {
+      animation: none;
+      opacity: 1;
+    }
+
+    .restaurant-hero__image {
+      transform: none;
+      transition: none;
+    }
+
+    .restaurant-hero:hover .restaurant-hero__image {
+      transform: none;
+    }
+
+    .restaurant-hero__hours-dot {
+      animation: none;
+    }
+
+    .restaurant-hero__scroll-indicator {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .restaurant-hero__overlay--base,
+    .restaurant-hero__overlay--warm,
+    .restaurant-hero__overlay--vignette {
+      display: none;
+    }
+
+    .restaurant-hero {
+      background: Canvas;
+    }
+
+    .restaurant-hero__name,
+    .restaurant-hero__tagline {
+      color: CanvasText;
+      text-shadow: none;
+    }
+
+    .restaurant-hero__hours-badge {
+      border: 2px solid CanvasText;
+      background: Canvas;
+    }
+
+    .restaurant-hero__cta--secondary {
+      border: 2px solid CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .restaurant-hero {
+      min-height: auto;
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .restaurant-hero__background,
+    .restaurant-hero__overlay,
+    .restaurant-hero__scroll-indicator {
+      display: none;
+    }
+
+    .restaurant-hero__name,
+    .restaurant-hero__tagline {
+      color: var(--color-text-primary);
+      text-shadow: none;
+    }
+
+    .restaurant-hero__hours-badge {
+      border: 1px solid var(--color-border);
+      background: transparent;
+      color: var(--color-text-primary);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE - Additional adjustments
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .restaurant-hero__hours-badge {
+    background: rgba(26, 20, 18, 0.5);
+    border-color: rgba(212, 196, 168, 0.3);
+  }
+
+  :global(html[data-theme="dark"]) .restaurant-hero__cta--primary {
+    background-color: var(--color-burgundy);
+  }
+
+  :global(html[data-theme="dark"]) .restaurant-hero__cta--primary:hover {
+    background-color: var(--color-burgundy-light);
+  }
+</style>

@@ -1,0 +1,858 @@
+---
+/**
+ * Reservation Links Component
+ * Displays prominent CTAs and links to external reservation platforms
+ * (OpenTable, Resy, Yelp Reservations) with proper tracking.
+ *
+ * Features:
+ * - Links to major reservation platforms with prominent CTAs
+ * - Platform-specific branding with official logos and colors
+ * - Availability status badges (when API integration is configured)
+ * - Click tracking for analytics
+ * - Call-to-action styling
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design (1 col mobile, 2 col tablet, 4 col desktop)
+ * - Dark mode support
+ * - Reduced motion support
+ *
+ * @example
+ * ```astro
+ * <ReservationLinks />
+ *
+ * // With custom configuration
+ * <ReservationLinks
+ *   heading="Book Your Table"
+ *   showAvailabilityStatus={true}
+ *   enableTracking={true}
+ * />
+ * ```
+ */
+
+import {
+  RESERVATION_PLATFORMS,
+  RESERVATIONS_CONFIG,
+  RESERVATION_TRACKING_EVENTS,
+  getEnabledPlatforms,
+  type ReservationPlatform,
+  type AvailabilityStatus,
+} from '../config/reservations.config';
+
+interface Props {
+  /** Custom heading */
+  heading?: string;
+  /** Custom subheading */
+  subheading?: string;
+  /** Custom list of platforms (overrides default) */
+  platforms?: ReservationPlatform[];
+  /** Show phone reservation option */
+  showPhoneOption?: boolean;
+  /** Phone number for reservations */
+  phone?: string;
+  /** Show availability status badges */
+  showAvailabilityStatus?: boolean;
+  /** Pre-loaded availability data */
+  availabilityData?: Record<string, AvailabilityStatus>;
+  /** Show additional info section */
+  showReservationInfo?: boolean;
+  /** Custom ID for the section */
+  id?: string;
+  /** Custom class name */
+  class?: string;
+  /** Enable click tracking */
+  enableTracking?: boolean;
+}
+
+const {
+  heading = RESERVATIONS_CONFIG.heading,
+  subheading = RESERVATIONS_CONFIG.subheading,
+  platforms = getEnabledPlatforms(),
+  showPhoneOption = RESERVATIONS_CONFIG.showPhoneOption,
+  phone = RESERVATIONS_CONFIG.phone,
+  showAvailabilityStatus = RESERVATIONS_CONFIG.showAvailabilityStatus,
+  availabilityData = {},
+  showReservationInfo = RESERVATIONS_CONFIG.showReservationInfo,
+  id = RESERVATIONS_CONFIG.sectionId,
+  class: className = '',
+  enableTracking = RESERVATIONS_CONFIG.enableTracking,
+} = Astro.props;
+
+const sectionClasses = ['reservation-links-section', className].filter(Boolean).join(' ');
+
+// Find platforms by ID
+const opentable = platforms.find(p => p.id === 'opentable');
+const resy = platforms.find(p => p.id === 'resy');
+const yelp = platforms.find(p => p.id === 'yelp');
+
+// Calculate grid columns based on number of platforms + phone option
+const totalItems = platforms.length + (showPhoneOption ? 1 : 0);
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-enable-tracking={enableTracking}
+  data-show-availability={showAvailabilityStatus}
+>
+  <div class="reservation-links-container">
+    <header class="reservation-links-header">
+      <h2 id={`${id}-heading`} class="reservation-links-title">{heading}</h2>
+      {subheading && <p class="reservation-links-description">{subheading}</p>}
+    </header>
+
+    <div class="reservation-links-grid" data-total-items={totalItems}>
+      <!-- OpenTable Card -->
+      {opentable && (
+        <a
+          href={opentable.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reservation-card reservation-card--opentable"
+          aria-label="Make a reservation on OpenTable (opens in new tab)"
+          data-platform="opentable"
+          data-platform-name="OpenTable"
+        >
+          {showAvailabilityStatus && (
+            <div
+              class="reservation-card__availability"
+              data-platform="opentable"
+              data-status={availabilityData?.opentable?.available ? 'available' : 'unknown'}
+              aria-label={availabilityData?.opentable?.statusMessage || 'Check availability'}
+            >
+              <span class="availability-dot"></span>
+              <span class="availability-text">
+                {availabilityData?.opentable?.statusMessage || 'Check availability'}
+              </span>
+            </div>
+          )}
+          <div class="reservation-card__logo" aria-hidden="true">
+            <!-- OpenTable Logo -->
+            <svg viewBox="0 0 100 100" fill="currentColor">
+              <circle cx="50" cy="50" r="45" fill="#da3743"/>
+              <path d="M50 25c-13.8 0-25 11.2-25 25s11.2 25 25 25 25-11.2 25-25-11.2-25-25-25zm0 40c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z" fill="white"/>
+              <circle cx="50" cy="50" r="8" fill="white"/>
+            </svg>
+          </div>
+          <div class="reservation-card__content">
+            <span class="reservation-card__name">OpenTable</span>
+            <span class="reservation-card__description">{opentable.description}</span>
+          </div>
+          <div class="reservation-card__cta">
+            <span class="reservation-card__cta-text">Book Now</span>
+            <svg class="reservation-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Resy Card -->
+      {resy && (
+        <a
+          href={resy.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reservation-card reservation-card--resy"
+          aria-label="Make a reservation on Resy (opens in new tab)"
+          data-platform="resy"
+          data-platform-name="Resy"
+        >
+          {showAvailabilityStatus && (
+            <div
+              class="reservation-card__availability"
+              data-platform="resy"
+              data-status={availabilityData?.resy?.available ? 'available' : 'unknown'}
+              aria-label={availabilityData?.resy?.statusMessage || 'Check availability'}
+            >
+              <span class="availability-dot"></span>
+              <span class="availability-text">
+                {availabilityData?.resy?.statusMessage || 'Check availability'}
+              </span>
+            </div>
+          )}
+          <div class="reservation-card__logo" aria-hidden="true">
+            <!-- Resy Logo -->
+            <svg viewBox="0 0 100 100" fill="currentColor">
+              <rect x="5" y="5" width="90" height="90" rx="12" fill="#c8102e"/>
+              <path d="M35 35h15c8.3 0 15 6.7 15 15 0 5.5-3 10.3-7.5 12.8L70 75H55l-10-10H45v10H35V35zm10 20h5c2.8 0 5-2.2 5-5s-2.2-5-5-5h-5v10z" fill="white"/>
+            </svg>
+          </div>
+          <div class="reservation-card__content">
+            <span class="reservation-card__name">Resy</span>
+            <span class="reservation-card__description">{resy.description}</span>
+          </div>
+          <div class="reservation-card__cta">
+            <span class="reservation-card__cta-text">Book Now</span>
+            <svg class="reservation-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Yelp Reservations Card -->
+      {yelp && (
+        <a
+          href={yelp.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reservation-card reservation-card--yelp"
+          aria-label="Make a reservation on Yelp (opens in new tab)"
+          data-platform="yelp"
+          data-platform-name="Yelp"
+        >
+          {showAvailabilityStatus && (
+            <div
+              class="reservation-card__availability"
+              data-platform="yelp"
+              data-status={availabilityData?.yelp?.available ? 'available' : 'unknown'}
+              aria-label={availabilityData?.yelp?.statusMessage || 'Check availability'}
+            >
+              <span class="availability-dot"></span>
+              <span class="availability-text">
+                {availabilityData?.yelp?.statusMessage || 'Check availability'}
+              </span>
+            </div>
+          )}
+          <div class="reservation-card__logo" aria-hidden="true">
+            <!-- Yelp Logo -->
+            <svg viewBox="0 0 100 100" fill="currentColor">
+              <circle cx="50" cy="50" r="45" fill="#d32323"/>
+              <path d="M45 25v25l-15 8 3 5 15-10V25h-3zm10 0v28l15 10 3-5-15-8V25h-3zm-10 35l-10 15 5 3 10-15-5-3zm10 0l10 15 5-3-10-15-5 3zm-5-5a5 5 0 100 10 5 5 0 000-10z" fill="white"/>
+            </svg>
+          </div>
+          <div class="reservation-card__content">
+            <span class="reservation-card__name">Yelp</span>
+            <span class="reservation-card__description">{yelp.description}</span>
+          </div>
+          <div class="reservation-card__cta">
+            <span class="reservation-card__cta-text">Book Now</span>
+            <svg class="reservation-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Phone Reservation Option -->
+      {showPhoneOption && (
+        <a
+          href={`tel:${phone.replace(/[^0-9+]/g, '')}`}
+          class="reservation-card reservation-card--phone"
+          aria-label={`Call ${phone} to make a reservation`}
+          data-platform="phone"
+          data-platform-name="Phone"
+        >
+          <div class="reservation-card__logo" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="currentColor">
+              <circle cx="50" cy="50" r="45" fill="var(--color-primary)"/>
+              <path d="M65 60c-2.5 2.5-6 4-10 4-8 0-20-12-20-20 0-4 1.5-7.5 4-10l4 8-2 4 8 8 4-2 8 4z" fill="white" stroke="white" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="reservation-card__content">
+            <span class="reservation-card__name">Call Us</span>
+            <span class="reservation-card__description">{phone}</span>
+          </div>
+          <div class="reservation-card__cta">
+            <span class="reservation-card__cta-text">Call Now</span>
+            <svg class="reservation-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+        </a>
+      )}
+    </div>
+
+    <!-- Additional Info -->
+    {showReservationInfo && (
+      <div class="reservation-info">
+        <div class="reservation-info__item">
+          <svg class="reservation-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>{RESERVATIONS_CONFIG.recommendationText}</span>
+        </div>
+        <div class="reservation-info__item">
+          <svg class="reservation-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span>{RESERVATIONS_CONFIG.largePartyText}</span>
+        </div>
+        <div class="reservation-info__item">
+          <svg class="reservation-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <span>{RESERVATIONS_CONFIG.specialRequestsText}</span>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * SECTION CONTAINER
+   * ================================================================= */
+  .reservation-links-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-background) 100%
+    );
+  }
+
+  .reservation-links-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  .reservation-links-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .reservation-links-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .reservation-links-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * RESERVATION CARDS GRID
+   * ================================================================= */
+  .reservation-links-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-10);
+  }
+
+  @media (min-width: 640px) {
+    .reservation-links-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .reservation-links-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Adjust for 3 items */
+    .reservation-links-grid[data-total-items="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * RESERVATION CARD
+   * ================================================================= */
+  .reservation-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-6);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    transition: all var(--duration-200) var(--ease-in-out);
+    border-left: 4px solid transparent;
+    text-align: center;
+  }
+
+  .reservation-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .reservation-card:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* =================================================================
+   * AVAILABILITY BADGE
+   * ================================================================= */
+  .reservation-card__availability {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--color-background);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .availability-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-text-tertiary);
+  }
+
+  .availability-text {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .availability-text {
+      display: inline;
+    }
+  }
+
+  /* Availability status colors */
+  [data-status="available"] .availability-dot {
+    background-color: #22c55e;
+    animation: pulse-available 2s infinite;
+  }
+
+  [data-status="limited"] .availability-dot {
+    background-color: #f59e0b;
+  }
+
+  [data-status="unavailable"] .availability-dot {
+    background-color: #ef4444;
+  }
+
+  [data-status="loading"] .availability-dot {
+    background-color: var(--color-text-tertiary);
+    animation: pulse-loading 1.5s infinite;
+  }
+
+  @keyframes pulse-available {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes pulse-loading {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* =================================================================
+   * CARD ELEMENTS
+   * ================================================================= */
+  .reservation-card__logo {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    transition: transform var(--duration-200) var(--ease-in-out);
+  }
+
+  .reservation-card:hover .reservation-card__logo {
+    transform: scale(1.1);
+  }
+
+  .reservation-card__logo svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .reservation-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .reservation-card__name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+  }
+
+  .reservation-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  /* =================================================================
+   * CTA BUTTON
+   * ================================================================= */
+  .reservation-card__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--duration-200) var(--ease-in-out);
+    margin-top: var(--spacing-2);
+  }
+
+  .reservation-card:hover .reservation-card__cta {
+    background-color: var(--color-primary-hover);
+  }
+
+  .reservation-card__cta-text {
+    white-space: nowrap;
+  }
+
+  .reservation-card__arrow {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--duration-200) var(--ease-in-out);
+  }
+
+  .reservation-card:hover .reservation-card__arrow {
+    transform: translateX(4px);
+  }
+
+  /* =================================================================
+   * PLATFORM-SPECIFIC HOVER STATES
+   * ================================================================= */
+  .reservation-card--opentable:hover {
+    border-left-color: #da3743;
+  }
+  .reservation-card--opentable:hover .reservation-card__cta {
+    background-color: #da3743;
+  }
+
+  .reservation-card--resy:hover {
+    border-left-color: #c8102e;
+  }
+  .reservation-card--resy:hover .reservation-card__cta {
+    background-color: #c8102e;
+  }
+
+  .reservation-card--yelp:hover {
+    border-left-color: #d32323;
+  }
+  .reservation-card--yelp:hover .reservation-card__cta {
+    background-color: #d32323;
+  }
+
+  .reservation-card--phone:hover {
+    border-left-color: var(--color-primary);
+  }
+
+  /* =================================================================
+   * RESERVATION INFO
+   * ================================================================= */
+  .reservation-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding: var(--spacing-6);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 768px) {
+    .reservation-info {
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+    }
+  }
+
+  .reservation-info__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .reservation-info__icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .reservation-links-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .reservation-card {
+      padding: var(--spacing-5);
+    }
+
+    .reservation-card__logo {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .reservation-card__name {
+      font-size: var(--font-size-base);
+    }
+
+    .reservation-info {
+      padding: var(--spacing-4);
+    }
+
+    .reservation-info__item {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .reservation-links-section {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-950) 0%,
+      var(--color-background) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .reservation-card {
+    background-color: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .reservation-card__availability {
+    background-color: var(--color-background);
+  }
+
+  :global(html[data-theme="dark"]) .reservation-info {
+    background-color: var(--color-background-elevated);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .reservation-card {
+      transition: none;
+    }
+
+    .reservation-card:hover {
+      transform: none;
+    }
+
+    .reservation-card__logo {
+      transition: none;
+    }
+
+    .reservation-card:hover .reservation-card__logo {
+      transform: none;
+    }
+
+    .reservation-card__arrow {
+      transition: none;
+    }
+
+    .reservation-card:hover .reservation-card__arrow {
+      transform: none;
+    }
+
+    .reservation-card__cta {
+      transition: none;
+    }
+
+    .availability-dot {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .reservation-links-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .reservation-card {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .reservation-card__cta {
+      display: none;
+    }
+
+    .reservation-card__availability {
+      display: none;
+    }
+
+    .reservation-card::after {
+      content: ' (' attr(href) ')';
+      display: block;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      margin-top: var(--spacing-1);
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .reservation-card {
+      border: 2px solid CanvasText;
+    }
+
+    .reservation-card__cta {
+      border: 2px solid CanvasText;
+    }
+
+    .reservation-card__availability {
+      border: 1px solid CanvasText;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Reservation Links Tracking
+   * Tracks clicks on reservation platform CTAs for conversion analysis.
+   * Uses the data layer pattern for compatibility with analytics tools.
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.querySelector('.reservation-links-section');
+    if (!section) return;
+
+    const enableTracking = section.getAttribute('data-enable-tracking') === 'true';
+    const showAvailability = section.getAttribute('data-show-availability') === 'true';
+
+    // Track section view
+    if (enableTracking) {
+      trackEvent('reservation_section_view', {
+        section_location: 'reservation_links',
+        platforms_shown: Array.from(section.querySelectorAll('[data-platform]'))
+          .map(el => el.getAttribute('data-platform'))
+          .filter(Boolean)
+          .join(','),
+      });
+    }
+
+    // Track platform clicks
+    const platformCards = section.querySelectorAll('.reservation-card');
+    platformCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const platform = card.getAttribute('data-platform');
+        const platformName = card.getAttribute('data-platform-name');
+        const destination = card.getAttribute('href');
+        const availabilityBadge = card.querySelector('.reservation-card__availability');
+        const availabilityStatus = availabilityBadge?.getAttribute('data-status') || 'unknown';
+
+        if (enableTracking) {
+          // Push to dataLayer if available (Google Tag Manager)
+          if (typeof window !== 'undefined' && (window as any).dataLayer) {
+            (window as any).dataLayer.push({
+              event: platform === 'phone' ? 'reservation_phone_click' : 'reservation_platform_click',
+              reservation_platform: platform,
+              reservation_platform_name: platformName,
+              reservation_destination: destination,
+              reservation_availability_status: availabilityStatus,
+              section_location: 'reservation_links',
+            });
+          }
+
+          // Custom event for other analytics integrations
+          window.dispatchEvent(new CustomEvent('reservation-click', {
+            detail: {
+              platform,
+              platformName,
+              destination,
+              availabilityStatus,
+              timestamp: new Date().toISOString(),
+            }
+          }));
+        }
+
+        // Console log for development
+        if (import.meta.env.DEV) {
+          console.log('[ReservationLinks] Platform clicked:', {
+            platform,
+            platformName,
+            destination,
+            availabilityStatus,
+          });
+        }
+      });
+    });
+
+    // Helper function to track events
+    function trackEvent(eventName: string, params: Record<string, any>) {
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          event: eventName,
+          ...params,
+        });
+      }
+
+      // Console log for development
+      if (import.meta.env.DEV) {
+        console.log(`[ReservationLinks] ${eventName}:`, params);
+      }
+    }
+
+    // Availability status fetching (when API integration is configured)
+    if (showAvailability) {
+      const availabilityBadges = section.querySelectorAll('.reservation-card__availability');
+      availabilityBadges.forEach(badge => {
+        const platform = badge.getAttribute('data-platform');
+
+        // Set loading state
+        badge.setAttribute('data-status', 'loading');
+        const textEl = badge.querySelector('.availability-text');
+        if (textEl) textEl.textContent = 'Checking...';
+
+        // Note: Actual API integration would go here
+        // For now, we simulate a response after a brief delay
+        // Real implementation would call the platform's availability API
+        setTimeout(() => {
+          // This is placeholder logic - real implementation would use actual API responses
+          const mockAvailable = Math.random() > 0.3; // 70% chance of being available
+          badge.setAttribute('data-status', mockAvailable ? 'available' : 'limited');
+          if (textEl) {
+            textEl.textContent = mockAvailable ? 'Tables available' : 'Limited availability';
+          }
+
+          if (enableTracking) {
+            trackEvent('reservation_availability_loaded', {
+              platform,
+              availability_status: mockAvailable ? 'available' : 'limited',
+            });
+          }
+        }, 1000 + Math.random() * 1000); // Random delay 1-2 seconds
+      });
+    }
+  });
+</script>

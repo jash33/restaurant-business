@@ -1,0 +1,528 @@
+---
+/**
+ * Delivery Platform Links Component
+ * Displays links to food delivery platforms (DoorDash, UberEats, Toast, Grubhub)
+ *
+ * Features:
+ * - Brand-compliant platform styling with official colors
+ * - Order tracking links
+ * - Support for affiliate/partnership links
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design (1 col mobile, 2 col tablet, 4 col desktop)
+ * - Dark mode support
+ * - Reduced motion support
+ *
+ * @example
+ * ```astro
+ * <DeliveryPlatformLinks />
+ *
+ * // With custom configuration
+ * <DeliveryPlatformLinks
+ *   heading="Order Delivery"
+ *   subheading="Choose your preferred platform"
+ *   showTrackingInfo={true}
+ * />
+ * ```
+ */
+
+import {
+  DELIVERY_PLATFORMS,
+  DELIVERY_CONFIG,
+  type DeliveryPlatform,
+} from '../config/delivery-platforms.config';
+
+interface Props {
+  /** Custom heading */
+  heading?: string;
+  /** Custom subheading */
+  subheading?: string;
+  /** Custom list of platforms (overrides default) */
+  platforms?: DeliveryPlatform[];
+  /** Show order tracking info section */
+  showTrackingInfo?: boolean;
+  /** Show delivery time estimates */
+  showDeliveryTimes?: boolean;
+  /** Custom ID for the section */
+  id?: string;
+  /** Custom class name */
+  class?: string;
+}
+
+const {
+  heading = DELIVERY_CONFIG.heading,
+  subheading = DELIVERY_CONFIG.subheading,
+  platforms = DELIVERY_PLATFORMS,
+  showTrackingInfo = DELIVERY_CONFIG.showTrackingInfo,
+  showDeliveryTimes = DELIVERY_CONFIG.showDeliveryTimes,
+  id = DELIVERY_CONFIG.sectionId,
+  class: className = '',
+} = Astro.props;
+
+const sectionClasses = ['delivery-platform-section', className].filter(Boolean).join(' ');
+---
+
+<section class={sectionClasses} id={id} aria-labelledby={`${id}-heading`}>
+  <div class="delivery-platform-container">
+    <header class="delivery-platform-header">
+      <h2 id={`${id}-heading`} class="delivery-platform-title">{heading}</h2>
+      {subheading && <p class="delivery-platform-description">{subheading}</p>}
+    </header>
+
+    <div class="delivery-platform-grid">
+      <!-- DoorDash Card -->
+      {platforms.find(p => p.id === 'doordash') && (
+        <a
+          href={platforms.find(p => p.id === 'doordash')!.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="delivery-card delivery-card--doordash"
+          aria-label="Order on DoorDash (opens in new tab)"
+          data-platform="doordash"
+        >
+          <div class="delivery-card__logo" aria-hidden="true">
+            <!-- DoorDash Logo -->
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="45" fill="#FF3008"/>
+              <path d="M70 42H56c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2z" fill="white"/>
+              <path d="M50 35c-8.3 0-15 6.7-15 15s6.7 15 15 15c4.1 0 7.9-1.7 10.6-4.4l-3.5-3.5c-1.8 1.8-4.3 2.9-7.1 2.9-5.5 0-10-4.5-10-10s4.5-10 10-10c2.8 0 5.3 1.1 7.1 2.9l3.5-3.5C57.9 36.7 54.1 35 50 35z" fill="white"/>
+            </svg>
+          </div>
+          <div class="delivery-card__content">
+            <span class="delivery-card__name">DoorDash</span>
+            <span class="delivery-card__description">{platforms.find(p => p.id === 'doordash')!.description}</span>
+          </div>
+          <div class="delivery-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Uber Eats Card -->
+      {platforms.find(p => p.id === 'ubereats') && (
+        <a
+          href={platforms.find(p => p.id === 'ubereats')!.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="delivery-card delivery-card--ubereats"
+          aria-label="Order on Uber Eats (opens in new tab)"
+          data-platform="ubereats"
+        >
+          <div class="delivery-card__logo" aria-hidden="true">
+            <!-- Uber Eats Logo -->
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="45" fill="#06C167"/>
+              <text x="50" y="58" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">UE</text>
+            </svg>
+          </div>
+          <div class="delivery-card__content">
+            <span class="delivery-card__name">Uber Eats</span>
+            <span class="delivery-card__description">{platforms.find(p => p.id === 'ubereats')!.description}</span>
+          </div>
+          <div class="delivery-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Toast Card -->
+      {platforms.find(p => p.id === 'toast') && (
+        <a
+          href={platforms.find(p => p.id === 'toast')!.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="delivery-card delivery-card--toast"
+          aria-label="Order on Toast (opens in new tab)"
+          data-platform="toast"
+        >
+          <div class="delivery-card__logo" aria-hidden="true">
+            <!-- Toast Logo -->
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="45" fill="#FF6900"/>
+              <path d="M35 60c0-8.3 6.7-15 15-15s15 6.7 15 15" stroke="white" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <circle cx="40" cy="45" r="4" fill="white"/>
+              <circle cx="60" cy="45" r="4" fill="white"/>
+            </svg>
+          </div>
+          <div class="delivery-card__content">
+            <span class="delivery-card__name">Toast</span>
+            <span class="delivery-card__description">{platforms.find(p => p.id === 'toast')!.description}</span>
+          </div>
+          <div class="delivery-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+
+      <!-- Grubhub Card -->
+      {platforms.find(p => p.id === 'grubhub') && (
+        <a
+          href={platforms.find(p => p.id === 'grubhub')!.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="delivery-card delivery-card--grubhub"
+          aria-label="Order on Grubhub (opens in new tab)"
+          data-platform="grubhub"
+        >
+          <div class="delivery-card__logo" aria-hidden="true">
+            <!-- Grubhub Logo -->
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="45" fill="#F63440"/>
+              <path d="M35 50c0-8.3 6.7-15 15-15s15 6.7 15 15-6.7 15-15 15" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <circle cx="50" cy="50" r="5" fill="white"/>
+              <path d="M50 35v-5M50 70v5M35 50h-5M65 50h5" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="delivery-card__content">
+            <span class="delivery-card__name">Grubhub</span>
+            <span class="delivery-card__description">{platforms.find(p => p.id === 'grubhub')!.description}</span>
+          </div>
+          <div class="delivery-card__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </div>
+        </a>
+      )}
+    </div>
+
+    <!-- Delivery Info Section -->
+    {(showTrackingInfo || showDeliveryTimes) && (
+      <div class="delivery-info">
+        {showDeliveryTimes && (
+          <div class="delivery-info__item">
+            <svg class="delivery-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span>Estimated delivery: {DELIVERY_CONFIG.deliveryTimeRange.min}-{DELIVERY_CONFIG.deliveryTimeRange.max} minutes</span>
+          </div>
+        )}
+        {showTrackingInfo && (
+          <div class="delivery-info__item">
+            <svg class="delivery-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span>Track your order in real-time through the app</span>
+          </div>
+        )}
+        <div class="delivery-info__item">
+          <svg class="delivery-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
+            <path d="M16 8h4l3 3v5a2 2 0 0 1-2 2h-1" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+          <span>Delivery available within {DELIVERY_CONFIG.deliveryRadius}</span>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * SECTION CONTAINER
+   * ================================================================= */
+  .delivery-platform-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-subtle, var(--color-primary-50)) 0%,
+      var(--color-background) 100%
+    );
+  }
+
+  .delivery-platform-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  .delivery-platform-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .delivery-platform-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-3);
+  }
+
+  .delivery-platform-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * DELIVERY CARDS GRID
+   * ================================================================= */
+  .delivery-platform-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-10);
+  }
+
+  @media (min-width: 640px) {
+    .delivery-platform-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .delivery-platform-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * DELIVERY CARD
+   * ================================================================= */
+  .delivery-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5) var(--spacing-6);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    transition: all var(--duration-200) var(--ease-in-out);
+    border-left: 4px solid transparent;
+  }
+
+  .delivery-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .delivery-card:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .delivery-card__logo {
+    flex-shrink: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .delivery-card__logo svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .delivery-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    min-width: 0;
+  }
+
+  .delivery-card__name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .delivery-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .delivery-card__arrow {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-text-tertiary);
+    transition: transform var(--duration-200) var(--ease-in-out),
+                color var(--duration-200) var(--ease-in-out);
+  }
+
+  .delivery-card:hover .delivery-card__arrow {
+    transform: translateX(4px);
+  }
+
+  /* =================================================================
+   * BRAND-SPECIFIC HOVER STATES
+   * ================================================================= */
+  .delivery-card--doordash:hover {
+    border-left-color: #FF3008;
+  }
+  .delivery-card--doordash:hover .delivery-card__arrow {
+    color: #FF3008;
+  }
+
+  .delivery-card--ubereats:hover {
+    border-left-color: #06C167;
+  }
+  .delivery-card--ubereats:hover .delivery-card__arrow {
+    color: #06C167;
+  }
+
+  .delivery-card--toast:hover {
+    border-left-color: #FF6900;
+  }
+  .delivery-card--toast:hover .delivery-card__arrow {
+    color: #FF6900;
+  }
+
+  .delivery-card--grubhub:hover {
+    border-left-color: #F63440;
+  }
+  .delivery-card--grubhub:hover .delivery-card__arrow {
+    color: #F63440;
+  }
+
+  /* =================================================================
+   * DELIVERY INFO
+   * ================================================================= */
+  .delivery-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding: var(--spacing-6);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 768px) {
+    .delivery-info {
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+    }
+  }
+
+  .delivery-info__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .delivery-info__icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .delivery-platform-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .delivery-card {
+      padding: var(--spacing-4);
+    }
+
+    .delivery-card__logo {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .delivery-card__name {
+      font-size: var(--font-size-base);
+    }
+
+    .delivery-info {
+      padding: var(--spacing-4);
+    }
+
+    .delivery-info__item {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .delivery-platform-section {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-950) 0%,
+      var(--color-background) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .delivery-card {
+    background-color: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .delivery-info {
+    background-color: var(--color-background-elevated);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .delivery-card {
+      transition: none;
+    }
+
+    .delivery-card:hover {
+      transform: none;
+    }
+
+    .delivery-card__arrow {
+      transition: none;
+    }
+
+    .delivery-card:hover .delivery-card__arrow {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .delivery-platform-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .delivery-card {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .delivery-card__arrow {
+      display: none;
+    }
+
+    .delivery-card::after {
+      content: ' (' attr(href) ')';
+      display: block;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      margin-top: var(--spacing-1);
+    }
+  }
+</style>

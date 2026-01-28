@@ -1,0 +1,329 @@
+---
+/**
+ * Menu Category Section Demo Page
+ * Demonstrates the MenuCategorySection component with various configurations.
+ * This page is for testing and verification purposes.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import MenuCategorySection from '../components/MenuCategorySection.astro';
+import { createPrice } from '../types/menu';
+import type { MenuItem } from '../types/menu';
+
+// Custom items for demonstration
+const customAppetizers: MenuItem[] = [
+  {
+    id: 'demo-bruschetta',
+    name: 'Bruschetta Trio',
+    description: 'Three classic Italian bruschetta: tomato basil, olive tapenade, and roasted garlic with ricotta. Served on freshly toasted ciabatta.',
+    shortDescription: 'Three classic Italian bruschetta varieties',
+    price: createPrice(1295),
+    category: 'appetizers',
+    menuTypes: ['dinner'],
+    dietaryTags: ['vegetarian'],
+    featured: true,
+    available: true,
+    image: {
+      src: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400&h=300&fit=crop',
+      alt: 'Bruschetta trio on a wooden board',
+      width: 400,
+      height: 300,
+    },
+  },
+  {
+    id: 'demo-calamari',
+    name: 'Crispy Calamari',
+    description: 'Lightly breaded calamari rings served with house-made marinara sauce and lemon aioli. A perfect start to your meal.',
+    shortDescription: 'Lightly breaded calamari with marinara and lemon aioli',
+    price: createPrice(1495),
+    category: 'appetizers',
+    menuTypes: ['dinner'],
+    dietaryTags: [],
+    chefRecommended: true,
+    available: true,
+    image: {
+      src: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&h=300&fit=crop',
+      alt: 'Crispy calamari served with marinara sauce',
+      width: 400,
+      height: 300,
+    },
+  },
+  {
+    id: 'demo-spinach-dip',
+    name: 'Spinach Artichoke Dip',
+    description: 'Creamy blend of spinach, artichoke hearts, and three cheeses. Served warm with house-made tortilla chips and crostini.',
+    shortDescription: 'Creamy spinach and artichoke dip with chips',
+    price: createPrice(1395),
+    category: 'appetizers',
+    menuTypes: ['dinner'],
+    dietaryTags: ['vegetarian', 'gluten-free'],
+    isNew: true,
+    available: true,
+  },
+  {
+    id: 'demo-soup',
+    name: 'French Onion Soup',
+    description: 'Classic French onion soup with caramelized onions in rich beef broth, topped with crusty bread and melted Gruyère cheese.',
+    shortDescription: 'Classic French onion with Gruyère',
+    price: createPrice(995),
+    category: 'appetizers',
+    menuTypes: ['dinner'],
+    dietaryTags: [],
+    seasonal: true,
+    available: true,
+  },
+];
+---
+
+<Layout
+  title="Menu Category Section Demo"
+  description="Demonstration of the MenuCategorySection component"
+>
+  <main class="demo-page">
+    <div class="demo-container">
+      <h1 class="demo-title">Menu Category Section Demo</h1>
+      <p class="demo-description">
+        This page demonstrates the MenuCategorySection component with different
+        layout styles, columns, and configurations.
+      </p>
+
+      <!-- Section 1: Compact Layout -->
+      <section class="demo-section" data-testid="compact-layout">
+        <h2 class="demo-section-title">Compact Layout</h2>
+        <p class="demo-section-description">
+          Single column list style, minimal spacing, great for simple menus.
+        </p>
+        <MenuCategorySection
+          title="Starters"
+          description="Begin your culinary journey with our carefully crafted appetizers"
+          items={customAppetizers}
+          layout="compact"
+          columns={1}
+          showImages={false}
+          decoratedHeading={true}
+          id="compact-section"
+        />
+      </section>
+
+      <!-- Section 2: Detailed Layout -->
+      <section class="demo-section" data-testid="detailed-layout">
+        <h2 class="demo-section-title">Detailed Layout (2 Columns)</h2>
+        <p class="demo-section-description">
+          Card-based grid with full descriptions, images, and all details visible.
+        </p>
+        <MenuCategorySection
+          title="Appetizers"
+          description="Start your meal with these delicious bites"
+          items={customAppetizers}
+          layout="detailed"
+          columns={2}
+          showImages={true}
+          showDietaryTags={true}
+          decoratedHeading={true}
+          id="detailed-section"
+        />
+      </section>
+
+      <!-- Section 3: Photo-heavy Layout -->
+      <section class="demo-section" data-testid="photo-heavy-layout">
+        <h2 class="demo-section-title">Photo-heavy Layout (3 Columns)</h2>
+        <p class="demo-section-description">
+          Large image grid with prominent visuals, perfect for showcasing dishes.
+        </p>
+        <MenuCategorySection
+          title="Featured Plates"
+          description="Our most photographed dishes, crafted to delight"
+          items={customAppetizers}
+          layout="photo-heavy"
+          columns={3}
+          showImages={true}
+          decoratedHeading={true}
+          id="photo-heavy-section"
+        />
+      </section>
+
+      <!-- Section 4: Using Category Data -->
+      <section class="demo-section" data-testid="category-data">
+        <h2 class="demo-section-title">Category-Based (Desserts)</h2>
+        <p class="demo-section-description">
+          Items loaded automatically from menu configuration by category.
+        </p>
+        <MenuCategorySection
+          category="desserts"
+          layout="detailed"
+          columns={2}
+          showImages={true}
+          decoratedHeading={true}
+        />
+      </section>
+
+      <!-- Section 5: Non-decorated Heading -->
+      <section class="demo-section" data-testid="non-decorated">
+        <h2 class="demo-section-title">Simple Heading (No Decoration)</h2>
+        <p class="demo-section-description">
+          Clean heading without decorative lines for minimal designs.
+        </p>
+        <MenuCategorySection
+          title="Main Courses"
+          description="Hearty entrees prepared with passion"
+          category="main-courses"
+          layout="detailed"
+          columns={2}
+          decoratedHeading={false}
+          id="simple-heading-section"
+        />
+      </section>
+
+      <!-- Section 6: Four Columns -->
+      <section class="demo-section" data-testid="four-columns">
+        <h2 class="demo-section-title">Four Column Grid</h2>
+        <p class="demo-section-description">
+          Maximum density layout for large screens, responsive on smaller devices.
+        </p>
+        <MenuCategorySection
+          title="Beverages"
+          description="Refreshing drinks to complement your meal"
+          category="beverages"
+          layout="detailed"
+          columns={4}
+          showImages={false}
+          id="four-column-section"
+        />
+      </section>
+
+      <!-- Info Section -->
+      <section class="demo-section demo-section--info">
+        <h2 class="demo-section-title">Component Features</h2>
+        <ul class="feature-list">
+          <li><strong>Layout Styles:</strong> compact, detailed, photo-heavy</li>
+          <li><strong>Grid Columns:</strong> 1, 2, 3, or 4 columns (responsive)</li>
+          <li><strong>Decorative Heading:</strong> Optional line decorations</li>
+          <li><strong>Data Source:</strong> Custom items or category-based</li>
+          <li><strong>Toggle Options:</strong> Images, prices, dietary tags</li>
+          <li><strong>Accessibility:</strong> WCAG 2.1 AA compliant</li>
+          <li><strong>Print Styles:</strong> Optimized for printing</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .demo-page {
+    padding: var(--spacing-8) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    min-height: 100vh;
+  }
+
+  .demo-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .demo-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-16);
+    background-color: var(--color-background);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .demo-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .demo-section-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .demo-section--info {
+    background-color: var(--color-info-light);
+    border: 1px solid var(--color-info-border);
+  }
+
+  .demo-section--info .demo-section-title {
+    color: var(--color-info-dark);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-3);
+  }
+
+  .feature-list li {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-2);
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--color-info-dark);
+  }
+
+  @media (max-width: 640px) {
+    .demo-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .demo-section {
+      padding: var(--spacing-4);
+      margin-bottom: var(--spacing-8);
+    }
+  }
+
+  @media print {
+    .demo-page {
+      padding: 0;
+      background-color: white;
+    }
+
+    .demo-title,
+    .demo-description,
+    .demo-section-title,
+    .demo-section-description,
+    .demo-section--info {
+      display: none;
+    }
+
+    .demo-section {
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      margin-bottom: var(--spacing-8);
+    }
+  }
+</style>

@@ -1,0 +1,325 @@
+---
+/**
+ * Static Map Component Demo Page
+ * Demonstrates the StaticMapComponent with various configurations.
+ * This page is for testing and verification purposes.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import StaticMapComponent from '../components/StaticMapComponent.astro';
+---
+
+<Layout
+  title="Static Map Component Demo"
+  description="Demonstration of the StaticMapComponent with various styles and configurations"
+>
+  <main class="demo-page">
+    <div class="demo-container">
+      <h1 class="demo-title">Static Map Component Demo</h1>
+      <p class="demo-description">
+        This page demonstrates the StaticMapComponent with different styles, marker colors, and configurations.
+        The component displays a static map image with graceful fallback to address text if the image fails to load.
+      </p>
+
+      <!-- Section 1: Default Configuration -->
+      <section class="demo-section" data-testid="default-config">
+        <h2 class="demo-section-title">Default Configuration</h2>
+        <p class="demo-section-description">
+          Standard map with default settings, address card, and map links.
+        </p>
+        <StaticMapComponent id="default-map" />
+      </section>
+
+      <!-- Section 2: Satellite Style -->
+      <section class="demo-section" data-testid="satellite-style">
+        <h2 class="demo-section-title">Satellite Map Style</h2>
+        <p class="demo-section-description">
+          Satellite imagery view with custom blue marker.
+        </p>
+        <StaticMapComponent
+          mapStyle="satellite"
+          markerColor="blue"
+          id="satellite-map"
+        />
+      </section>
+
+      <!-- Section 3: Terrain Style -->
+      <section class="demo-section" data-testid="terrain-style">
+        <h2 class="demo-section-title">Terrain Map Style</h2>
+        <p class="demo-section-description">
+          Terrain view showing elevation, with green marker.
+        </p>
+        <StaticMapComponent
+          mapStyle="terrain"
+          markerColor="green"
+          zoom={14}
+          id="terrain-map"
+        />
+      </section>
+
+      <!-- Section 4: Minimal Configuration -->
+      <section class="demo-section" data-testid="minimal-config">
+        <h2 class="demo-section-title">Minimal (Map Only)</h2>
+        <p class="demo-section-description">
+          Map only without address card or navigation links.
+        </p>
+        <StaticMapComponent
+          showAddressCard={false}
+          showMapLink={false}
+          width={800}
+          height={300}
+          id="minimal-map"
+        />
+      </section>
+
+      <!-- Section 5: Custom Marker Color -->
+      <section class="demo-section" data-testid="custom-marker">
+        <h2 class="demo-section-title">Custom Marker Color</h2>
+        <p class="demo-section-description">
+          Using a custom hex color for the marker.
+        </p>
+        <StaticMapComponent
+          markerColor="custom"
+          customMarkerColor="#8B5CF6"
+          id="custom-marker-map"
+        />
+      </section>
+
+      <!-- Section 6: High Zoom Level -->
+      <section class="demo-section" data-testid="high-zoom">
+        <h2 class="demo-section-title">High Zoom Level</h2>
+        <p class="demo-section-description">
+          Close-up view with zoom level 18 for street-level detail.
+        </p>
+        <StaticMapComponent
+          zoom={18}
+          width={600}
+          height={450}
+          id="high-zoom-map"
+        />
+      </section>
+
+      <!-- Section 7: Fallback Test -->
+      <section class="demo-section" data-testid="fallback-test">
+        <h2 class="demo-section-title">Fallback Behavior Test</h2>
+        <p class="demo-section-description">
+          This section tests the fallback to address text when the map image fails.
+          The fallback should display the business name and full address.
+        </p>
+        <div class="fallback-demo" data-testid="fallback-container">
+          <!-- Simulated failed image state -->
+          <div class="static-map-component" id="fallback-demo-map">
+            <div class="static-map__image-container" style="aspect-ratio: 600/400;">
+              <div id="fallback-demo-fallback" class="static-map__fallback static-map__fallback--visible" aria-live="polite">
+                <div class="static-map__fallback-content">
+                  <svg class="static-map__fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <div class="static-map__fallback-text">
+                    <strong class="static-map__fallback-name">Houston Web Services</strong>
+                    <address class="static-map__fallback-address">
+                      1234 Main Street<br />
+                      Suite 100<br />
+                      Houston, TX 77002
+                    </address>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Info Section -->
+      <section class="demo-section demo-section--info">
+        <h2 class="demo-section-title">Component Features</h2>
+        <ul class="feature-list">
+          <li><strong>Map Styles:</strong> standard, satellite, terrain, illustrated</li>
+          <li><strong>Marker Colors:</strong> primary, red, blue, green, custom</li>
+          <li><strong>Zoom Levels:</strong> 1-20 (default: 15)</li>
+          <li><strong>Performance:</strong> Lazy loading, proper dimensions</li>
+          <li><strong>Fallback:</strong> Graceful degradation to address text</li>
+          <li><strong>Accessibility:</strong> WCAG 2.1 AA compliant</li>
+          <li><strong>Responsive:</strong> Mobile-first design</li>
+          <li><strong>Dark Mode:</strong> Automatic theme support</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .demo-page {
+    padding: var(--spacing-8) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    min-height: 100vh;
+  }
+
+  .demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .demo-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+  }
+
+  .demo-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-16);
+    background-color: var(--color-background);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .demo-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .demo-section-description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .demo-section--info {
+    background-color: var(--color-info-light);
+    border: 1px solid var(--color-info-border);
+  }
+
+  .demo-section--info .demo-section-title {
+    color: var(--color-info-dark);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-3);
+  }
+
+  .feature-list li {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-2);
+    background-color: var(--color-background);
+    border-radius: var(--radius-md);
+  }
+
+  .feature-list strong {
+    color: var(--color-info-dark);
+  }
+
+  /* Fallback demo specific styles */
+  .fallback-demo .static-map__image-container {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-xl, 16px);
+    overflow: hidden;
+    background-color: var(--color-background-muted, #f3f4f6);
+    box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  }
+
+  .fallback-demo .static-map__fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      var(--color-background, #ffffff) 0%,
+      var(--color-background-muted, #f3f4f6) 100%
+    );
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .fallback-demo .static-map__fallback-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-8, 32px);
+  }
+
+  .fallback-demo .static-map__fallback-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary, #D97706);
+    margin-bottom: var(--spacing-4, 16px);
+  }
+
+  .fallback-demo .static-map__fallback-name {
+    font-size: var(--font-size-lg, 18px);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--color-text-primary, #1f2937);
+    margin-bottom: var(--spacing-2, 8px);
+    display: block;
+  }
+
+  .fallback-demo .static-map__fallback-address {
+    font-size: var(--font-size-base, 16px);
+    font-style: normal;
+    color: var(--color-text-secondary, #6b7280);
+    line-height: var(--line-height-relaxed, 1.625);
+  }
+
+  @media (max-width: 640px) {
+    .demo-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .demo-section {
+      padding: var(--spacing-4);
+      margin-bottom: var(--spacing-8);
+    }
+  }
+
+  @media print {
+    .demo-page {
+      padding: 0;
+      background-color: white;
+    }
+
+    .demo-title,
+    .demo-description,
+    .demo-section-title,
+    .demo-section-description,
+    .demo-section--info {
+      display: none;
+    }
+
+    .demo-section {
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      margin-bottom: var(--spacing-8);
+    }
+  }
+</style>

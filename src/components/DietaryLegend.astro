@@ -1,0 +1,485 @@
+---
+/**
+ * DietaryLegend Component
+ * A comprehensive legend showing all dietary indicators with their icons,
+ * abbreviations, and full descriptions. Includes tooltips and accessibility support.
+ *
+ * Features:
+ * - Full list of all dietary indicators
+ * - SVG icons with color-coded badges
+ * - Detailed descriptions for each tag
+ * - Responsive grid layout
+ * - Screen reader accessible
+ * - Print-friendly styling
+ * - Dark mode support
+ *
+ * @example Basic usage
+ * ```astro
+ * <DietaryLegend />
+ * ```
+ *
+ * @example With specific tags only
+ * ```astro
+ * <DietaryLegend tags={['gluten-free', 'vegan', 'vegetarian', 'dairy-free', 'nut-free', 'spicy']} />
+ * ```
+ *
+ * @example Compact layout
+ * ```astro
+ * <DietaryLegend layout="compact" />
+ * ```
+ */
+
+import type { DietaryTag } from '../types/menu';
+import DietaryIndicator from './DietaryIndicator.astro';
+
+interface Props {
+  /** Specific tags to display (defaults to all primary tags) */
+  tags?: DietaryTag[];
+  /** Layout style */
+  layout?: 'full' | 'compact' | 'inline';
+  /** Whether to show descriptions */
+  showDescriptions?: boolean;
+  /** Title for the legend */
+  title?: string;
+  /** Additional CSS class names */
+  class?: string;
+  /** HTML id for the legend */
+  id?: string;
+}
+
+const {
+  tags,
+  layout = 'full',
+  showDescriptions = true,
+  title = 'Dietary Information',
+  class: className = '',
+  id,
+} = Astro.props;
+
+// Default primary dietary tags if not specified
+const defaultTags: DietaryTag[] = [
+  'gluten-free',
+  'vegan',
+  'vegetarian',
+  'dairy-free',
+  'nut-free',
+  'spicy',
+];
+
+const displayTags = tags || defaultTags;
+
+// Full dietary tag information
+const dietaryTagInfo: Record<DietaryTag, {
+  label: string;
+  description: string;
+}> = {
+  'gluten-free': {
+    label: 'Gluten-Free',
+    description: 'Contains no gluten or gluten-containing ingredients. Suitable for those with celiac disease or gluten sensitivity.',
+  },
+  'vegan': {
+    label: 'Vegan',
+    description: 'Contains no animal products or by-products. Made entirely from plant-based ingredients.',
+  },
+  'vegetarian': {
+    label: 'Vegetarian',
+    description: 'Contains no meat or fish. May include dairy products and eggs.',
+  },
+  'dairy-free': {
+    label: 'Dairy-Free',
+    description: 'Contains no milk or dairy products. Suitable for those with lactose intolerance or dairy allergies.',
+  },
+  'nut-free': {
+    label: 'Nut-Free',
+    description: 'Contains no tree nuts or peanuts. Prepared in a nut-aware environment.',
+  },
+  'egg-free': {
+    label: 'Egg-Free',
+    description: 'Contains no eggs or egg products.',
+  },
+  'soy-free': {
+    label: 'Soy-Free',
+    description: 'Contains no soy or soy-derived products.',
+  },
+  'halal': {
+    label: 'Halal',
+    description: 'Prepared according to Islamic dietary law. All ingredients and preparation methods are halal-certified.',
+  },
+  'kosher': {
+    label: 'Kosher',
+    description: 'Prepared according to Jewish dietary law. Certified kosher ingredients and preparation.',
+  },
+  'organic': {
+    label: 'Organic',
+    description: 'Made with certified organic ingredients. No synthetic pesticides or fertilizers used.',
+  },
+  'locally-sourced': {
+    label: 'Locally Sourced',
+    description: 'Ingredients are sourced from local farms and suppliers within our region.',
+  },
+  'spicy': {
+    label: 'Spicy',
+    description: 'Contains spicy ingredients. May cause heat or discomfort for those sensitive to spice.',
+  },
+  'mild': {
+    label: 'Mild',
+    description: 'Contains no significant spice or heat. Suitable for those who prefer mild flavors.',
+  },
+};
+
+const layoutClasses = {
+  full: 'dietary-legend--full',
+  compact: 'dietary-legend--compact',
+  inline: 'dietary-legend--inline',
+};
+---
+
+<aside
+  class:list={['dietary-legend', layoutClasses[layout], className]}
+  id={id}
+  aria-labelledby={id ? `${id}-title` : 'dietary-legend-title'}
+  data-testid="dietary-legend"
+>
+  <h2
+    class="dietary-legend__title"
+    id={id ? `${id}-title` : 'dietary-legend-title'}
+  >
+    {title}
+  </h2>
+
+  <p class="dietary-legend__intro">
+    We are committed to accommodating dietary needs. Please inform your server of any allergies or dietary restrictions.
+  </p>
+
+  <dl class="dietary-legend__list" role="list">
+    {displayTags.map((tag) => {
+      const info = dietaryTagInfo[tag];
+      return (
+        <div
+          class="dietary-legend__item"
+          role="listitem"
+          data-testid={`dietary-legend-item-${tag}`}
+        >
+          <dt class="dietary-legend__term">
+            <DietaryIndicator tag={tag} size="lg" />
+            <span class="dietary-legend__label">{info.label}</span>
+          </dt>
+          {showDescriptions && (
+            <dd class="dietary-legend__description">
+              {info.description}
+            </dd>
+          )}
+        </div>
+      );
+    })}
+  </dl>
+
+  <p class="dietary-legend__disclaimer">
+    <strong>Note:</strong> While we take precautions to prevent cross-contamination, our kitchen handles common allergens. Please speak with our staff if you have severe allergies.
+  </p>
+</aside>
+
+<style>
+  /* =================================================================
+   * DIETARY LEGEND BASE STYLES
+   * ================================================================= */
+  .dietary-legend {
+    background-color: var(--color-background-subtle);
+    border: var(--border-width-1) solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-6);
+  }
+
+  .dietary-legend__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    padding-bottom: var(--spacing-2);
+    border-bottom: var(--border-width-2) solid var(--color-primary);
+  }
+
+  .dietary-legend__intro {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-6);
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * LIST STYLES
+   * ================================================================= */
+  .dietary-legend__list {
+    display: grid;
+    gap: var(--spacing-4);
+    margin: 0;
+    padding: 0;
+  }
+
+  .dietary-legend__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    padding: var(--spacing-3);
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-1) solid var(--color-border-light);
+    transition: box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .dietary-legend__item:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .dietary-legend__term {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .dietary-legend__label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .dietary-legend__description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+    padding-left: calc(36px + var(--spacing-3));
+  }
+
+  .dietary-legend__disclaimer {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin: var(--spacing-6) 0 0;
+    padding-top: var(--spacing-4);
+    border-top: var(--border-width-1) solid var(--color-border-light);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .dietary-legend__disclaimer strong {
+    color: var(--color-text-secondary);
+  }
+
+  /* =================================================================
+   * FULL LAYOUT (Default)
+   * ================================================================= */
+  .dietary-legend--full .dietary-legend__list {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* =================================================================
+   * COMPACT LAYOUT
+   * ================================================================= */
+  .dietary-legend--compact {
+    padding: var(--spacing-4);
+  }
+
+  .dietary-legend--compact .dietary-legend__title {
+    font-size: var(--font-size-lg);
+  }
+
+  .dietary-legend--compact .dietary-legend__intro {
+    display: none;
+  }
+
+  .dietary-legend--compact .dietary-legend__list {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-2);
+  }
+
+  .dietary-legend--compact .dietary-legend__item {
+    padding: var(--spacing-2);
+  }
+
+  .dietary-legend--compact .dietary-legend__description {
+    display: none;
+  }
+
+  .dietary-legend--compact .dietary-legend__disclaimer {
+    font-size: 10px;
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-2);
+  }
+
+  /* =================================================================
+   * INLINE LAYOUT
+   * ================================================================= */
+  .dietary-legend--inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: var(--color-background-muted);
+  }
+
+  .dietary-legend--inline .dietary-legend__title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+    padding: 0;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .dietary-legend--inline .dietary-legend__intro,
+  .dietary-legend--inline .dietary-legend__disclaimer {
+    display: none;
+  }
+
+  .dietary-legend--inline .dietary-legend__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    flex: 1;
+  }
+
+  .dietary-legend--inline .dietary-legend__item {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-2);
+    gap: var(--spacing-1);
+    background: transparent;
+    border: none;
+  }
+
+  .dietary-legend--inline .dietary-legend__item:hover {
+    box-shadow: none;
+  }
+
+  .dietary-legend--inline .dietary-legend__term {
+    gap: var(--spacing-1);
+  }
+
+  .dietary-legend--inline .dietary-legend__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .dietary-legend--inline .dietary-legend__description {
+    display: none;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .dietary-legend {
+      padding: var(--spacing-4);
+    }
+
+    .dietary-legend__title {
+      font-size: var(--font-size-lg);
+    }
+
+    .dietary-legend__list {
+      grid-template-columns: 1fr;
+    }
+
+    .dietary-legend__description {
+      padding-left: 0;
+      margin-top: var(--spacing-1);
+    }
+
+    .dietary-legend--inline {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .dietary-legend--inline .dietary-legend__list {
+      width: 100%;
+    }
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY - REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .dietary-legend__item {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .dietary-legend {
+      border: 2px solid currentColor;
+    }
+
+    .dietary-legend__item {
+      border: 1px solid currentColor;
+    }
+
+    .dietary-legend__title {
+      border-bottom: 2px solid currentColor;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global([data-theme='dark']) .dietary-legend {
+    background-color: var(--color-background-muted);
+  }
+
+  :global([data-theme='dark']) .dietary-legend__item {
+    background-color: var(--color-background);
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .dietary-legend {
+      background-color: #ffffff !important;
+      border: 1px solid #ccc !important;
+      padding: 12pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .dietary-legend__title {
+      font-size: 14pt;
+      border-bottom-color: #333 !important;
+    }
+
+    .dietary-legend__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8pt;
+    }
+
+    .dietary-legend__item {
+      padding: 6pt;
+      background-color: #f5f5f5 !important;
+      border-color: #ddd !important;
+    }
+
+    .dietary-legend__label {
+      font-size: 10pt;
+    }
+
+    .dietary-legend__description {
+      font-size: 9pt;
+    }
+
+    .dietary-legend__disclaimer {
+      font-size: 8pt;
+      margin-top: 8pt;
+      padding-top: 6pt;
+    }
+  }
+</style>

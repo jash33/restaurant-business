@@ -1,0 +1,747 @@
+---
+/**
+ * Special Events Banner Component
+ *
+ * A dismissible banner component for displaying special events, holiday hours,
+ * prix fixe menus, and announcements with date-based auto-display/hide logic
+ * and persistent dismissal via localStorage.
+ *
+ * Features:
+ * - Date-based automatic display/hide
+ * - Persistent dismissal state via localStorage
+ * - Multiple banner types with distinct styling
+ * - Priority-based display ordering
+ * - Fully accessible (ARIA, keyboard navigation)
+ * - Responsive design
+ * - Dark mode support
+ * - Reduced motion support
+ * - Astro View Transitions compatible
+ *
+ * @example Basic usage
+ * ```astro
+ * <SpecialEventsBanner />
+ * ```
+ *
+ * @example With custom configuration
+ * ```astro
+ * <SpecialEventsBanner
+ *   position="top"
+ *   sticky={true}
+ * />
+ * ```
+ */
+
+import type {
+  SpecialEventsBannerProps,
+  BannerEvent,
+  BannerType,
+} from '../types/special-events-banner';
+import {
+  SPECIAL_EVENTS_BANNER_CONFIG,
+  BANNER_TYPE_STYLES,
+} from '../config/special-events-banner.config';
+
+interface Props extends SpecialEventsBannerProps {}
+
+const {
+  config: customConfig = {},
+  position = 'top',
+  class: className = '',
+  sticky = false,
+} = Astro.props;
+
+// Merge custom config with defaults
+const config = {
+  ...SPECIAL_EVENTS_BANNER_CONFIG,
+  ...customConfig,
+  events: customConfig.events || SPECIAL_EVENTS_BANNER_CONFIG.events,
+};
+
+/**
+ * Get today's date in YYYY-MM-DD format
+ */
+function getTodayString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Check if a date string is within the display range
+ */
+function isDateInRange(startDate: string, endDate: string): boolean {
+  const today = getTodayString();
+  return today >= startDate && today <= endDate;
+}
+
+/**
+ * Get active banners sorted by priority
+ */
+function getActiveBanners(events: BannerEvent[]): BannerEvent[] {
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+
+  return events
+    .filter((event) => isDateInRange(event.startDate, event.endDate))
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+    .slice(0, config.maxVisibleBanners || 1);
+}
+
+/**
+ * Get style configuration for a banner type
+ */
+function getBannerStyles(event: BannerEvent) {
+  const typeStyles = BANNER_TYPE_STYLES[event.type];
+  return {
+    backgroundColor: event.backgroundColor || typeStyles.backgroundColor,
+    textColor: event.textColor || typeStyles.textColor,
+    icon: event.icon || typeStyles.icon,
+  };
+}
+
+// Get active banners for server-side rendering
+const activeBanners = getActiveBanners(config.events);
+
+// Build CSS classes
+const containerClasses = [
+  'special-events-banner',
+  `special-events-banner--${position}`,
+  sticky && 'special-events-banner--sticky',
+  className,
+].filter(Boolean).join(' ');
+---
+
+{activeBanners.length > 0 && (
+  <div
+    class={containerClasses}
+    role="region"
+    aria-label="Special announcements"
+    data-special-events-banner
+    data-config={JSON.stringify(config)}
+    data-storage-prefix={config.storageKeyPrefix}
+  >
+    {activeBanners.map((event) => {
+      const styles = getBannerStyles(event);
+      const isDismissible = event.dismissible !== false && config.showCloseButton !== false;
+
+      return (
+        <div
+          class={`special-events-banner__item special-events-banner__item--${event.type}`}
+          data-banner-id={event.id}
+          data-dismissible={isDismissible}
+          role="alert"
+          aria-live="polite"
+          style={`--banner-bg: ${styles.backgroundColor}; --banner-text: ${styles.textColor};`}
+        >
+          <div class="special-events-banner__container">
+            {/* Icon */}
+            <span class="special-events-banner__icon" aria-hidden="true">
+              {styles.icon}
+            </span>
+
+            {/* Content */}
+            <div class="special-events-banner__content">
+              <span class="special-events-banner__title">
+                {event.title}
+              </span>
+
+              {event.description && (
+                <span class="special-events-banner__description">
+                  {event.description}
+                </span>
+              )}
+
+              {event.linkUrl && (
+                <a
+                  href={event.linkUrl}
+                  class="special-events-banner__link"
+                >
+                  {event.linkText || 'Learn More'}
+                  <svg
+                    class="special-events-banner__link-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+              )}
+            </div>
+
+            {/* Close Button */}
+            {isDismissible && (
+              <button
+                type="button"
+                class="special-events-banner__close"
+                aria-label={`Dismiss ${event.title} announcement`}
+                data-dismiss-banner={event.id}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
+
+<style>
+  /* =================================================================
+   * SPECIAL EVENTS BANNER - BASE STYLES
+   * ================================================================= */
+  .special-events-banner {
+    width: 100%;
+    z-index: var(--z-toast, 800);
+  }
+
+  .special-events-banner--top {
+    /* Positioned above content */
+  }
+
+  .special-events-banner--bottom {
+    /* Bottom positioning handled by container */
+  }
+
+  .special-events-banner--sticky {
+    position: sticky;
+    top: 0;
+  }
+
+  /* =================================================================
+   * BANNER ITEM
+   * ================================================================= */
+  .special-events-banner__item {
+    background-color: var(--banner-bg, var(--color-primary));
+    color: var(--banner-text, var(--color-text-inverse));
+    padding: var(--spacing-3) var(--spacing-4);
+    position: relative;
+    overflow: hidden;
+
+    /* Animation */
+    animation: banner-slide-in var(--animation-duration-normal, 300ms) var(--ease-out, ease-out) forwards;
+  }
+
+  @keyframes banner-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .special-events-banner--bottom .special-events-banner__item {
+    animation-name: banner-slide-in-bottom;
+  }
+
+  @keyframes banner-slide-in-bottom {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hidden state for dismissed banners */
+  .special-events-banner__item[data-dismissed="true"] {
+    display: none;
+  }
+
+  /* =================================================================
+   * BANNER CONTAINER (Inner layout)
+   * ================================================================= */
+  .special-events-banner__container {
+    max-width: var(--container-7xl, 80rem);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex-wrap: wrap;
+  }
+
+  @media (min-width: 768px) {
+    .special-events-banner__container {
+      flex-wrap: nowrap;
+      gap: var(--spacing-4);
+    }
+  }
+
+  /* =================================================================
+   * ICON
+   * ================================================================= */
+  .special-events-banner__icon {
+    font-size: var(--font-size-xl, 1.5rem);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* =================================================================
+   * CONTENT
+   * ================================================================= */
+  .special-events-banner__content {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-1) var(--spacing-3);
+    min-width: 0; /* Allow text truncation */
+  }
+
+  .special-events-banner__title {
+    font-weight: var(--font-weight-semibold, 600);
+    font-size: var(--font-size-sm, 0.875rem);
+    white-space: nowrap;
+  }
+
+  .special-events-banner__description {
+    font-size: var(--font-size-sm, 0.875rem);
+    opacity: 0.9;
+    /* Allow text to wrap on mobile, truncate on desktop */
+  }
+
+  @media (min-width: 768px) {
+    .special-events-banner__description {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  /* =================================================================
+   * LINK
+   * ================================================================= */
+  .special-events-banner__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: var(--font-weight-medium, 500);
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: var(--spacing-1) var(--spacing-2);
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md, 0.375rem);
+    transition: background-color var(--duration-150, 150ms) var(--ease-in-out, ease-in-out);
+  }
+
+  .special-events-banner__link:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .special-events-banner__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .special-events-banner__link-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * CLOSE BUTTON
+   * ================================================================= */
+  .special-events-banner__close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: var(--radius-md, 0.375rem);
+    color: inherit;
+    cursor: pointer;
+    transition: background-color var(--duration-150, 150ms) var(--ease-in-out, ease-in-out);
+  }
+
+  .special-events-banner__close:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .special-events-banner__close:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .special-events-banner__close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* =================================================================
+   * BANNER TYPE VARIANTS
+   * ================================================================= */
+
+  /* Announcement - Info blue */
+  .special-events-banner__item--announcement {
+    background: linear-gradient(135deg, var(--color-info, #3b82f6) 0%, var(--color-info-dark, #2563eb) 100%);
+  }
+
+  /* Holiday Hours - Warning amber */
+  .special-events-banner__item--holiday-hours {
+    background: linear-gradient(135deg, var(--color-warning, #f59e0b) 0%, var(--color-warning-dark, #d97706) 100%);
+    color: var(--color-warning-text, #92400e);
+  }
+
+  .special-events-banner__item--holiday-hours .special-events-banner__link,
+  .special-events-banner__item--holiday-hours .special-events-banner__close {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .special-events-banner__item--holiday-hours .special-events-banner__link:hover,
+  .special-events-banner__item--holiday-hours .special-events-banner__close:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  /* Prix Fixe - Accent purple */
+  .special-events-banner__item--prix-fixe {
+    background: linear-gradient(135deg, var(--color-accent, #8b5cf6) 0%, var(--color-accent-dark, #7c3aed) 100%);
+  }
+
+  /* Special Event - Primary brand */
+  .special-events-banner__item--special-event {
+    background: linear-gradient(135deg, var(--color-primary-500, #365395) 0%, var(--color-primary-700, #284182) 100%);
+  }
+
+  /* Closure - Error red */
+  .special-events-banner__item--closure {
+    background: linear-gradient(135deg, var(--color-error, #ef4444) 0%, var(--color-error-dark, #dc2626) 100%);
+  }
+
+  /* Promotion - Success green */
+  .special-events-banner__item--promotion {
+    background: linear-gradient(135deg, var(--color-success, #10b981) 0%, var(--color-success-dark, #059669) 100%);
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .special-events-banner__item {
+      padding: var(--spacing-2-5) var(--spacing-3);
+    }
+
+    .special-events-banner__icon {
+      font-size: var(--font-size-lg, 1.25rem);
+    }
+
+    .special-events-banner__title {
+      font-size: var(--font-size-xs, 0.75rem);
+    }
+
+    .special-events-banner__description {
+      font-size: var(--font-size-xs, 0.75rem);
+      width: 100%;
+      white-space: normal;
+    }
+
+    .special-events-banner__link {
+      font-size: var(--font-size-xs, 0.75rem);
+      margin-left: 0;
+      margin-top: var(--spacing-1);
+    }
+
+    .special-events-banner__content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .special-events-banner__item {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .special-events-banner__link,
+    .special-events-banner__close {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .special-events-banner__item--holiday-hours {
+    color: var(--color-text-primary, #f8fafc);
+  }
+
+  :global(html[data-theme="dark"]) .special-events-banner__item--holiday-hours .special-events-banner__link,
+  :global(html[data-theme="dark"]) .special-events-banner__item--holiday-hours .special-events-banner__close {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  :global(html[data-theme="dark"]) .special-events-banner__item--holiday-hours .special-events-banner__link:hover,
+  :global(html[data-theme="dark"]) .special-events-banner__item--holiday-hours .special-events-banner__close:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .special-events-banner__item {
+      background: Canvas;
+      border: 2px solid CanvasText;
+      color: CanvasText;
+    }
+
+    .special-events-banner__link,
+    .special-events-banner__close {
+      background: transparent;
+      border: 1px solid CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .special-events-banner {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Special Events Banner Client-Side Logic
+   * Handles dismissal, localStorage persistence, and date-based visibility
+   */
+
+  interface BannerConfig {
+    storageKeyPrefix: string;
+    persistDismissals: boolean;
+  }
+
+  interface DismissedState {
+    id: string;
+    dismissedAt: string;
+  }
+
+  class SpecialEventsBannerController {
+    private container: HTMLElement;
+    private config: BannerConfig;
+
+    constructor(container: HTMLElement) {
+      const configStr = container.dataset.config || '{}';
+      const parsedConfig = JSON.parse(configStr);
+
+      this.container = container;
+      this.config = {
+        storageKeyPrefix: container.dataset.storagePrefix || 'restaurant-banner-dismissed',
+        persistDismissals: parsedConfig.persistDismissals !== false,
+      };
+
+      this.initialize();
+    }
+
+    private initialize(): void {
+      // Check for previously dismissed banners
+      this.restoreDismissedState();
+
+      // Attach event listeners
+      this.attachEventListeners();
+    }
+
+    /**
+     * Get the localStorage key for a banner
+     */
+    private getStorageKey(bannerId: string): string {
+      return `${this.config.storageKeyPrefix}-${bannerId}`;
+    }
+
+    /**
+     * Check if a banner was previously dismissed
+     */
+    private isDismissed(bannerId: string): boolean {
+      if (!this.config.persistDismissals) {
+        return false;
+      }
+
+      try {
+        const stored = localStorage.getItem(this.getStorageKey(bannerId));
+        if (!stored) return false;
+
+        const state: DismissedState = JSON.parse(stored);
+        return state.id === bannerId;
+      } catch {
+        return false;
+      }
+    }
+
+    /**
+     * Mark a banner as dismissed
+     */
+    private dismissBanner(bannerId: string): void {
+      const bannerItem = this.container.querySelector(
+        `[data-banner-id="${bannerId}"]`
+      ) as HTMLElement | null;
+
+      if (!bannerItem) return;
+
+      // Animate out
+      bannerItem.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+      bannerItem.style.opacity = '0';
+      bannerItem.style.transform = 'translateY(-100%)';
+
+      // After animation, hide and persist
+      setTimeout(() => {
+        bannerItem.setAttribute('data-dismissed', 'true');
+
+        // Persist to localStorage
+        if (this.config.persistDismissals) {
+          try {
+            const state: DismissedState = {
+              id: bannerId,
+              dismissedAt: new Date().toISOString(),
+            };
+            localStorage.setItem(this.getStorageKey(bannerId), JSON.stringify(state));
+          } catch {
+            // localStorage might be unavailable
+          }
+        }
+
+        // Announce to screen readers
+        this.announceToScreenReader(`${bannerId} announcement dismissed`);
+
+        // Check if all banners are dismissed
+        this.checkAllDismissed();
+      }, 200);
+    }
+
+    /**
+     * Restore dismissed state from localStorage
+     */
+    private restoreDismissedState(): void {
+      const bannerItems = this.container.querySelectorAll('[data-banner-id]');
+
+      bannerItems.forEach((item) => {
+        const bannerId = (item as HTMLElement).dataset.bannerId;
+        if (bannerId && this.isDismissed(bannerId)) {
+          (item as HTMLElement).setAttribute('data-dismissed', 'true');
+        }
+      });
+
+      this.checkAllDismissed();
+    }
+
+    /**
+     * Check if all banners are dismissed and hide container
+     */
+    private checkAllDismissed(): void {
+      const visibleBanners = this.container.querySelectorAll(
+        '[data-banner-id]:not([data-dismissed="true"])'
+      );
+
+      if (visibleBanners.length === 0) {
+        this.container.style.display = 'none';
+      }
+    }
+
+    /**
+     * Attach event listeners for dismiss buttons
+     */
+    private attachEventListeners(): void {
+      // Dismiss button clicks
+      this.container.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const dismissButton = target.closest('[data-dismiss-banner]');
+
+        if (dismissButton) {
+          const bannerId = (dismissButton as HTMLElement).dataset.dismissBanner;
+          if (bannerId) {
+            this.dismissBanner(bannerId);
+          }
+        }
+      });
+
+      // Keyboard handling
+      this.container.addEventListener('keydown', (event) => {
+        const target = event.target as HTMLElement;
+
+        // Close on Escape when focused on dismiss button
+        if (event.key === 'Escape' && target.dataset.dismissBanner) {
+          const bannerId = target.dataset.dismissBanner;
+          if (bannerId) {
+            this.dismissBanner(bannerId);
+          }
+        }
+      });
+    }
+
+    /**
+     * Announce to screen readers
+     */
+    private announceToScreenReader(message: string): void {
+      const announcer = document.createElement('div');
+      announcer.setAttribute('role', 'status');
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.className = 'sr-only';
+      announcer.textContent = message;
+
+      document.body.appendChild(announcer);
+
+      setTimeout(() => {
+        document.body.removeChild(announcer);
+      }, 1000);
+    }
+  }
+
+  // Store instances for cleanup
+  const instances = new Map<HTMLElement, SpecialEventsBannerController>();
+
+  // Initialize all banner containers
+  function initBanners(): void {
+    // Clean up existing instances
+    instances.clear();
+
+    // Initialize new instances
+    const containers = document.querySelectorAll('[data-special-events-banner]');
+    containers.forEach((container) => {
+      const instance = new SpecialEventsBannerController(container as HTMLElement);
+      instances.set(container as HTMLElement, instance);
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBanners);
+  } else {
+    initBanners();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initBanners);
+</script>

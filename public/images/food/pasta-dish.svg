@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="plateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f5f5"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
+    </linearGradient>
+    <linearGradient id="pastaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4d03f"/>
+      <stop offset="100%" style="stop-color:#d4ac0d"/>
+    </linearGradient>
+    <linearGradient id="sauceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c"/>
+      <stop offset="100%" style="stop-color:#c0392b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#2c3e50"/>
+
+  <!-- Wooden table texture -->
+  <rect x="0" y="400" width="800" height="200" fill="#8b4513"/>
+  <rect x="0" y="420" width="800" height="3" fill="#6b3510" opacity="0.5"/>
+  <rect x="0" y="480" width="800" height="2" fill="#6b3510" opacity="0.3"/>
+  <rect x="0" y="540" width="800" height="2" fill="#6b3510" opacity="0.4"/>
+
+  <!-- Plate shadow -->
+  <ellipse cx="410" cy="360" rx="200" ry="50" fill="rgba(0,0,0,0.3)"/>
+
+  <!-- White plate -->
+  <ellipse cx="400" cy="300" rx="200" ry="150" fill="url(#plateGrad)" stroke="#ccc" stroke-width="2"/>
+  <ellipse cx="400" cy="300" rx="180" ry="135" fill="#fff" stroke="#eee" stroke-width="1"/>
+
+  <!-- Pasta pile -->
+  <ellipse cx="400" cy="290" rx="140" ry="80" fill="url(#pastaGrad)"/>
+
+  <!-- Pasta strands -->
+  <path d="M280 280 Q350 250 420 280 Q490 310 520 280" stroke="#d4ac0d" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M290 300 Q360 270 430 300 Q500 330 510 290" stroke="#e6be1a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M300 320 Q370 290 440 320 Q500 350 490 310" stroke="#d4ac0d" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M320 260 Q380 230 440 260 Q490 290 480 250" stroke="#e6be1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Tomato sauce -->
+  <ellipse cx="400" cy="285" rx="90" ry="50" fill="url(#sauceGrad)" opacity="0.8"/>
+  <circle cx="360" cy="275" r="8" fill="#c0392b"/>
+  <circle cx="420" cy="290" r="10" fill="#c0392b"/>
+  <circle cx="440" cy="265" r="6" fill="#c0392b"/>
+
+  <!-- Basil leaves -->
+  <path d="M380 250 Q390 230 400 250 Q390 260 380 250" fill="#27ae60"/>
+  <path d="M420 255 Q430 235 440 255 Q430 265 420 255" fill="#2ecc71"/>
+  <path d="M395 240 Q405 220 415 240 Q405 250 395 240" fill="#27ae60"/>
+
+  <!-- Parmesan shavings -->
+  <ellipse cx="350" cy="270" rx="10" ry="5" fill="#f5f5dc" opacity="0.9"/>
+  <ellipse cx="430" cy="280" rx="8" ry="4" fill="#f5f5dc" opacity="0.9"/>
+  <ellipse cx="400" cy="260" rx="12" ry="6" fill="#f5f5dc" opacity="0.9"/>
+
+  <!-- Fork -->
+  <rect x="600" y="200" width="8" height="180" fill="#c0c0c0" rx="2"/>
+  <rect x="585" y="180" width="6" height="40" fill="#c0c0c0" rx="1"/>
+  <rect x="595" y="180" width="6" height="45" fill="#c0c0c0" rx="1"/>
+  <rect x="605" y="180" width="6" height="45" fill="#c0c0c0" rx="1"/>
+  <rect x="615" y="180" width="6" height="40" fill="#c0c0c0" rx="1"/>
+
+  <!-- Decorative text -->
+  <text x="400" y="550" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#fff" opacity="0.8">Fresh Homemade Pasta</text>
+</svg>

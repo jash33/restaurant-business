@@ -1,0 +1,603 @@
+---
+/**
+ * TestimonialsCarousel Component
+ * A horizontal scrolling carousel for displaying customer testimonials.
+ * Adapted from HorizontalGallery patterns for testimonial cards.
+ *
+ * Features:
+ * - CSS scroll-snap for precise navigation
+ * - Dot indicators showing current position
+ * - Navigation arrows
+ * - Touch swipe gestures for mobile
+ * - Keyboard navigation (Arrow keys)
+ * - Auto-scroll with pause on hover
+ * - WCAG 2.1 AA compliant
+ * - Reduced motion support
+ * - Responsive: 1 card mobile, 2 tablet, 3 desktop
+ *
+ * @example Basic usage
+ * ```astro
+ * <TestimonialsCarousel testimonials={testimonials} />
+ * ```
+ *
+ * @example With auto-scroll
+ * ```astro
+ * <TestimonialsCarousel
+ *   testimonials={testimonials}
+ *   autoScroll={true}
+ *   autoScrollInterval={5000}
+ * />
+ * ```
+ */
+
+import type { TestimonialsCarouselProps } from '../types/testimonial';
+import TestimonialCard from './TestimonialCard.astro';
+
+interface Props extends TestimonialsCarouselProps {}
+
+const {
+  testimonials,
+  showArrows = true,
+  showIndicators = true,
+  autoScroll = false,
+  autoScrollInterval = 6000,
+  class: className = '',
+  testId = 'testimonials-carousel',
+} = Astro.props;
+
+// Generate unique ID for this carousel instance
+const carouselId = `tcarousel-${Math.random().toString(36).substr(2, 9)}`;
+
+// Build CSS classes
+const carouselClasses = [
+  'testimonials-carousel',
+  className,
+].filter(Boolean).join(' ');
+---
+
+<div
+  class={carouselClasses}
+  data-carousel-id={carouselId}
+  data-testid={testId}
+  data-auto-scroll={autoScroll ? 'true' : 'false'}
+  data-auto-scroll-interval={autoScrollInterval}
+  role="region"
+  aria-label="Customer testimonials carousel - Use arrow keys or swipe to navigate"
+  aria-roledescription="carousel"
+>
+  {/* Main scroll container */}
+  <div
+    class="testimonials-carousel__track"
+    role="list"
+    aria-label="Testimonial reviews"
+    tabindex="0"
+  >
+    {testimonials.map((testimonial, index) => (
+      <div
+        class="testimonials-carousel__slide"
+        role="listitem"
+        data-slide-index={index}
+        aria-label={`Testimonial ${index + 1} of ${testimonials.length}`}
+        aria-roledescription="slide"
+      >
+        <TestimonialCard
+          {...testimonial}
+          showSource={true}
+          showDate={true}
+          testId={`testimonial-${index}`}
+        />
+      </div>
+    ))}
+  </div>
+
+  {/* Navigation Arrows */}
+  {showArrows && testimonials.length > 1 && (
+    <>
+      <button
+        type="button"
+        class="testimonials-carousel__nav testimonials-carousel__prev"
+        aria-label="Previous testimonial"
+        data-testid="carousel-prev"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="testimonials-carousel__nav testimonials-carousel__next"
+        aria-label="Next testimonial"
+        data-testid="carousel-next"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </>
+  )}
+
+  {/* Scroll Indicators (Dots) */}
+  {showIndicators && testimonials.length > 1 && (
+    <div
+      class="testimonials-carousel__indicators"
+      role="tablist"
+      aria-label="Testimonial navigation"
+    >
+      {testimonials.map((_, index) => (
+        <button
+          type="button"
+          class:list={['testimonials-carousel__indicator', { active: index === 0 }]}
+          role="tab"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          aria-label={`Go to testimonial ${index + 1}`}
+          data-slide-index={index}
+          data-testid={`indicator-${index}`}
+        />
+      ))}
+    </div>
+  )}
+
+  {/* Swipe hint for touch devices */}
+  <div class="testimonials-carousel__swipe-hint" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    <span>Swipe</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </div>
+</div>
+
+<style>
+  /* =================================================================
+   * TESTIMONIALS CAROUSEL COMPONENT STYLES
+   * =================================================================
+   */
+
+  .testimonials-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Main scroll track */
+  .testimonials-carousel__track {
+    display: flex;
+    gap: var(--spacing-6);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--spacing-4) var(--spacing-2);
+    margin: calc(var(--spacing-4) * -1) calc(var(--spacing-2) * -1);
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .testimonials-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonials-carousel__track:focus {
+    outline: none;
+  }
+
+  .testimonials-carousel__track:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 4px;
+    border-radius: var(--radius-lg, 0.5rem);
+  }
+
+  /* Individual slide */
+  .testimonials-carousel__slide {
+    flex: 0 0 auto;
+    width: calc(100% - var(--spacing-4));
+    max-width: 400px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  /* Tablet - show 2 cards */
+  @media (min-width: 640px) {
+    .testimonials-carousel__slide {
+      width: calc(50% - var(--spacing-4));
+      max-width: 450px;
+    }
+  }
+
+  /* Desktop - show 3 cards */
+  @media (min-width: 1024px) {
+    .testimonials-carousel__slide {
+      width: calc(33.333% - var(--spacing-4));
+      max-width: 400px;
+    }
+  }
+
+  /* Navigation arrows */
+  .testimonials-carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-elevated, #ffffff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 50%;
+    color: var(--color-text-primary, #111827);
+    cursor: pointer;
+    transition: all var(--duration-200, 200ms) var(--ease-out);
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+  }
+
+  .testimonials-carousel__nav:hover {
+    background: var(--color-primary, #365395);
+    color: white;
+    border-color: var(--color-primary, #365395);
+  }
+
+  .testimonials-carousel__nav:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+  }
+
+  .testimonials-carousel__nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .testimonials-carousel__prev {
+    left: 0;
+  }
+
+  .testimonials-carousel__next {
+    right: 0;
+  }
+
+  /* Hide arrows on small touch devices */
+  @media (max-width: 640px) and (pointer: coarse) {
+    .testimonials-carousel__nav {
+      display: none;
+    }
+  }
+
+  /* Scroll indicators (dots) */
+  .testimonials-carousel__indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4) 0;
+  }
+
+  .testimonials-carousel__indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-border-dark, #d1d5db);
+    cursor: pointer;
+    transition: all var(--duration-200, 200ms) var(--ease-out);
+    padding: 0;
+  }
+
+  .testimonials-carousel__indicator:hover {
+    background: var(--color-primary-light, #7287b5);
+    transform: scale(1.2);
+  }
+
+  .testimonials-carousel__indicator:focus-visible {
+    outline: 2px solid var(--color-primary, #365395);
+    outline-offset: 2px;
+  }
+
+  .testimonials-carousel__indicator.active {
+    background: var(--color-primary, #365395);
+    transform: scale(1.2);
+  }
+
+  /* Swipe hint */
+  .testimonials-carousel__swipe-hint {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2);
+    color: var(--color-text-tertiary, #6b7280);
+    font-size: var(--font-size-xs);
+    opacity: 0;
+    transition: opacity var(--duration-300, 300ms) var(--ease-out);
+  }
+
+  /* Show swipe hint on touch devices */
+  @media (pointer: coarse) {
+    .testimonials-carousel__swipe-hint {
+      display: flex;
+    }
+
+    .testimonials-carousel__swipe-hint.visible {
+      opacity: 1;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT
+   * =================================================================
+   */
+
+  html[data-theme="dark"] .testimonials-carousel__nav {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  html[data-theme="dark"] .testimonials-carousel__nav:hover {
+    background: var(--color-primary, #365395);
+    border-color: var(--color-primary, #365395);
+  }
+
+  html[data-theme="dark"] .testimonials-carousel__indicator {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  html[data-theme="dark"] .testimonials-carousel__indicator.active {
+    background: var(--color-primary-light, #7287b5);
+  }
+
+  html[data-theme="dark"] .testimonials-carousel__swipe-hint {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * =================================================================
+   */
+
+  @media (prefers-reduced-motion: reduce) {
+    .testimonials-carousel__track {
+      scroll-behavior: auto;
+    }
+
+    .testimonials-carousel__nav,
+    .testimonials-carousel__indicator,
+    .testimonials-carousel__swipe-hint {
+      transition: none;
+    }
+
+    .testimonials-carousel__indicator:hover {
+      transform: none;
+    }
+
+    .testimonials-carousel__indicator.active {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   */
+
+  @media print {
+    .testimonials-carousel__track {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-4);
+      overflow: visible;
+    }
+
+    .testimonials-carousel__slide {
+      width: 100%;
+      max-width: none;
+    }
+
+    .testimonials-carousel__nav,
+    .testimonials-carousel__indicators,
+    .testimonials-carousel__swipe-hint {
+      display: none;
+    }
+  }
+</style>
+
+<script define:vars={{ carouselId }}>
+  /**
+   * Testimonials Carousel Interactive Functionality
+   * Handles scroll tracking, navigation, touch gestures
+   */
+
+  function initTestimonialsCarousel() {
+    const carousel = document.querySelector(`[data-carousel-id="${carouselId}"]`);
+    if (!carousel) return;
+
+    const track = carousel.querySelector('.testimonials-carousel__track');
+    const slides = carousel.querySelectorAll('.testimonials-carousel__slide');
+    const indicators = carousel.querySelectorAll('.testimonials-carousel__indicator');
+    const prevButton = carousel.querySelector('.testimonials-carousel__prev');
+    const nextButton = carousel.querySelector('.testimonials-carousel__next');
+    const swipeHint = carousel.querySelector('.testimonials-carousel__swipe-hint');
+
+    let currentIndex = 0;
+    let autoScrollTimer = null;
+
+    // Get auto-scroll settings
+    const autoScroll = carousel.dataset.autoScroll === 'true';
+    const autoScrollInterval = parseInt(carousel.dataset.autoScrollInterval || '6000', 10);
+
+    // Show swipe hint on touch devices
+    if ('ontouchstart' in window && swipeHint) {
+      swipeHint.classList.add('visible');
+      setTimeout(() => {
+        swipeHint.classList.remove('visible');
+      }, 3000);
+    }
+
+    // Update active indicator
+    function updateIndicators(index) {
+      indicators.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+        dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+      currentIndex = index;
+    }
+
+    // Scroll to specific slide
+    function scrollToSlide(index) {
+      if (!track || !slides[index]) return;
+
+      const slide = slides[index];
+      const scrollPosition = slide.offsetLeft - (track.offsetWidth - slide.offsetWidth) / 2;
+
+      track.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+
+      updateIndicators(index);
+    }
+
+    // Get current visible slide index using Intersection Observer
+    function setupScrollObserver() {
+      if (!track) return;
+
+      const options = {
+        root: track,
+        rootMargin: '0px',
+        threshold: 0.5
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.slideIndex || '0', 10);
+            updateIndicators(index);
+          }
+        });
+      }, options);
+
+      slides.forEach((slide) => {
+        observer.observe(slide);
+      });
+    }
+
+    // Navigation button handlers
+    function goToPrevious() {
+      const newIndex = currentIndex > 0 ? currentIndex - 1 : slides.length - 1;
+      scrollToSlide(newIndex);
+    }
+
+    function goToNext() {
+      const newIndex = currentIndex < slides.length - 1 ? currentIndex + 1 : 0;
+      scrollToSlide(newIndex);
+    }
+
+    // Event listeners for navigation arrows
+    prevButton?.addEventListener('click', goToPrevious);
+    nextButton?.addEventListener('click', goToNext);
+
+    // Event listeners for indicator dots
+    indicators.forEach((dot, index) => {
+      dot.addEventListener('click', () => scrollToSlide(index));
+    });
+
+    // Keyboard navigation
+    track?.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          goToPrevious();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          goToNext();
+          break;
+        case 'Home':
+          e.preventDefault();
+          scrollToSlide(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          scrollToSlide(slides.length - 1);
+          break;
+      }
+    });
+
+    // Touch swipe handling
+    let touchStartX = 0;
+
+    track?.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      // Pause auto-scroll on touch
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+      }
+    }, { passive: true });
+
+    track?.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const swipeDistance = touchEndX - touchStartX;
+      const swipeThreshold = 50;
+
+      // Native scroll-snap handles the actual scrolling
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        // Swipe detected - scroll-snap will handle positioning
+      }
+
+      // Restart auto-scroll after interaction
+      if (autoScroll) {
+        startAutoScroll();
+      }
+    }, { passive: true });
+
+    // Auto-scroll functionality
+    function startAutoScroll() {
+      if (!autoScroll || autoScrollTimer) return;
+
+      autoScrollTimer = setInterval(() => {
+        goToNext();
+      }, autoScrollInterval);
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+      }
+    }
+
+    // Pause auto-scroll on hover
+    carousel.addEventListener('mouseenter', stopAutoScroll);
+    carousel.addEventListener('mouseleave', () => {
+      if (autoScroll) startAutoScroll();
+    });
+
+    // Pause on focus for accessibility
+    carousel.addEventListener('focusin', stopAutoScroll);
+    carousel.addEventListener('focusout', () => {
+      if (autoScroll) startAutoScroll();
+    });
+
+    // Initialize scroll observer
+    setupScrollObserver();
+
+    // Start auto-scroll if enabled
+    if (autoScroll) {
+      startAutoScroll();
+    }
+
+    // Cleanup function
+    return () => {
+      stopAutoScroll();
+    };
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initTestimonialsCarousel);
+  document.addEventListener('astro:page-load', initTestimonialsCarousel);
+</script>

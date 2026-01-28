@@ -1,0 +1,1237 @@
+---
+/**
+ * Specials Showcase Component
+ *
+ * A responsive component for showcasing rotating specials with large photos,
+ * limited-time badges, and day-specific offerings.
+ *
+ * Features:
+ * - Carousel, grid, and featured layout modes
+ * - Auto-rotation with pause on hover/focus
+ * - Limited-time and day-specific badge system
+ * - Discount price display with strikethrough
+ * - Keyboard navigation (Arrow keys, Escape)
+ * - Touch swipe gestures for mobile
+ * - WCAG 2.1 AA compliant
+ * - Responsive design for all screen sizes
+ * - Print-friendly styling
+ *
+ * @example Basic carousel usage
+ * ```astro
+ * <SpecialsShowcase
+ *   specials={SPECIALS}
+ *   config={{ layout: 'carousel', autoRotateInterval: 5000 }}
+ * />
+ * ```
+ *
+ * @example Grid layout with today's specials
+ * ```astro
+ * <SpecialsShowcase
+ *   specials={getTodaysSpecials()}
+ *   config={{ layout: 'grid', showBadges: true }}
+ * />
+ * ```
+ */
+
+import type {
+  Special,
+  SpecialsShowcaseConfig,
+  SpecialsShowcaseProps,
+} from '../types/specials-showcase';
+import { getBadgeStyle } from '../types/specials-showcase';
+import { DEFAULT_SHOWCASE_CONFIG } from '../config/specials-showcase.config';
+import FoodImage from './FoodImage.astro';
+
+interface Props extends SpecialsShowcaseProps {}
+
+const {
+  specials,
+  config: userConfig = {},
+  class: className = '',
+  testId = 'specials-showcase',
+} = Astro.props;
+
+// Merge user config with defaults
+const config: SpecialsShowcaseConfig = {
+  ...DEFAULT_SHOWCASE_CONFIG,
+  ...userConfig,
+};
+
+// Filter and limit specials
+let displaySpecials = specials.filter(s => s.active);
+if (config.maxItems > 0) {
+  displaySpecials = displaySpecials.slice(0, config.maxItems);
+}
+
+// Generate unique ID for this instance
+const instanceId = `specials-${Math.random().toString(36).substr(2, 9)}`;
+
+// Determine grid columns based on special count
+const gridColumns = Math.min(displaySpecials.length, 3);
+---
+
+<section
+  class:list={['specials-showcase', `layout-${config.layout}`, className]}
+  data-testid={testId}
+  data-instance-id={instanceId}
+  data-auto-rotate={config.autoRotateInterval}
+  data-layout={config.layout}
+  aria-label="Special offers showcase"
+>
+  {/* Section Header */}
+  {(config.heading || config.subheading) && (
+    <header class="specials-showcase__header">
+      {config.heading && (
+        <h2 class="specials-showcase__heading">{config.heading}</h2>
+      )}
+      {config.subheading && (
+        <p class="specials-showcase__subheading">{config.subheading}</p>
+      )}
+    </header>
+  )}
+
+  {/* Carousel Layout */}
+  {config.layout === 'carousel' && (
+    <div class="specials-carousel" role="region" aria-roledescription="carousel" aria-label="Special offers">
+      {/* Previous Button */}
+      {config.showArrows && displaySpecials.length > 1 && (
+        <button
+          type="button"
+          class="carousel-nav carousel-nav--prev"
+          aria-label="Previous special"
+          data-testid="carousel-prev"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+      )}
+
+      {/* Carousel Track */}
+      <div class="carousel-track" role="group" aria-live="polite">
+        {displaySpecials.map((special, index) => (
+          <article
+            class:list={['special-card', 'carousel-slide', { 'is-active': index === 0 }]}
+            data-index={index}
+            data-testid={`special-card-${special.id}`}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${displaySpecials.length}: ${special.title}`}
+            aria-hidden={index !== 0 ? 'true' : 'false'}
+          >
+            {/* Image */}
+            <div class="special-card__image-container">
+              <FoodImage
+                src={special.image.src}
+                alt={special.image.alt}
+                width={special.image.width}
+                height={special.image.height}
+                preset="hero"
+                placeholder={true}
+                aspectRatio="16 / 9"
+                borderRadius="12px"
+              />
+              {/* Badge */}
+              {config.showBadges && special.badge && (
+                <div
+                  class:list={['special-badge', `special-badge--${special.badge.type}`]}
+                  data-testid={`badge-${special.badge.type}`}
+                >
+                  {special.badge.icon && (
+                    <span class="special-badge__icon" aria-hidden="true">{special.badge.icon}</span>
+                  )}
+                  <span class="special-badge__text">{special.badge.text}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Content */}
+            <div class="special-card__content">
+              <h3 class="special-card__title">{special.title}</h3>
+              <p class="special-card__description">{special.description}</p>
+
+              {/* Time/Day availability */}
+              {(special.timeAvailable || (special.daysAvailable && special.daysAvailable.length > 0)) && (
+                <div class="special-card__availability">
+                  {special.daysAvailable && special.daysAvailable.length > 0 && special.daysAvailable.length < 7 && (
+                    <span class="special-card__days">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      {special.daysAvailable.join(', ')}
+                    </span>
+                  )}
+                  {special.timeAvailable && (
+                    <span class="special-card__time">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      {special.timeAvailable}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Price */}
+              {config.showPrices && special.price && (
+                <div class="special-card__price">
+                  {special.price.originalDisplay && (
+                    <span class="special-card__price-original">
+                      <span class="sr-only">Original price:</span>
+                      {special.price.originalDisplay}
+                    </span>
+                  )}
+                  <span class="special-card__price-current">
+                    <span class="sr-only">Special price:</span>
+                    {special.price.display}
+                  </span>
+                  {special.price.discountPercent && (
+                    <span class="special-card__discount">
+                      Save {special.price.discountPercent}%
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* CTA Link */}
+              {special.link && (
+                <a href={special.link} class="special-card__cta">
+                  {special.linkText || 'Learn More'}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Next Button */}
+      {config.showArrows && displaySpecials.length > 1 && (
+        <button
+          type="button"
+          class="carousel-nav carousel-nav--next"
+          aria-label="Next special"
+          data-testid="carousel-next"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      )}
+
+      {/* Dot Indicators */}
+      {config.showIndicators && displaySpecials.length > 1 && (
+        <div class="carousel-indicators" role="tablist" aria-label="Slide indicators">
+          {displaySpecials.map((special, index) => (
+            <button
+              type="button"
+              class:list={['carousel-dot', { 'is-active': index === 0 }]}
+              role="tab"
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-label={`Go to slide ${index + 1}: ${special.title}`}
+              data-index={index}
+              data-testid={`carousel-dot-${index}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+
+  {/* Grid Layout */}
+  {config.layout === 'grid' && (
+    <div
+      class="specials-grid"
+      style={`--grid-columns: ${gridColumns}`}
+      role="list"
+      aria-label="Special offers"
+    >
+      {displaySpecials.map((special, index) => (
+        <article
+          class="special-card special-card--grid"
+          data-testid={`special-card-${special.id}`}
+          role="listitem"
+        >
+          {/* Image */}
+          <div class="special-card__image-container">
+            <FoodImage
+              src={special.image.src}
+              alt={special.image.alt}
+              width={special.image.width}
+              height={special.image.height}
+              preset="foodPhoto"
+              placeholder={true}
+              aspectRatio="4 / 3"
+              borderRadius="12px 12px 0 0"
+            />
+            {/* Badge */}
+            {config.showBadges && special.badge && (
+              <div class:list={['special-badge', `special-badge--${special.badge.type}`]}>
+                {special.badge.icon && (
+                  <span class="special-badge__icon" aria-hidden="true">{special.badge.icon}</span>
+                )}
+                <span class="special-badge__text">{special.badge.text}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Content */}
+          <div class="special-card__content">
+            <h3 class="special-card__title">{special.title}</h3>
+            <p class="special-card__description">{special.description}</p>
+
+            {/* Availability */}
+            {(special.timeAvailable || (special.daysAvailable && special.daysAvailable.length > 0 && special.daysAvailable.length < 7)) && (
+              <div class="special-card__availability">
+                {special.daysAvailable && special.daysAvailable.length > 0 && special.daysAvailable.length < 7 && (
+                  <span class="special-card__days">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    {special.daysAvailable.join(', ')}
+                  </span>
+                )}
+                {special.timeAvailable && (
+                  <span class="special-card__time">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    {special.timeAvailable}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Price */}
+            {config.showPrices && special.price && (
+              <div class="special-card__price">
+                {special.price.originalDisplay && (
+                  <span class="special-card__price-original">{special.price.originalDisplay}</span>
+                )}
+                <span class="special-card__price-current">{special.price.display}</span>
+                {special.price.discountPercent && (
+                  <span class="special-card__discount">Save {special.price.discountPercent}%</span>
+                )}
+              </div>
+            )}
+
+            {/* CTA */}
+            {special.link && (
+              <a href={special.link} class="special-card__cta">
+                {special.linkText || 'Learn More'}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  )}
+
+  {/* Featured Layout - Single large card */}
+  {config.layout === 'featured' && displaySpecials.length > 0 && (
+    <article
+      class="special-featured"
+      data-testid={`special-featured-${displaySpecials[0].id}`}
+    >
+      <div class="special-featured__image">
+        <FoodImage
+          src={displaySpecials[0].image.src}
+          alt={displaySpecials[0].image.alt}
+          width={displaySpecials[0].image.width}
+          height={displaySpecials[0].image.height}
+          preset="hero"
+          placeholder={true}
+          aspectRatio="21 / 9"
+          borderRadius="16px"
+        />
+        {config.showBadges && displaySpecials[0].badge && (
+          <div class:list={['special-badge', 'special-badge--large', `special-badge--${displaySpecials[0].badge.type}`]}>
+            {displaySpecials[0].badge.icon && (
+              <span class="special-badge__icon" aria-hidden="true">{displaySpecials[0].badge.icon}</span>
+            )}
+            <span class="special-badge__text">{displaySpecials[0].badge.text}</span>
+          </div>
+        )}
+      </div>
+      <div class="special-featured__content">
+        <h3 class="special-featured__title">{displaySpecials[0].title}</h3>
+        <p class="special-featured__description">
+          {displaySpecials[0].longDescription || displaySpecials[0].description}
+        </p>
+
+        {/* Availability */}
+        {(displaySpecials[0].timeAvailable || (displaySpecials[0].daysAvailable && displaySpecials[0].daysAvailable.length > 0)) && (
+          <div class="special-featured__availability">
+            {displaySpecials[0].daysAvailable && displaySpecials[0].daysAvailable.length > 0 && displaySpecials[0].daysAvailable.length < 7 && (
+              <span class="special-featured__days">
+                {displaySpecials[0].daysAvailable.join(' | ')}
+              </span>
+            )}
+            {displaySpecials[0].timeAvailable && (
+              <span class="special-featured__time">{displaySpecials[0].timeAvailable}</span>
+            )}
+          </div>
+        )}
+
+        <div class="special-featured__footer">
+          {config.showPrices && displaySpecials[0].price && (
+            <div class="special-featured__price">
+              {displaySpecials[0].price.originalDisplay && (
+                <span class="special-featured__price-original">{displaySpecials[0].price.originalDisplay}</span>
+              )}
+              <span class="special-featured__price-current">{displaySpecials[0].price.display}</span>
+            </div>
+          )}
+          {displaySpecials[0].link && (
+            <a href={displaySpecials[0].link} class="special-featured__cta">
+              {displaySpecials[0].linkText || 'Learn More'}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    </article>
+  )}
+
+  {/* Empty State */}
+  {displaySpecials.length === 0 && (
+    <div class="specials-empty" data-testid="specials-empty">
+      <p>No specials available at the moment. Check back soon!</p>
+    </div>
+  )}
+</section>
+
+<style>
+  /* =================================================================
+   * BASE STYLES
+   * ================================================================= */
+  .specials-showcase {
+    width: 100%;
+    padding: var(--spacing-8) 0;
+  }
+
+  /* =================================================================
+   * HEADER STYLES
+   * ================================================================= */
+  .specials-showcase__header {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+  }
+
+  .specials-showcase__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    line-height: var(--line-height-tight);
+  }
+
+  .specials-showcase__subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* =================================================================
+   * CAROUSEL LAYOUT
+   * ================================================================= */
+  .specials-carousel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform var(--duration-500) var(--ease-in-out);
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-300) var(--ease-in-out), visibility var(--duration-300);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .carousel-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+  }
+
+  /* Navigation Arrows */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-elevated);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-full);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--duration-200) var(--ease-in-out);
+    box-shadow: var(--shadow-md);
+  }
+
+  .carousel-nav:hover {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+  }
+
+  .carousel-nav:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .carousel-nav--prev {
+    left: var(--spacing-4);
+  }
+
+  .carousel-nav--next {
+    right: var(--spacing-4);
+  }
+
+  /* Dot Indicators */
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-6);
+  }
+
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    background: var(--color-border-dark);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all var(--duration-200) var(--ease-in-out);
+  }
+
+  .carousel-dot:hover {
+    background: var(--color-primary-light);
+  }
+
+  .carousel-dot.is-active {
+    background: var(--color-primary);
+    width: 24px;
+  }
+
+  .carousel-dot:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* =================================================================
+   * SPECIAL CARD STYLES
+   * ================================================================= */
+  .special-card {
+    background: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--duration-300) var(--ease-in-out), box-shadow var(--duration-300);
+  }
+
+  .special-card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Carousel card layout */
+  .carousel-slide.special-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+    padding: var(--spacing-6);
+    align-items: center;
+  }
+
+  .special-card__image-container {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .special-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .special-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+  }
+
+  .special-card__description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* Availability */
+  .special-card__availability {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+  }
+
+  .special-card__days,
+  .special-card__time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+  }
+
+  .special-card__days svg,
+  .special-card__time svg {
+    color: var(--color-primary);
+  }
+
+  /* Price */
+  .special-card__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-2);
+  }
+
+  .special-card__price-original {
+    font-size: var(--font-size-base);
+    color: var(--color-text-disabled);
+    text-decoration: line-through;
+  }
+
+  .special-card__price-current {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+  }
+
+  .special-card__discount {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-success-text);
+    background: var(--color-success-light);
+    padding: var(--spacing-0-5) var(--spacing-2);
+    border-radius: var(--radius-full);
+  }
+
+  /* CTA Button */
+  .special-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    transition: all var(--duration-200) var(--ease-in-out);
+    margin-top: var(--spacing-2);
+    width: fit-content;
+  }
+
+  .special-card__cta:hover {
+    background: var(--color-primary-dark);
+    transform: translateX(4px);
+  }
+
+  .special-card__cta:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* =================================================================
+   * BADGE STYLES
+   * ================================================================= */
+  .special-badge {
+    position: absolute;
+    top: var(--spacing-3);
+    left: var(--spacing-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    z-index: 5;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .special-badge--large {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-base);
+  }
+
+  .special-badge__icon {
+    font-size: 1.1em;
+  }
+
+  /* Badge Types */
+  .special-badge--limited-time {
+    background: var(--color-error-light);
+    color: var(--color-error-text);
+    border: 1px solid var(--color-error-border);
+  }
+
+  .special-badge--daily {
+    background: var(--color-primary-100);
+    color: var(--color-primary-700);
+    border: 1px solid var(--color-primary-200);
+  }
+
+  .special-badge--weekend {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent-dark);
+    border: 1px solid var(--color-accent);
+  }
+
+  .special-badge--seasonal {
+    background: var(--color-warning-light);
+    color: var(--color-warning-text);
+    border: 1px solid var(--color-warning-border);
+  }
+
+  .special-badge--new {
+    background: var(--color-success-light);
+    color: var(--color-success-text);
+    border: 1px solid var(--color-success-border);
+  }
+
+  .special-badge--featured {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
+
+  .special-badge--chef-special {
+    background: linear-gradient(135deg, #e6eaf2 0%, #c2cbdf 100%);
+    color: var(--color-primary-700);
+    border: 1px solid var(--color-primary-200);
+  }
+
+  /* =================================================================
+   * GRID LAYOUT
+   * ================================================================= */
+  .specials-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
+    gap: var(--spacing-6);
+  }
+
+  .special-card--grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .special-card--grid .special-card__image-container {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .special-card--grid .special-card__content {
+    padding: var(--spacing-4);
+    flex: 1;
+  }
+
+  .special-card--grid .special-card__title {
+    font-size: var(--font-size-xl);
+  }
+
+  .special-card--grid .special-card__description {
+    font-size: var(--font-size-sm);
+  }
+
+  .special-card--grid .special-card__price-current {
+    font-size: var(--font-size-xl);
+  }
+
+  /* =================================================================
+   * FEATURED LAYOUT
+   * ================================================================= */
+  .special-featured {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background: var(--color-background-elevated);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .special-featured__image {
+    position: relative;
+  }
+
+  .special-featured__content {
+    padding: var(--spacing-8);
+  }
+
+  .special-featured__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4);
+  }
+
+  .special-featured__description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--spacing-4);
+    max-width: 800px;
+  }
+
+  .special-featured__availability {
+    display: flex;
+    gap: var(--spacing-4);
+    font-size: var(--font-size-base);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--spacing-6);
+  }
+
+  .special-featured__days,
+  .special-featured__time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--color-background-muted);
+    border-radius: var(--radius-lg);
+  }
+
+  .special-featured__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+  }
+
+  .special-featured__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-3);
+  }
+
+  .special-featured__price-original {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-disabled);
+    text-decoration: line-through;
+  }
+
+  .special-featured__price-current {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+  }
+
+  .special-featured__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4) var(--spacing-6);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    text-decoration: none;
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-200) var(--ease-in-out);
+  }
+
+  .special-featured__cta:hover {
+    background: var(--color-primary-dark);
+    transform: translateX(4px);
+  }
+
+  /* =================================================================
+   * EMPTY STATE
+   * ================================================================= */
+  .specials-empty {
+    text-align: center;
+    padding: var(--spacing-12) var(--spacing-6);
+    color: var(--color-text-secondary);
+    background: var(--color-background-muted);
+    border-radius: var(--radius-xl);
+  }
+
+  /* =================================================================
+   * ACCESSIBILITY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 1024px) {
+    .carousel-slide.special-card {
+      grid-template-columns: 1fr;
+      padding: var(--spacing-4);
+    }
+
+    .specials-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .carousel-nav {
+      width: 40px;
+      height: 40px;
+    }
+
+    .carousel-nav--prev {
+      left: var(--spacing-2);
+    }
+
+    .carousel-nav--next {
+      right: var(--spacing-2);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .specials-showcase__heading {
+      font-size: var(--font-size-2xl);
+    }
+
+    .specials-showcase__subheading {
+      font-size: var(--font-size-base);
+    }
+
+    .specials-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .carousel-nav {
+      display: none;
+    }
+
+    .special-card__title {
+      font-size: var(--font-size-xl);
+    }
+
+    .special-card__price-current {
+      font-size: var(--font-size-xl);
+    }
+
+    .special-featured__title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .special-featured__content {
+      padding: var(--spacing-5);
+    }
+
+    .special-featured__price-current {
+      font-size: var(--font-size-2xl);
+    }
+
+    .special-featured__cta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-track,
+    .carousel-slide,
+    .special-card,
+    .carousel-nav,
+    .carousel-dot,
+    .special-card__cta,
+    .special-featured__cta {
+      transition: none;
+    }
+
+    .special-card:hover,
+    .special-card__cta:hover,
+    .special-featured__cta:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  @media (prefers-color-scheme: dark) {
+    .special-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .carousel-nav {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .carousel-dot {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .carousel-dot.is-active {
+      background: var(--color-primary-light);
+    }
+
+    .specials-empty {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .special-card,
+    .special-badge,
+    .carousel-nav,
+    .carousel-dot {
+      border: 2px solid currentColor;
+    }
+
+    .carousel-dot.is-active {
+      background: Highlight;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .specials-showcase {
+      padding: 0;
+    }
+
+    .carousel-nav,
+    .carousel-indicators {
+      display: none;
+    }
+
+    .carousel-slide {
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: relative !important;
+      page-break-inside: avoid;
+    }
+
+    .special-card {
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
+
+    .special-badge {
+      border: 1px solid #666;
+      background: #f0f0f0 !important;
+      color: #333 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+
+<script define:vars={{ instanceId, config, displaySpecials }}>
+  /**
+   * Specials Showcase Interactive Functionality
+   * Handles carousel auto-rotation, keyboard navigation,
+   * and touch swipe gestures
+   */
+
+  function initSpecialsShowcase() {
+    const showcase = document.querySelector(`[data-instance-id="${instanceId}"]`);
+    if (!showcase) return;
+
+    const layout = showcase.dataset.layout;
+    if (layout !== 'carousel') return;
+
+    const slides = showcase.querySelectorAll('.carousel-slide');
+    const dots = showcase.querySelectorAll('.carousel-dot');
+    const prevButton = showcase.querySelector('.carousel-nav--prev');
+    const nextButton = showcase.querySelector('.carousel-nav--next');
+
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+    let autoRotateTimer = null;
+    let isPaused = false;
+
+    // Touch handling
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function showSlide(index) {
+      // Wrap around
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+
+      // Update slides
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === index);
+        slide.setAttribute('aria-hidden', i !== index ? 'true' : 'false');
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === index);
+        dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      showSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentIndex - 1);
+    }
+
+    function startAutoRotate() {
+      if (config.autoRotateInterval <= 0) return;
+      stopAutoRotate();
+      autoRotateTimer = setInterval(() => {
+        if (!isPaused) {
+          nextSlide();
+        }
+      }, config.autoRotateInterval);
+    }
+
+    function stopAutoRotate() {
+      if (autoRotateTimer) {
+        clearInterval(autoRotateTimer);
+        autoRotateTimer = null;
+      }
+    }
+
+    // Event Listeners
+    prevButton?.addEventListener('click', () => {
+      prevSlide();
+      startAutoRotate(); // Reset timer on manual navigation
+    });
+
+    nextButton?.addEventListener('click', () => {
+      nextSlide();
+      startAutoRotate();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showSlide(index);
+        startAutoRotate();
+      });
+    });
+
+    // Pause on hover/focus
+    showcase.addEventListener('mouseenter', () => { isPaused = true; });
+    showcase.addEventListener('mouseleave', () => { isPaused = false; });
+    showcase.addEventListener('focusin', () => { isPaused = true; });
+    showcase.addEventListener('focusout', () => { isPaused = false; });
+
+    // Keyboard navigation
+    showcase.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+        startAutoRotate();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextSlide();
+        startAutoRotate();
+      }
+    });
+
+    // Touch swipe handling
+    const carouselTrack = showcase.querySelector('.carousel-track');
+
+    carouselTrack?.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    carouselTrack?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      const swipeDistance = touchEndX - touchStartX;
+      const threshold = 50;
+
+      if (Math.abs(swipeDistance) > threshold) {
+        if (swipeDistance > 0) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
+        startAutoRotate();
+      }
+    }, { passive: true });
+
+    // Start auto-rotation
+    startAutoRotate();
+
+    // Cleanup
+    return () => {
+      stopAutoRotate();
+    };
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initSpecialsShowcase);
+  document.addEventListener('astro:page-load', initSpecialsShowcase);
+</script>

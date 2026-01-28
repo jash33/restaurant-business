@@ -1,0 +1,409 @@
+---
+/**
+ * Yelp Badge Component
+ * Displays a Yelp badge with rating, review count, and link to Yelp page.
+ * Follows Yelp Brand Guidelines for proper attribution.
+ *
+ * Brand Guidelines: https://www.yelp.com/brand
+ * - Uses official Yelp logo
+ * - Links to Yelp business page
+ * - Displays authentic rating and review count
+ *
+ * Features:
+ * - Multiple size variants (small, medium, large)
+ * - Star rating display
+ * - Review count
+ * - Link to Yelp profile
+ * - WCAG 2.1 AA compliant
+ * - Dark mode support
+ *
+ * @example Basic usage
+ * ```astro
+ * <YelpBadge />
+ * ```
+ *
+ * @example Compact inline variant
+ * ```astro
+ * <YelpBadge variant="inline" size="small" />
+ * ```
+ */
+
+import type { YelpBadgeProps } from '../types/yelp';
+import { yelpConfig, YELP_COLORS } from '../config/yelp.config';
+
+interface Props extends YelpBadgeProps {}
+
+const {
+  size = 'medium',
+  showRating = true,
+  showReviewCount = true,
+  class: className = '',
+  linkToYelp = true,
+  variant = 'default',
+} = Astro.props;
+
+// Get data from config
+const { rating, totalReviews, profileUrl, businessName } = yelpConfig;
+
+// Calculate full and half stars (Yelp uses 0.5 increments)
+const fullStars = Math.floor(rating);
+const hasHalfStar = rating % 1 >= 0.25 && rating % 1 < 0.75;
+const hasAlmostFullStar = rating % 1 >= 0.75;
+const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0) - (hasAlmostFullStar ? 1 : 0);
+
+// Adjust for almost full stars
+const adjustedFullStars = fullStars + (hasAlmostFullStar ? 1 : 0);
+const adjustedEmptyStars = 5 - adjustedFullStars - (hasHalfStar ? 1 : 0);
+
+// Build CSS classes
+const badgeClasses = [
+  'yelp-badge',
+  `yelp-badge--${size}`,
+  `yelp-badge--${variant}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Yelp logo SVG (simplified version following brand guidelines)
+const yelpLogo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+  <path fill="#FF1A1A" d="M12.7 14.3c-.1-.1-.3-.2-.4-.1l-3.4 1.4c-.4.2-.4.7 0 .9l3.4 1.4c.2.1.4 0 .4-.2l.4-3.1c0-.1 0-.2-.1-.3h-.3zM9.3 14.8c-.1-.4-.5-.5-.8-.3l-2.8 2.1c-.3.2-.3.6.1.8l3.2 1.1c.2.1.4-.1.4-.3l-.1-3.4zM11.9 5.5c-.4-.1-.7.2-.7.5l-.2 4.8c0 .2.1.3.3.4l3.2.4c.2 0 .4-.1.4-.3l-2.5-5.6c-.1-.1-.3-.2-.5-.2zM8.8 12.3l-3.2-.9c-.4-.1-.7.2-.6.6l.9 3.2c.1.2.3.3.5.2l2.8-2.3c.2-.2.1-.5-.1-.6l-.3-.2zM15 9.5l2.3-2.4c.3-.3.2-.7-.2-.8l-3.3-.7c-.2 0-.4.1-.4.3l.6 3.4c0 .2.3.4.5.3l.5-.1z"/>
+</svg>`;
+
+// Star SVG icons (Yelp-style filled stars)
+const starFull = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+const starHalf = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill-opacity="0.3"/><path d="M12 17.27V2l-2.81 6.63L2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+const starEmpty = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill-opacity="0.3"/></svg>`;
+
+// Badge content wrapper
+const WrapperTag = linkToYelp ? 'a' : 'div';
+---
+
+{linkToYelp ? (
+  <a
+    href={profileUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class={badgeClasses}
+    aria-label={`View ${businessName} on Yelp - ${rating} stars from ${totalReviews} reviews (opens in new tab)`}
+    data-component="yelp-badge"
+  >
+    <span class="yelp-badge__logo" set:html={yelpLogo} />
+
+    {showRating && (
+      <div class="yelp-badge__rating">
+        <span class="yelp-badge__rating-value">{rating.toFixed(1)}</span>
+        <div class="yelp-badge__stars" role="img" aria-label={`${rating} out of 5 stars`}>
+          {Array(adjustedFullStars).fill(null).map(() => (
+            <span class="yelp-badge__star yelp-badge__star--full" set:html={starFull} />
+          ))}
+          {hasHalfStar && (
+            <span class="yelp-badge__star yelp-badge__star--half" set:html={starHalf} />
+          )}
+          {Array(adjustedEmptyStars).fill(null).map(() => (
+            <span class="yelp-badge__star yelp-badge__star--empty" set:html={starEmpty} />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {showReviewCount && (
+      <span class="yelp-badge__review-count">
+        {totalReviews.toLocaleString()} reviews
+      </span>
+    )}
+
+    <span class="yelp-badge__external-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+      </svg>
+    </span>
+  </a>
+) : (
+  <div
+    class={badgeClasses}
+    data-component="yelp-badge"
+  >
+    <span class="yelp-badge__logo" set:html={yelpLogo} />
+
+    {showRating && (
+      <div class="yelp-badge__rating">
+        <span class="yelp-badge__rating-value">{rating.toFixed(1)}</span>
+        <div class="yelp-badge__stars" role="img" aria-label={`${rating} out of 5 stars`}>
+          {Array(adjustedFullStars).fill(null).map(() => (
+            <span class="yelp-badge__star yelp-badge__star--full" set:html={starFull} />
+          ))}
+          {hasHalfStar && (
+            <span class="yelp-badge__star yelp-badge__star--half" set:html={starHalf} />
+          )}
+          {Array(adjustedEmptyStars).fill(null).map(() => (
+            <span class="yelp-badge__star yelp-badge__star--empty" set:html={starEmpty} />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {showReviewCount && (
+      <span class="yelp-badge__review-count">
+        {totalReviews.toLocaleString()} reviews
+      </span>
+    )}
+  </div>
+)}
+
+<style>
+  /* =================================================================
+   * YELP BADGE COMPONENT STYLES
+   * =================================================================
+   * Uses official Yelp brand colors per brand guidelines
+   */
+
+  .yelp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    transition:
+      transform var(--duration-150) var(--ease-out),
+      box-shadow var(--duration-150) var(--ease-out),
+      border-color var(--duration-150) var(--ease-out);
+  }
+
+  a.yelp-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: #FF1A1A;
+  }
+
+  a.yelp-badge:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  /* =================================================================
+   * LOGO
+   * =================================================================
+   */
+
+  .yelp-badge__logo {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .yelp-badge__logo :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* =================================================================
+   * RATING DISPLAY
+   * =================================================================
+   */
+
+  .yelp-badge__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .yelp-badge__rating-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  .yelp-badge__stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .yelp-badge__star {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    color: #FF1A1A; /* Yelp Red */
+  }
+
+  .yelp-badge__star :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* =================================================================
+   * REVIEW COUNT
+   * =================================================================
+   */
+
+  .yelp-badge__review-count {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* =================================================================
+   * EXTERNAL LINK ICON
+   * =================================================================
+   */
+
+  .yelp-badge__external-icon {
+    display: flex;
+    margin-left: auto;
+    color: var(--color-text-tertiary);
+    transition: color var(--duration-150) var(--ease-out);
+  }
+
+  .yelp-badge__external-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  a.yelp-badge:hover .yelp-badge__external-icon {
+    color: #FF1A1A;
+  }
+
+  /* =================================================================
+   * SIZE VARIANTS
+   * =================================================================
+   */
+
+  /* Small */
+  .yelp-badge--small {
+    padding: var(--spacing-2) var(--spacing-3);
+    gap: var(--spacing-2);
+  }
+
+  .yelp-badge--small .yelp-badge__logo :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .yelp-badge--small .yelp-badge__rating-value {
+    font-size: var(--font-size-base);
+  }
+
+  .yelp-badge--small .yelp-badge__star {
+    width: 14px;
+    height: 14px;
+  }
+
+  .yelp-badge--small .yelp-badge__review-count {
+    font-size: var(--font-size-xs);
+  }
+
+  /* Large */
+  .yelp-badge--large {
+    padding: var(--spacing-4) var(--spacing-6);
+    gap: var(--spacing-4);
+  }
+
+  .yelp-badge--large .yelp-badge__logo :global(svg) {
+    width: 32px;
+    height: 32px;
+  }
+
+  .yelp-badge--large .yelp-badge__rating-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .yelp-badge--large .yelp-badge__star {
+    width: 20px;
+    height: 20px;
+  }
+
+  .yelp-badge--large .yelp-badge__review-count {
+    font-size: var(--font-size-base);
+  }
+
+  /* =================================================================
+   * VARIANT STYLES
+   * =================================================================
+   */
+
+  /* Compact - No border, minimal styling */
+  .yelp-badge--compact {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: var(--spacing-2);
+  }
+
+  a.yelp-badge--compact:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Inline - Flows with text */
+  .yelp-badge--inline {
+    display: inline-flex;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    gap: var(--spacing-2);
+    vertical-align: middle;
+  }
+
+  .yelp-badge--inline .yelp-badge__external-icon {
+    display: none;
+  }
+
+  a.yelp-badge--inline:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  a.yelp-badge--inline:hover .yelp-badge__rating-value {
+    color: #FF1A1A;
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * =================================================================
+   */
+
+  @media (prefers-reduced-motion: reduce) {
+    .yelp-badge {
+      transition: none;
+    }
+
+    a.yelp-badge:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * =================================================================
+   */
+
+  :global(html[data-theme="dark"]) .yelp-badge {
+    background: var(--color-background-elevated);
+  }
+
+  :global(html[data-theme="dark"]) .yelp-badge--compact,
+  :global(html[data-theme="dark"]) .yelp-badge--inline {
+    background: transparent;
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   */
+
+  @media print {
+    .yelp-badge {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .yelp-badge__external-icon {
+      display: none;
+    }
+  }
+</style>

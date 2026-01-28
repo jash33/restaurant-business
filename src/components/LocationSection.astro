@@ -1,0 +1,1030 @@
+---
+/**
+ * Location Section Component
+ * A comprehensive location section displaying address, hours, parking notes,
+ * public transit info, and Get Directions CTA with deep linking to Google/Apple Maps.
+ *
+ * Features:
+ * - WCAG 2.1 AA compliant accessibility
+ * - Responsive design for mobile, tablet, and desktop
+ * - Get Directions with platform-aware deep linking (Google Maps / Apple Maps)
+ * - Address card with copy-to-clipboard functionality
+ * - Parking information display
+ * - Public transit options
+ * - Dark mode support
+ * - Reduced motion support
+ * - Print-friendly styles
+ *
+ * @example Basic usage
+ * ```astro
+ * <LocationSection />
+ * ```
+ *
+ * @example With custom configuration
+ * ```astro
+ * <LocationSection
+ *   heading="Visit Us"
+ *   subheading="We'd love to see you!"
+ *   showTransit={false}
+ * />
+ * ```
+ */
+
+import type { LocationSectionProps } from '../types/location';
+import {
+  LOCATION_CONFIG,
+  LOCATION_DISPLAY_CONFIG,
+} from '../config/location.config';
+import Button from './Button.astro';
+
+interface Props extends LocationSectionProps {}
+
+const {
+  config = LOCATION_CONFIG,
+  heading = LOCATION_DISPLAY_CONFIG.defaultHeading,
+  subheading = LOCATION_DISPLAY_CONFIG.defaultSubheading,
+  showAddress = LOCATION_DISPLAY_CONFIG.showAddress,
+  showParking = LOCATION_DISPLAY_CONFIG.showParking,
+  showTransit = LOCATION_DISPLAY_CONFIG.showTransit,
+  showDirections = LOCATION_DISPLAY_CONFIG.showDirections,
+  id = 'location',
+  class: className = '',
+} = Astro.props;
+
+const {
+  businessName,
+  address,
+  coordinates,
+  phone,
+  parking,
+  transit,
+  accessibility,
+  directionsCTA,
+  additionalNotes,
+} = config;
+
+// Format address for display
+const formattedAddress = [
+  address.street,
+  address.street2,
+  `${address.city}, ${address.state} ${address.zipCode}`,
+].filter(Boolean).join('\n');
+
+const formattedAddressOneLine = [
+  address.street,
+  address.street2,
+  `${address.city}, ${address.state} ${address.zipCode}`,
+].filter(Boolean).join(', ');
+
+// Build CSS classes
+const sectionClasses = ['location-section', className].filter(Boolean).join(' ');
+
+// Transit type icons mapping
+const transitIcons: Record<string, string> = {
+  'bus': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M16 6v6"/><path d="M2 12h20"/><path d="M18 18H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
+  'metro': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  'train': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  'light-rail': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="m8 19h8"/></svg>`,
+  'ferry': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg>`,
+  'other': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+};
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-location-section
+>
+  <div class="location-container">
+    <!-- Section Header -->
+    <header class="location-header section-heading--decorated">
+      <h2 id={`${id}-heading`} class="location-title">{heading}</h2>
+      {subheading && <p class="location-description">{subheading}</p>}
+    </header>
+
+    <!-- Location Cards Grid -->
+    <div class="location-grid">
+      <!-- Address Card -->
+      {showAddress && (
+        <div class="location-card location-card--address">
+          <div class="location-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </div>
+          <div class="location-card__content">
+            <h3 class="location-card__title">Address</h3>
+            <address class="location-card__address" data-address>
+              <span class="location-card__business-name">{businessName}</span>
+              {address.street}<br />
+              {address.street2 && <>{address.street2}<br /></>}
+              {address.city}, {address.state} {address.zipCode}
+            </address>
+            {phone && (
+              <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} class="location-card__phone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="location-card__phone-icon" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                {phone}
+              </a>
+            )}
+            <button
+              class="location-card__copy-btn"
+              type="button"
+              data-copy-address
+              data-address-text={formattedAddressOneLine}
+              aria-label="Copy address to clipboard"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="location-card__copy-icon" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+              <span class="location-card__copy-text">Copy Address</span>
+              <span class="location-card__copied-text" aria-live="polite">Copied!</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <!-- Parking Card -->
+      {showParking && parking.available && (
+        <div class="location-card location-card--parking">
+          <div class="location-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>
+            </svg>
+          </div>
+          <div class="location-card__content">
+            <h3 class="location-card__title">Parking</h3>
+            <p class="location-card__text">{parking.description}</p>
+            {parking.isFree && (
+              <span class="location-card__badge location-card__badge--success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Free Parking
+              </span>
+            )}
+            {parking.notes && (
+              <p class="location-card__notes">{parking.notes}</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Transit Card -->
+      {showTransit && transit.available && (
+        <div class="location-card location-card--transit">
+          <div class="location-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="3" width="16" height="16" rx="2"/>
+              <path d="M4 11h16"/>
+              <path d="M12 3v8"/>
+              <path d="m8 19-2 3"/>
+              <path d="m18 22-2-3"/>
+              <path d="m8 19h8"/>
+            </svg>
+          </div>
+          <div class="location-card__content">
+            <h3 class="location-card__title">Public Transit</h3>
+            {transit.description && (
+              <p class="location-card__text">{transit.description}</p>
+            )}
+            <ul class="location-card__transit-list" role="list">
+              {transit.options.map((option) => (
+                <li class="location-card__transit-item">
+                  <span class="location-card__transit-icon" aria-hidden="true" set:html={transitIcons[option.type] || transitIcons['other']} />
+                  <div class="location-card__transit-details">
+                    <span class="location-card__transit-line">{option.line}</span>
+                    <span class="location-card__transit-stop">{option.stop}</span>
+                    {option.walkingInfo && (
+                      <span class="location-card__transit-walk">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="5" r="1"/>
+                          <path d="m9 20 3-6 3 6"/>
+                          <path d="m6 8 6 2 6-2"/>
+                          <path d="M12 10v4"/>
+                        </svg>
+                        {option.walkingInfo}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <!-- Accessibility Card (if available) -->
+      {accessibility && accessibility.wheelchairAccessible && (
+        <div class="location-card location-card--accessibility">
+          <div class="location-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="16" cy="4" r="1"/>
+              <path d="m18 19 1-7-6 1"/>
+              <path d="m5 8 3-3 5.5 3-2.36 3.5"/>
+              <path d="M4.24 14.5a5 5 0 1 0 6.88 6"/>
+              <path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>
+            </svg>
+          </div>
+          <div class="location-card__content">
+            <h3 class="location-card__title">Accessibility</h3>
+            <span class="location-card__badge location-card__badge--info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Wheelchair Accessible
+            </span>
+            {accessibility.description && (
+              <p class="location-card__text">{accessibility.description}</p>
+            )}
+            {accessibility.notes && (
+              <p class="location-card__notes">{accessibility.notes}</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Additional Notes -->
+    {additionalNotes && additionalNotes.length > 0 && (
+      <div class="location-notes">
+        <ul class="location-notes__list" role="list">
+          {additionalNotes.map((note) => (
+            <li class="location-notes__item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="location-notes__icon" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {note}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Get Directions CTA -->
+    {showDirections && (
+      <div class="location-directions">
+        <div class="location-directions__buttons">
+          <a
+            href={directionsCTA.googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="location-directions__btn location-directions__btn--google"
+            data-directions="google"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" class="location-directions__btn-icon" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <span>Google Maps</span>
+          </a>
+          <a
+            href={directionsCTA.appleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="location-directions__btn location-directions__btn--apple"
+            data-directions="apple"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" class="location-directions__btn-icon" aria-hidden="true">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+            <span>Apple Maps</span>
+          </a>
+        </div>
+        <p class="location-directions__text">
+          Opens in a new tab with directions to our location
+        </p>
+      </div>
+    )}
+
+    <!-- Screen reader announcement region -->
+    <div
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      id={`${id}-announcer`}
+      data-location-announcer
+    ></div>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * LOCATION SECTION
+   * ================================================================= */
+  .location-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background);
+  }
+
+  .location-container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER
+   * ================================================================= */
+  .location-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .location-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-3);
+    line-height: var(--line-height-tight);
+  }
+
+  .location-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    max-width: 32rem;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * LOCATION CARDS GRID
+   * ================================================================= */
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+  }
+
+  /* =================================================================
+   * LOCATION CARD
+   * ================================================================= */
+  .location-card {
+    display: flex;
+    gap: var(--spacing-4);
+    padding: var(--spacing-6);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.08));
+    transition: all var(--duration-300) var(--ease-out);
+  }
+
+  .location-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .location-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-radius: var(--radius-lg);
+    color: var(--color-primary);
+  }
+
+  .location-card__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .location-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .location-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    line-height: var(--line-height-tight);
+  }
+
+  .location-card__text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-3);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .location-card__notes {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: var(--spacing-3) 0 0;
+    line-height: var(--line-height-relaxed);
+    padding-top: var(--spacing-3);
+    border-top: 1px dashed var(--color-border, rgba(0,0,0,0.1));
+  }
+
+  /* Address Specific Styles */
+  .location-card__address {
+    font-style: normal;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--spacing-3);
+  }
+
+  .location-card__business-name {
+    display: block;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-1);
+  }
+
+  .location-card__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-bottom: var(--spacing-3);
+    transition: color var(--duration-150) var(--ease-in-out);
+  }
+
+  .location-card__phone:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .location-card__phone-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* Copy Button */
+  .location-card__copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    background: var(--color-background);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.1));
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--duration-150) var(--ease-in-out);
+  }
+
+  .location-card__copy-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary-200);
+    background: var(--color-primary-50);
+  }
+
+  .location-card__copy-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .location-card__copy-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .location-card__copied-text {
+    display: none;
+    color: var(--color-success);
+  }
+
+  .location-card__copy-btn.is-copied .location-card__copy-text {
+    display: none;
+  }
+
+  .location-card__copy-btn.is-copied .location-card__copied-text {
+    display: inline;
+  }
+
+  .location-card__copy-btn.is-copied {
+    color: var(--color-success);
+    border-color: var(--color-success);
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  /* Badge Styles */
+  .location-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-2);
+  }
+
+  .location-card__badge svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .location-card__badge--success {
+    color: var(--color-success);
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  .location-card__badge--info {
+    color: var(--color-info);
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  /* Transit List Styles */
+  .location-card__transit-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .location-card__transit-item {
+    display: flex;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    background: var(--color-background);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border, rgba(0,0,0,0.05));
+  }
+
+  .location-card__transit-icon {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-primary);
+  }
+
+  .location-card__transit-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .location-card__transit-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    min-width: 0;
+  }
+
+  .location-card__transit-line {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
+  .location-card__transit-stop {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .location-card__transit-walk {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .location-card__transit-walk svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  /* =================================================================
+   * ADDITIONAL NOTES
+   * ================================================================= */
+  .location-notes {
+    margin-bottom: var(--spacing-8);
+  }
+
+  .location-notes__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-4);
+  }
+
+  .location-notes__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--color-background-subtle);
+    border-radius: var(--radius-full);
+  }
+
+  .location-notes__icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-success);
+  }
+
+  /* =================================================================
+   * GET DIRECTIONS CTA
+   * ================================================================= */
+  .location-directions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding-top: var(--spacing-8);
+    border-top: 1px solid var(--color-border, rgba(0,0,0,0.08));
+  }
+
+  .location-directions__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    width: 100%;
+    max-width: 24rem;
+  }
+
+  .location-directions__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-200) var(--ease-out);
+  }
+
+  .location-directions__btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .location-directions__btn-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  /* Google Maps Button */
+  .location-directions__btn--google {
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc04 75%, #ea4335 100%);
+    background-size: 300% 300%;
+    color: #ffffff;
+    box-shadow: var(--shadow-md);
+  }
+
+  .location-directions__btn--google:hover {
+    background-position: 100% 100%;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Apple Maps Button */
+  .location-directions__btn--apple {
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border, rgba(0,0,0,0.12));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .location-directions__btn--apple:hover {
+    border-color: var(--color-text-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .location-directions__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .location-section {
+      padding: var(--spacing-12) var(--spacing-4);
+    }
+
+    .location-title {
+      font-size: var(--font-size-3xl);
+    }
+
+    .location-header {
+      margin-bottom: var(--spacing-8);
+    }
+
+    .location-card {
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+    }
+
+    .location-card__icon {
+      margin-bottom: var(--spacing-2);
+    }
+
+    .location-card__transit-item {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .location-notes__list {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .location-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-8);
+    }
+
+    .location-directions__buttons {
+      flex-direction: row;
+      max-width: none;
+      justify-content: center;
+    }
+
+    .location-directions__btn {
+      min-width: 12rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .location-title {
+      font-size: var(--font-size-5xl);
+    }
+
+    .location-card__icon {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+
+    .location-card__icon svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .location-card {
+    background: var(--color-background-subtle);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  :global(html[data-theme="dark"]) .location-card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  :global(html[data-theme="dark"]) .location-card__icon {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.2) 0%,
+      rgba(var(--color-primary-rgb, 114, 47, 55), 0.3) 100%
+    );
+  }
+
+  :global(html[data-theme="dark"]) .location-card__copy-btn {
+    background: var(--color-background);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  :global(html[data-theme="dark"]) .location-card__copy-btn:hover {
+    background: var(--color-primary-900);
+    border-color: var(--color-primary-700);
+  }
+
+  :global(html[data-theme="dark"]) .location-card__transit-item {
+    background: var(--color-background);
+    border-color: rgba(255,255,255,0.05);
+  }
+
+  :global(html[data-theme="dark"]) .location-notes__item {
+    background: var(--color-background-subtle);
+  }
+
+  :global(html[data-theme="dark"]) .location-directions__btn--apple {
+    background: var(--color-background-subtle);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  :global(html[data-theme="dark"]) .location-directions__btn--apple:hover {
+    border-color: rgba(255,255,255,0.4);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .location-card,
+    .location-card__copy-btn,
+    .location-directions__btn {
+      transition: none;
+    }
+
+    .location-card:hover,
+    .location-directions__btn:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .location-card {
+      border: 2px solid CanvasText;
+    }
+
+    .location-card__badge {
+      border: 1px solid currentColor;
+    }
+
+    .location-directions__btn {
+      border: 2px solid CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .location-section {
+      padding: var(--spacing-8) 0;
+      background: none;
+    }
+
+    .location-card {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+      page-break-inside: avoid;
+    }
+
+    .location-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .location-card__copy-btn {
+      display: none;
+    }
+
+    .location-directions__btn--google,
+    .location-directions__btn--apple {
+      border: 1px solid var(--color-border);
+      background: none;
+      color: var(--color-text-primary);
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Location Section Client-Side Logic
+   * Handles copy-to-clipboard functionality and platform detection for maps
+   */
+
+  class LocationSection {
+    private container: HTMLElement;
+    private copyBtn: HTMLButtonElement | null;
+    private announcer: HTMLElement | null;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.copyBtn = container.querySelector('[data-copy-address]');
+      this.announcer = container.querySelector('[data-location-announcer]');
+
+      this.initialize();
+    }
+
+    private initialize(): void {
+      this.setupCopyButton();
+      this.setupDirectionsLinks();
+    }
+
+    private setupCopyButton(): void {
+      if (!this.copyBtn) return;
+
+      this.copyBtn.addEventListener('click', async () => {
+        const addressText = this.copyBtn?.dataset.addressText;
+        if (!addressText) return;
+
+        try {
+          await navigator.clipboard.writeText(addressText);
+          this.showCopiedFeedback();
+          this.announce('Address copied to clipboard');
+        } catch (err) {
+          // Fallback for older browsers
+          this.fallbackCopy(addressText);
+        }
+      });
+    }
+
+    private fallbackCopy(text: string): void {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand('copy');
+        this.showCopiedFeedback();
+        this.announce('Address copied to clipboard');
+      } catch (err) {
+        this.announce('Failed to copy address');
+      }
+
+      document.body.removeChild(textArea);
+    }
+
+    private showCopiedFeedback(): void {
+      if (!this.copyBtn) return;
+
+      this.copyBtn.classList.add('is-copied');
+
+      setTimeout(() => {
+        this.copyBtn?.classList.remove('is-copied');
+      }, 2000);
+    }
+
+    private setupDirectionsLinks(): void {
+      const googleBtn = this.container.querySelector('[data-directions="google"]');
+      const appleBtn = this.container.querySelector('[data-directions="apple"]');
+
+      // Detect platform and highlight appropriate button
+      const isAppleDevice = /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
+
+      if (isAppleDevice && appleBtn) {
+        appleBtn.classList.add('location-directions__btn--preferred');
+      } else if (googleBtn) {
+        googleBtn.classList.add('location-directions__btn--preferred');
+      }
+    }
+
+    private announce(message: string): void {
+      if (!this.announcer) return;
+      this.announcer.textContent = message;
+
+      // Clear after announcement
+      setTimeout(() => {
+        if (this.announcer) {
+          this.announcer.textContent = '';
+        }
+      }, 1000);
+    }
+  }
+
+  // Initialize all location sections on the page
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll<HTMLElement>('[data-location-section]');
+    sections.forEach((section) => new LocationSection(section));
+  });
+
+  // Also initialize on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    const sections = document.querySelectorAll<HTMLElement>('[data-location-section]');
+    sections.forEach((section) => new LocationSection(section));
+  });
+</script>

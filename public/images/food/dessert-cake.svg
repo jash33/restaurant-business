@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="chocolateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a2c2a"/>
+      <stop offset="100%" style="stop-color:#2d1810"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fffef0"/>
+      <stop offset="100%" style="stop-color:#f5f5dc"/>
+    </linearGradient>
+    <linearGradient id="berryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc143c"/>
+      <stop offset="100%" style="stop-color:#8b0000"/>
+    </linearGradient>
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90"/>
+      <stop offset="100%" style="stop-color:#228B22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background - elegant marble -->
+  <rect width="800" height="600" fill="#f0ead6"/>
+  <rect x="0" y="0" width="800" height="600" fill="#e8e0d0" opacity="0.5"/>
+
+  <!-- Marble veins -->
+  <path d="M0 100 Q200 150 400 100 Q600 50 800 120" stroke="#d4c4b0" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M0 300 Q150 250 350 300 Q550 350 800 280" stroke="#d4c4b0" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M0 500 Q250 450 500 500 Q700 550 800 480" stroke="#d4c4b0" stroke-width="2" fill="none" opacity="0.5"/>
+
+  <!-- Dessert plate -->
+  <ellipse cx="400" cy="380" rx="220" ry="60" fill="rgba(0,0,0,0.1)"/>
+  <ellipse cx="400" cy="350" rx="200" ry="50" fill="#fff"/>
+  <ellipse cx="400" cy="345" rx="180" ry="45" fill="#fafafa" stroke="#eee" stroke-width="1"/>
+
+  <!-- Chocolate sauce pool -->
+  <ellipse cx="400" cy="340" rx="100" ry="25" fill="#3d2314" opacity="0.8"/>
+
+  <!-- Cake base (chocolate) -->
+  <rect x="300" y="220" width="200" height="100" rx="5" fill="url(#chocolateGrad)"/>
+
+  <!-- Cake layers -->
+  <rect x="300" y="220" width="200" height="20" fill="#5a3a38"/>
+  <rect x="300" y="260" width="200" height="3" fill="url(#creamGrad)"/>
+  <rect x="300" y="290" width="200" height="3" fill="url(#creamGrad)"/>
+
+  <!-- Chocolate ganache top -->
+  <rect x="295" y="200" width="210" height="25" rx="3" fill="#2d1810"/>
+
+  <!-- Ganache drips -->
+  <ellipse cx="310" cy="225" rx="8" ry="15" fill="#2d1810"/>
+  <ellipse cx="340" cy="230" rx="6" ry="20" fill="#2d1810"/>
+  <ellipse cx="380" cy="228" rx="7" ry="18" fill="#2d1810"/>
+  <ellipse cx="420" cy="232" rx="5" ry="22" fill="#2d1810"/>
+  <ellipse cx="460" cy="227" rx="8" ry="17" fill="#2d1810"/>
+  <ellipse cx="490" cy="225" rx="6" ry="15" fill="#2d1810"/>
+
+  <!-- Whipped cream dollop -->
+  <ellipse cx="400" cy="190" rx="40" ry="20" fill="url(#creamGrad)"/>
+  <ellipse cx="400" cy="175" rx="30" ry="15" fill="#fffef5"/>
+  <ellipse cx="400" cy="165" rx="20" ry="10" fill="#fff"/>
+  <ellipse cx="400" cy="158" rx="10" ry="5" fill="#fffef5"/>
+
+  <!-- Raspberry on top -->
+  <circle cx="400" cy="150" r="12" fill="url(#berryGrad)"/>
+  <circle cx="395" cy="145" r="3" fill="#dc143c"/>
+  <circle cx="405" cy="147" r="3" fill="#dc143c"/>
+  <circle cx="400" cy="153" r="3" fill="#dc143c"/>
+  <circle cx="393" cy="152" r="2" fill="#dc143c"/>
+  <circle cx="407" cy="151" r="2" fill="#dc143c"/>
+
+  <!-- Fresh berries on plate -->
+  <circle cx="280" cy="330" r="10" fill="url(#berryGrad)"/>
+  <circle cx="260" cy="345" r="8" fill="#4169e1"/>
+  <circle cx="285" cy="355" r="9" fill="url(#berryGrad)"/>
+  <circle cx="520" cy="335" r="10" fill="url(#berryGrad)"/>
+  <circle cx="540" cy="350" r="8" fill="#4169e1"/>
+  <circle cx="510" cy="355" r="9" fill="#4169e1"/>
+
+  <!-- Mint leaves -->
+  <path d="M430 155 Q445 140 460 155 Q445 165 430 155" fill="url(#mintGrad)"/>
+  <path d="M365 160 Q350 145 335 160 Q350 170 365 160" fill="url(#mintGrad)"/>
+
+  <!-- Chocolate shavings -->
+  <ellipse cx="370" cy="180" rx="8" ry="3" fill="#2d1810" transform="rotate(30, 370, 180)"/>
+  <ellipse cx="430" cy="178" rx="6" ry="2" fill="#2d1810" transform="rotate(-25, 430, 178)"/>
+  <ellipse cx="395" cy="185" rx="7" ry="2" fill="#2d1810" transform="rotate(15, 395, 185)"/>
+
+  <!-- Sauce drizzle on plate -->
+  <path d="M250 360 Q300 340 350 360 Q380 375 280 370" stroke="#3d2314" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M450 355 Q500 335 550 360 Q520 375 460 365" stroke="#3d2314" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Gold dust accent -->
+  <circle cx="320" cy="210" r="2" fill="#d4af37" opacity="0.8"/>
+  <circle cx="480" cy="215" r="2" fill="#d4af37" opacity="0.8"/>
+  <circle cx="350" cy="195" r="1.5" fill="#d4af37" opacity="0.7"/>
+  <circle cx="450" cy="200" r="1.5" fill="#d4af37" opacity="0.7"/>
+
+  <!-- Dessert fork -->
+  <rect x="600" y="250" width="6" height="150" fill="#d4af37" rx="2"/>
+  <rect x="588" y="235" width="4" height="30" fill="#d4af37" rx="1"/>
+  <rect x="596" y="235" width="4" height="35" fill="#d4af37" rx="1"/>
+  <rect x="604" y="235" width="4" height="35" fill="#d4af37" rx="1"/>
+  <rect x="612" y="235" width="4" height="30" fill="#d4af37" rx="1"/>
+
+  <!-- Title -->
+  <text x="400" y="550" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#4a2c2a">Chocolate Mousse Cake</text>
+</svg>

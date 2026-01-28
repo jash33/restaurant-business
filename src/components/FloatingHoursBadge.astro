@@ -1,0 +1,877 @@
+---
+/**
+ * Floating Hours Badge Component
+ * A floating badge showing current open/closed status and today's hours,
+ * designed to be positioned over hero images with subtle backdrop blur
+ * and warm accent colors.
+ *
+ * Features:
+ * - Real-time open/closed status updates via client-side JavaScript
+ * - Glassmorphic design with backdrop blur
+ * - Warm accent colors matching the restaurant theme
+ * - Animated pulsing status dot indicator
+ * - Auto-hides when restaurant is closed (configurable)
+ * - Configurable positioning (top-left, top-right, bottom-left, bottom-right)
+ * - WCAG 2.1 AA compliant accessibility
+ * - Reduced motion support
+ * - Responsive design
+ *
+ * @example Basic usage (positioned over hero)
+ * ```astro
+ * <div style="position: relative;">
+ *   <RestaurantHeroSection ... />
+ *   <FloatingHoursBadge />
+ * </div>
+ * ```
+ *
+ * @example With custom configuration
+ * ```astro
+ * <FloatingHoursBadge
+ *   position="top-left"
+ *   visibility="always"
+ *   timeFormat="24h"
+ *   offset={24}
+ * />
+ * ```
+ */
+
+import type { FloatingHoursBadgeProps } from '../types/floating-hours-badge';
+import {
+  BUSINESS_HOURS_CONFIG,
+  HOURS_DISPLAY_CONFIG,
+} from '../config/hours.config';
+import {
+  getCurrentStatus,
+  getHoursDisplayState,
+  getDayHoursText,
+  getTodaySpecialHours,
+  getCurrentDayIndex,
+} from '../utils/hours';
+
+interface Props extends FloatingHoursBadgeProps {}
+
+const {
+  config = BUSINESS_HOURS_CONFIG,
+  timeFormat = HOURS_DISPLAY_CONFIG.defaultTimeFormat,
+  position = 'top-right',
+  visibility = 'auto-hide-when-closed',
+  updateInterval = HOURS_DISPLAY_CONFIG.defaultUpdateInterval,
+  showHoursText = true,
+  animateDot = true,
+  class: className = '',
+  zIndex = 10,
+  offset = 16,
+} = Astro.props;
+
+// Get initial state for server-side rendering
+const initialState = getHoursDisplayState(config);
+const currentDayIndex = getCurrentDayIndex(config.timezone);
+const todayHours = initialState.isSpecialDay && initialState.todaySpecialHours
+  ? initialState.todaySpecialHours.isOpen && initialState.todaySpecialHours.hours
+    ? getDayHoursText({ day: 'Today', isOpen: true, hours: initialState.todaySpecialHours.hours }, timeFormat)
+    : 'Closed'
+  : getDayHoursText(config.regularHours[currentDayIndex], timeFormat);
+
+// Determine initial visibility
+const isOpen = initialState.currentStatus.status === 'open' || initialState.currentStatus.status === 'closing-soon';
+const initiallyVisible = visibility === 'always' || (visibility === 'auto-hide-when-closed' && isOpen);
+
+// Build CSS classes
+const badgeClasses = [
+  'floating-hours-badge',
+  `floating-hours-badge--${position}`,
+  `floating-hours-badge--${initialState.currentStatus.status}`,
+  !animateDot && 'floating-hours-badge--no-animation',
+  !initiallyVisible && 'floating-hours-badge--hidden',
+  className,
+].filter(Boolean).join(' ');
+
+// Inline styles for positioning
+const positionStyle = `--badge-offset: ${offset}px; --badge-z-index: ${zIndex};`;
+---
+
+<div
+  class={badgeClasses}
+  role="status"
+  aria-live="polite"
+  aria-label={`Restaurant status: ${initialState.currentStatus.message}${showHoursText ? `. Today's hours: ${todayHours}` : ''}`}
+  data-floating-badge
+  data-config={JSON.stringify(config)}
+  data-time-format={timeFormat}
+  data-visibility={visibility}
+  data-update-interval={updateInterval}
+  data-show-hours={showHoursText}
+  style={positionStyle}
+>
+  <!-- Status indicator with pulsing dot -->
+  <span class="floating-hours-badge__status">
+    <span class="floating-hours-badge__dot" aria-hidden="true"></span>
+    <span class="floating-hours-badge__status-text" data-status-text>
+      {initialState.currentStatus.message}
+    </span>
+  </span>
+
+  <!-- Today's hours (optional) -->
+  {showHoursText && (
+    <span class="floating-hours-badge__divider" aria-hidden="true"></span>
+    <span class="floating-hours-badge__hours" data-hours-text>
+      {todayHours}
+    </span>
+  )}
+
+  <!-- Screen reader announcement region -->
+  <span
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    data-badge-announcer
+  ></span>
+</div>
+
+<style>
+  /* =================================================================
+   * FLOATING HOURS BADGE - BASE STYLES
+   * ================================================================= */
+  .floating-hours-badge {
+    position: absolute;
+    z-index: var(--badge-z-index, 10);
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2) var(--spacing-3);
+    padding: var(--spacing-2-5) var(--spacing-4);
+
+    /* Glassmorphic background with warm tint */
+    background: linear-gradient(
+      135deg,
+      rgba(255, 251, 235, 0.15) 0%,
+      rgba(255, 247, 219, 0.12) 50%,
+      rgba(255, 251, 235, 0.1) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    /* Warm border accent */
+    border: 1px solid rgba(255, 251, 235, 0.25);
+    border-radius: var(--radius-full);
+
+    /* Typography */
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-cream, rgba(255, 251, 235, 1));
+
+    /* Subtle shadow for depth */
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    /* Smooth transitions */
+    transition:
+      opacity var(--animation-duration-normal, 300ms) var(--ease-out, ease-out),
+      transform var(--animation-duration-normal, 300ms) var(--ease-out, ease-out),
+      box-shadow var(--animation-duration-fast, 150ms) var(--ease-out, ease-out);
+
+    /* Entrance animation */
+    animation: badge-entrance var(--animation-duration-slow, 500ms) var(--ease-enter-emphasized, ease-out) forwards;
+    animation-delay: var(--animation-delay-2, 0.3s);
+    opacity: 0;
+  }
+
+  @keyframes badge-entrance {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Hover state */
+  .floating-hours-badge:hover {
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  /* Hidden state */
+  .floating-hours-badge--hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.95);
+    animation: none;
+  }
+
+  /* =================================================================
+   * POSITIONING VARIANTS
+   * ================================================================= */
+  .floating-hours-badge--top-left {
+    top: var(--badge-offset, 16px);
+    left: var(--badge-offset, 16px);
+  }
+
+  .floating-hours-badge--top-right {
+    top: var(--badge-offset, 16px);
+    right: var(--badge-offset, 16px);
+  }
+
+  .floating-hours-badge--bottom-left {
+    bottom: var(--badge-offset, 16px);
+    left: var(--badge-offset, 16px);
+  }
+
+  .floating-hours-badge--bottom-right {
+    bottom: var(--badge-offset, 16px);
+    right: var(--badge-offset, 16px);
+  }
+
+  /* =================================================================
+   * STATUS INDICATOR
+   * ================================================================= */
+  .floating-hours-badge__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Pulsing dot indicator */
+  .floating-hours-badge__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    animation: pulse-badge-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge-dot {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.85);
+    }
+  }
+
+  /* Disable animation when specified */
+  .floating-hours-badge--no-animation .floating-hours-badge__dot {
+    animation: none;
+  }
+
+  /* =================================================================
+   * STATUS COLOR VARIANTS
+   * ================================================================= */
+
+  /* Open - Warm green with glow */
+  .floating-hours-badge--open .floating-hours-badge__dot {
+    background-color: var(--color-success, #10b981);
+    box-shadow: 0 0 10px var(--color-success, #10b981);
+  }
+
+  .floating-hours-badge--open {
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  /* Closed - Warm red/terracotta */
+  .floating-hours-badge--closed .floating-hours-badge__dot {
+    background-color: var(--color-error, #ef4444);
+    box-shadow: 0 0 10px var(--color-error, #ef4444);
+  }
+
+  .floating-hours-badge--closed {
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  /* Closing Soon - Warm amber */
+  .floating-hours-badge--closing-soon .floating-hours-badge__dot {
+    background-color: var(--color-warning, #f59e0b);
+    box-shadow: 0 0 10px var(--color-warning, #f59e0b);
+    /* Faster pulse for urgency */
+    animation-duration: 1.2s;
+  }
+
+  .floating-hours-badge--closing-soon {
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+
+  /* Opening Soon - Warm blue/info */
+  .floating-hours-badge--opening-soon .floating-hours-badge__dot {
+    background-color: var(--color-info, #3b82f6);
+    box-shadow: 0 0 10px var(--color-info, #3b82f6);
+    /* Gentle pulse for anticipation */
+    animation-duration: 1.5s;
+  }
+
+  .floating-hours-badge--opening-soon {
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  /* =================================================================
+   * DIVIDER
+   * ================================================================= */
+  .floating-hours-badge__divider {
+    width: 1px;
+    height: 14px;
+    background-color: rgba(255, 251, 235, 0.35);
+    flex-shrink: 0;
+  }
+
+  /* =================================================================
+   * HOURS TEXT
+   * ================================================================= */
+  .floating-hours-badge__hours {
+    color: rgba(255, 251, 235, 0.85);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (max-width: 640px) {
+    .floating-hours-badge {
+      font-size: var(--font-size-xs);
+      padding: var(--spacing-2) var(--spacing-3);
+      gap: var(--spacing-1-5) var(--spacing-2);
+    }
+
+    .floating-hours-badge__dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .floating-hours-badge__divider {
+      height: 12px;
+    }
+
+    /* Adjust offset for smaller screens */
+    .floating-hours-badge--top-left,
+    .floating-hours-badge--top-right {
+      top: var(--spacing-3);
+    }
+
+    .floating-hours-badge--bottom-left,
+    .floating-hours-badge--bottom-right {
+      bottom: var(--spacing-3);
+    }
+
+    .floating-hours-badge--top-left,
+    .floating-hours-badge--bottom-left {
+      left: var(--spacing-3);
+    }
+
+    .floating-hours-badge--top-right,
+    .floating-hours-badge--bottom-right {
+      right: var(--spacing-3);
+    }
+  }
+
+  /* Tablet adjustments */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .floating-hours-badge {
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-hours-badge {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .floating-hours-badge:hover {
+      transform: none;
+    }
+
+    .floating-hours-badge__dot {
+      animation: none;
+    }
+
+    .floating-hours-badge--hidden {
+      transition: opacity var(--animation-duration-fast, 150ms) ease;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .floating-hours-badge {
+      background: Canvas;
+      border: 2px solid CanvasText;
+      color: CanvasText;
+    }
+
+    .floating-hours-badge__dot {
+      box-shadow: none;
+    }
+
+    .floating-hours-badge--open .floating-hours-badge__dot {
+      background-color: Highlight;
+    }
+
+    .floating-hours-badge--closed .floating-hours-badge__dot {
+      background-color: Mark;
+    }
+
+    .floating-hours-badge__divider {
+      background-color: CanvasText;
+    }
+
+    .floating-hours-badge__hours {
+      color: CanvasText;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .floating-hours-badge {
+      position: static;
+      display: inline-flex;
+      background: transparent;
+      border: 1px solid var(--color-border, #e5e7eb);
+      backdrop-filter: none;
+      color: var(--color-text-primary, #111827);
+      box-shadow: none;
+      animation: none;
+      opacity: 1;
+    }
+
+    .floating-hours-badge__dot {
+      animation: none;
+      box-shadow: none;
+    }
+
+    .floating-hours-badge__divider {
+      background-color: var(--color-border, #e5e7eb);
+    }
+
+    .floating-hours-badge__hours {
+      color: var(--color-text-secondary, #6b7280);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE ADJUSTMENTS
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .floating-hours-badge {
+    background: linear-gradient(
+      135deg,
+      rgba(26, 20, 18, 0.6) 0%,
+      rgba(45, 36, 30, 0.5) 50%,
+      rgba(26, 20, 18, 0.55) 100%
+    );
+    border-color: rgba(212, 196, 168, 0.35);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      0 2px 10px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  :global(html[data-theme="dark"]) .floating-hours-badge:hover {
+    box-shadow:
+      0 6px 28px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(html[data-theme="dark"]) .floating-hours-badge__divider {
+    background-color: rgba(212, 196, 168, 0.4);
+  }
+</style>
+
+<script>
+  /**
+   * Floating Hours Badge Client-Side Logic
+   * Handles real-time status updates, visibility toggling, and announcements
+   */
+
+  interface TimeRange {
+    open: string;
+    close: string;
+  }
+
+  interface DailyHours {
+    day: string;
+    isOpen: boolean;
+    hours?: TimeRange[];
+  }
+
+  interface SpecialHours {
+    id: string;
+    name: string;
+    date: string;
+    type: string;
+    isOpen: boolean;
+    hours?: TimeRange[];
+    description?: string;
+  }
+
+  interface BusinessHoursConfig {
+    timezone: string;
+    regularHours: DailyHours[];
+    specialHours?: SpecialHours[];
+    closingSoonMinutes?: number;
+    openingSoonMinutes?: number;
+  }
+
+  type OperatingStatus = 'open' | 'closed' | 'closing-soon' | 'opening-soon';
+  type BadgeVisibility = 'always' | 'auto-hide-when-closed' | 'hidden';
+  type TimeFormat = '12h' | '24h';
+
+  interface BadgeState {
+    container: HTMLElement;
+    config: BusinessHoursConfig;
+    timeFormat: TimeFormat;
+    visibility: BadgeVisibility;
+    updateInterval: number;
+    showHours: boolean;
+    intervalId?: number;
+    currentStatus: OperatingStatus;
+  }
+
+  class FloatingHoursBadge {
+    private state: BadgeState;
+
+    constructor(container: HTMLElement) {
+      const configStr = container.dataset.config || '{}';
+      const config = JSON.parse(configStr) as BusinessHoursConfig;
+
+      this.state = {
+        container,
+        config,
+        timeFormat: (container.dataset.timeFormat || '12h') as TimeFormat,
+        visibility: (container.dataset.visibility || 'auto-hide-when-closed') as BadgeVisibility,
+        updateInterval: parseInt(container.dataset.updateInterval || '60000', 10),
+        showHours: container.dataset.showHours === 'true',
+        currentStatus: this.extractCurrentStatus(),
+      };
+
+      this.initialize();
+    }
+
+    private initialize(): void {
+      // Update immediately
+      this.updateBadge();
+
+      // Set up interval for real-time updates
+      this.state.intervalId = window.setInterval(() => {
+        this.updateBadge();
+      }, this.state.updateInterval);
+
+      // Update on visibility change (when user returns to tab)
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          this.updateBadge();
+        }
+      });
+    }
+
+    private extractCurrentStatus(): OperatingStatus {
+      const { container } = this.state;
+      if (container.classList.contains('floating-hours-badge--open')) return 'open';
+      if (container.classList.contains('floating-hours-badge--closed')) return 'closed';
+      if (container.classList.contains('floating-hours-badge--closing-soon')) return 'closing-soon';
+      if (container.classList.contains('floating-hours-badge--opening-soon')) return 'opening-soon';
+      return 'closed';
+    }
+
+    private getCurrentTimeInMinutes(): number {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    private getCurrentDayIndex(): number {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      return now.getDay();
+    }
+
+    private getTodayDateString(): string {
+      const { timezone } = this.state.config;
+      const now = timezone
+        ? new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
+        : new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    private parseTimeToMinutes(time: string): number {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
+    private formatMinutesToTime(minutes: number): string {
+      const normalizedMinutes = minutes >= 0 ? minutes % (24 * 60) : minutes + 24 * 60;
+      const hours = Math.floor(normalizedMinutes / 60);
+      const mins = normalizedMinutes % 60;
+
+      if (this.state.timeFormat === '24h') {
+        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+      }
+
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      const minsStr = mins === 0 ? '' : `:${mins.toString().padStart(2, '0')}`;
+      return `${displayHours}${minsStr} ${period}`;
+    }
+
+    private isWithinTimeRange(currentMinutes: number, range: TimeRange): boolean {
+      const openMinutes = this.parseTimeToMinutes(range.open);
+      let closeMinutes = this.parseTimeToMinutes(range.close);
+
+      if (closeMinutes < openMinutes) {
+        closeMinutes += 24 * 60;
+        if (currentMinutes < openMinutes) {
+          return currentMinutes + 24 * 60 >= openMinutes && currentMinutes + 24 * 60 < closeMinutes;
+        }
+      }
+
+      return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+    }
+
+    private isWithinAnyTimeRange(currentMinutes: number, ranges: TimeRange[]): boolean {
+      return ranges.some((range) => this.isWithinTimeRange(currentMinutes, range));
+    }
+
+    private getMinutesUntilClose(currentMinutes: number, ranges: TimeRange[]): number | null {
+      for (const range of ranges) {
+        if (this.isWithinTimeRange(currentMinutes, range)) {
+          let closeMinutes = this.parseTimeToMinutes(range.close);
+          const openMinutes = this.parseTimeToMinutes(range.open);
+
+          if (closeMinutes < openMinutes) {
+            closeMinutes += 24 * 60;
+            if (currentMinutes < openMinutes) {
+              return closeMinutes - (currentMinutes + 24 * 60);
+            }
+          }
+
+          return closeMinutes - currentMinutes;
+        }
+      }
+      return null;
+    }
+
+    private getMinutesUntilOpen(currentMinutes: number, ranges: TimeRange[]): number | null {
+      const sortedRanges = [...ranges].sort(
+        (a, b) => this.parseTimeToMinutes(a.open) - this.parseTimeToMinutes(b.open)
+      );
+
+      for (const range of sortedRanges) {
+        const openMinutes = this.parseTimeToMinutes(range.open);
+        if (openMinutes > currentMinutes) {
+          return openMinutes - currentMinutes;
+        }
+      }
+
+      if (sortedRanges.length > 0) {
+        const firstOpen = this.parseTimeToMinutes(sortedRanges[0].open);
+        return 24 * 60 - currentMinutes + firstOpen;
+      }
+
+      return null;
+    }
+
+    private getCurrentStatus(): {
+      status: OperatingStatus;
+      message: string;
+    } {
+      const { config } = this.state;
+      const { regularHours, specialHours, closingSoonMinutes = 30, openingSoonMinutes = 30 } = config;
+
+      const todayString = this.getTodayDateString();
+      const currentMinutes = this.getCurrentTimeInMinutes();
+      const currentDayIndex = this.getCurrentDayIndex();
+
+      // Check for special hours first
+      const todaySpecial = specialHours?.find((sh) => sh.date === todayString);
+      const hours = todaySpecial
+        ? (todaySpecial.isOpen ? todaySpecial.hours || [] : [])
+        : regularHours[currentDayIndex].hours || [];
+      const isOpenDay = todaySpecial
+        ? todaySpecial.isOpen
+        : regularHours[currentDayIndex].isOpen;
+      const prefix = todaySpecial ? `${todaySpecial.name}: ` : '';
+
+      if (!isOpenDay || hours.length === 0) {
+        return { status: 'closed', message: `${prefix}Closed` };
+      }
+
+      const isOpen = this.isWithinAnyTimeRange(currentMinutes, hours);
+
+      if (isOpen) {
+        const minutesUntilClose = this.getMinutesUntilClose(currentMinutes, hours);
+        if (minutesUntilClose !== null && minutesUntilClose <= closingSoonMinutes) {
+          return { status: 'closing-soon', message: `${prefix}Closing Soon` };
+        }
+        return { status: 'open', message: `${prefix}Open Now` };
+      }
+
+      const minutesUntilOpen = this.getMinutesUntilOpen(currentMinutes, hours);
+      if (minutesUntilOpen !== null && minutesUntilOpen <= openingSoonMinutes) {
+        return { status: 'opening-soon', message: `${prefix}Opening Soon` };
+      }
+
+      return { status: 'closed', message: `${prefix}Closed` };
+    }
+
+    private getTodayHoursText(): string {
+      const { config, timeFormat } = this.state;
+      const { regularHours, specialHours } = config;
+
+      const todayString = this.getTodayDateString();
+      const currentDayIndex = this.getCurrentDayIndex();
+
+      // Check for special hours first
+      const todaySpecial = specialHours?.find((sh) => sh.date === todayString);
+      const hours = todaySpecial
+        ? (todaySpecial.isOpen ? todaySpecial.hours || [] : [])
+        : regularHours[currentDayIndex].hours || [];
+      const isOpenDay = todaySpecial
+        ? todaySpecial.isOpen
+        : regularHours[currentDayIndex].isOpen;
+
+      if (!isOpenDay || hours.length === 0) {
+        return 'Closed';
+      }
+
+      return hours
+        .map((range) => {
+          const open = this.formatMinutesToTime(this.parseTimeToMinutes(range.open));
+          const close = this.formatMinutesToTime(this.parseTimeToMinutes(range.close));
+          return `${open} - ${close}`;
+        })
+        .join(', ');
+    }
+
+    private updateBadge(): void {
+      const { container, visibility } = this.state;
+      const newStatus = this.getCurrentStatus();
+      const previousStatus = this.state.currentStatus;
+
+      // Update status text
+      const statusTextEl = container.querySelector('[data-status-text]');
+      if (statusTextEl && statusTextEl.textContent !== newStatus.message) {
+        statusTextEl.textContent = newStatus.message;
+      }
+
+      // Update hours text
+      if (this.state.showHours) {
+        const hoursTextEl = container.querySelector('[data-hours-text]');
+        if (hoursTextEl) {
+          const hoursText = this.getTodayHoursText();
+          if (hoursTextEl.textContent !== hoursText) {
+            hoursTextEl.textContent = hoursText;
+          }
+        }
+      }
+
+      // Update status classes
+      if (newStatus.status !== previousStatus) {
+        container.classList.remove(
+          'floating-hours-badge--open',
+          'floating-hours-badge--closed',
+          'floating-hours-badge--closing-soon',
+          'floating-hours-badge--opening-soon'
+        );
+        container.classList.add(`floating-hours-badge--${newStatus.status}`);
+        this.state.currentStatus = newStatus.status;
+
+        // Announce status change to screen readers
+        const announcer = container.querySelector('[data-badge-announcer]');
+        if (announcer) {
+          announcer.textContent = `Restaurant status changed: ${newStatus.message}`;
+        }
+
+        // Update aria-label
+        const hoursText = this.state.showHours ? this.getTodayHoursText() : '';
+        container.setAttribute(
+          'aria-label',
+          `Restaurant status: ${newStatus.message}${hoursText ? `. Today's hours: ${hoursText}` : ''}`
+        );
+      }
+
+      // Handle visibility based on status
+      if (visibility === 'auto-hide-when-closed') {
+        const shouldBeVisible = newStatus.status === 'open' || newStatus.status === 'closing-soon';
+        const isCurrentlyHidden = container.classList.contains('floating-hours-badge--hidden');
+
+        if (shouldBeVisible && isCurrentlyHidden) {
+          container.classList.remove('floating-hours-badge--hidden');
+        } else if (!shouldBeVisible && !isCurrentlyHidden) {
+          container.classList.add('floating-hours-badge--hidden');
+        }
+      }
+    }
+
+    public destroy(): void {
+      if (this.state.intervalId) {
+        clearInterval(this.state.intervalId);
+      }
+    }
+  }
+
+  // Store instances for cleanup
+  const instances = new Map<HTMLElement, FloatingHoursBadge>();
+
+  // Initialize all floating badges on the page
+  function initFloatingBadges(): void {
+    // Clean up existing instances
+    instances.forEach((instance) => instance.destroy());
+    instances.clear();
+
+    // Initialize new instances
+    const containers = document.querySelectorAll('[data-floating-badge]');
+    containers.forEach((container) => {
+      const instance = new FloatingHoursBadge(container as HTMLElement);
+      instances.set(container as HTMLElement, instance);
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingBadges);
+  } else {
+    initFloatingBadges();
+  }
+
+  // Re-initialize on Astro page transitions (for View Transitions)
+  document.addEventListener('astro:page-load', initFloatingBadges);
+</script>

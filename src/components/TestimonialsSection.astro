@@ -1,0 +1,410 @@
+---
+/**
+ * TestimonialsSection Component
+ * A complete section for displaying customer testimonials with multiple layout options.
+ * Includes carousel mode, grid mode, or automatic switching based on viewport.
+ *
+ * Features:
+ * - Section heading and subheading
+ * - Carousel layout (responsive, touch-friendly)
+ * - Grid layout (responsive: 1-col mobile, 2-col tablet, 3-col desktop)
+ * - Auto layout: carousel on mobile, grid on desktop
+ * - Review schema markup for rich snippets
+ * - Background variants (default, subtle, primary)
+ * - Accessible with proper semantic structure
+ * - Loading/empty state handling
+ * - Dark mode support
+ * - Reduced motion support
+ *
+ * @example Basic usage
+ * ```astro
+ * <TestimonialsSection testimonials={testimonials} />
+ * ```
+ *
+ * @example With custom heading and grid layout
+ * ```astro
+ * <TestimonialsSection
+ *   heading="Customer Reviews"
+ *   subheading="See what our guests are saying"
+ *   testimonials={testimonials}
+ *   layout="grid"
+ * />
+ * ```
+ *
+ * @example With carousel and schema markup
+ * ```astro
+ * <TestimonialsSection
+ *   testimonials={testimonials}
+ *   layout="carousel"
+ *   autoScroll={true}
+ *   includeSchema={true}
+ * />
+ * ```
+ */
+
+import type { TestimonialsSectionProps } from '../types/testimonial';
+import { TESTIMONIALS_CONFIG } from '../config/testimonials.config';
+import TestimonialCard from './TestimonialCard.astro';
+import TestimonialsCarousel from './TestimonialsCarousel.astro';
+import { generateTestimonialsSchema } from '../utils/testimonial-jsonld';
+
+interface Props extends TestimonialsSectionProps {}
+
+const {
+  heading = TESTIMONIALS_CONFIG.defaultHeading,
+  subheading = TESTIMONIALS_CONFIG.defaultSubheading,
+  testimonials,
+  layout = TESTIMONIALS_CONFIG.defaultLayout,
+  showArrows = true,
+  showIndicators = true,
+  autoScroll = TESTIMONIALS_CONFIG.defaultAutoScroll,
+  autoScrollInterval = TESTIMONIALS_CONFIG.defaultAutoScrollInterval,
+  includeSchema = TESTIMONIALS_CONFIG.defaultIncludeSchema,
+  id = 'testimonials',
+  class: className = '',
+  background = 'subtle',
+  testId = 'testimonials-section',
+} = Astro.props;
+
+// Build CSS classes
+const sectionClasses = [
+  'testimonials-section',
+  `testimonials-section--bg-${background}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Check if we have testimonials to display
+const hasTestimonials = testimonials && testimonials.length > 0;
+
+// Generate schema markup if enabled
+const schemaMarkup = includeSchema && hasTestimonials
+  ? generateTestimonialsSchema(testimonials, TESTIMONIALS_CONFIG.aggregateRating)
+  : null;
+---
+
+<section
+  class={sectionClasses}
+  id={id}
+  aria-labelledby={`${id}-heading`}
+  data-testid={testId}
+>
+  <div class="testimonials-section__container">
+    <!-- Section Header -->
+    <header class="testimonials-section__header section-heading--decorated">
+      <h2 id={`${id}-heading`} class="testimonials-section__heading">{heading}</h2>
+      {subheading && (
+        <p class="testimonials-section__subheading">{subheading}</p>
+      )}
+    </header>
+
+    <!-- Testimonials Content -->
+    {hasTestimonials ? (
+      <>
+        {/* Carousel Layout (also used for 'auto' on mobile via CSS) */}
+        {(layout === 'carousel' || layout === 'auto') && (
+          <div class:list={['testimonials-section__carousel', layout === 'auto' && 'testimonials-section__carousel--auto']}>
+            <TestimonialsCarousel
+              testimonials={testimonials}
+              showArrows={showArrows}
+              showIndicators={showIndicators}
+              autoScroll={autoScroll}
+              autoScrollInterval={autoScrollInterval}
+            />
+          </div>
+        )}
+
+        {/* Grid Layout (also used for 'auto' on desktop via CSS) */}
+        {(layout === 'grid' || layout === 'auto') && (
+          <div class:list={['testimonials-section__grid', layout === 'auto' && 'testimonials-section__grid--auto']}>
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard
+                {...testimonial}
+                showSource={true}
+                showDate={true}
+                testId={`testimonial-grid-${index}`}
+              />
+            ))}
+          </div>
+        )}
+      </>
+    ) : (
+      <!-- Empty State -->
+      <div class="testimonials-section__empty" role="status" aria-live="polite">
+        <p class="testimonials-section__empty-text">Customer reviews coming soon.</p>
+      </div>
+    )}
+  </div>
+
+  {/* Schema Markup */}
+  {schemaMarkup && (
+    <script type="application/ld+json" set:html={JSON.stringify(schemaMarkup)} />
+  )}
+</section>
+
+<style>
+  /* =================================================================
+   * TESTIMONIALS SECTION COMPONENT STYLES
+   * =================================================================
+   * Uses design system variables from variables.css
+   * Follows BEM naming convention for maintainability
+   */
+
+  .testimonials-section {
+    padding: var(--spacing-16) var(--spacing-4);
+  }
+
+  /* Background Variants */
+  .testimonials-section--bg-default {
+    background-color: var(--color-background);
+  }
+
+  .testimonials-section--bg-subtle {
+    background-color: var(--color-background-subtle);
+  }
+
+  .testimonials-section--bg-primary {
+    background: var(--gradient-hero);
+    color: var(--color-text-inverse);
+  }
+
+  .testimonials-section--bg-primary .testimonials-section__heading,
+  .testimonials-section--bg-primary .testimonials-section__subheading {
+    color: var(--color-text-inverse);
+  }
+
+  .testimonials-section__container {
+    max-width: var(--container-7xl);
+    margin: 0 auto;
+  }
+
+  /* Section Header */
+  .testimonials-section__header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+  }
+
+  .testimonials-section__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4);
+    line-height: var(--line-height-tight);
+  }
+
+  .testimonials-section__subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* Carousel Container */
+  .testimonials-section__carousel {
+    display: block;
+  }
+
+  /* Grid Container */
+  .testimonials-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  /* Auto Layout - Show carousel on mobile, grid on desktop */
+  .testimonials-section__carousel--auto {
+    display: block;
+  }
+
+  .testimonials-section__grid--auto {
+    display: none;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .testimonials-section__carousel--auto {
+      display: none;
+    }
+
+    .testimonials-section__grid--auto {
+      display: grid;
+    }
+  }
+
+  /* Empty State */
+  .testimonials-section__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-16) var(--spacing-8);
+    background-color: var(--color-background-muted);
+    border-radius: var(--radius-xl);
+    border: 2px dashed var(--color-border);
+  }
+
+  .testimonials-section__empty-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    text-align: center;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * =================================================================
+   */
+
+  /* Tablet (640px) - 2 columns */
+  @media screen and (min-width: 640px) {
+    .testimonials-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-6);
+    }
+  }
+
+  /* Tablet Large (768px) */
+  @media screen and (min-width: 768px) {
+    .testimonials-section {
+      padding: var(--spacing-20) var(--spacing-8);
+    }
+
+    .testimonials-section__header {
+      margin-bottom: var(--spacing-16);
+    }
+
+    .testimonials-section__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .testimonials-section__grid {
+      gap: var(--spacing-8);
+    }
+  }
+
+  /* Desktop (1024px) - 3 columns */
+  @media screen and (min-width: 1024px) {
+    .testimonials-section__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Large Desktop (1280px) */
+  @media screen and (min-width: 1280px) {
+    .testimonials-section {
+      padding: var(--spacing-24) var(--spacing-8);
+    }
+  }
+
+  /* =================================================================
+   * ANIMATION - Staggered card appearance
+   * =================================================================
+   */
+  .testimonials-section__grid > :global(*) {
+    animation: fadeSlideUp 0.5s ease-out backwards;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(1)) {
+    animation-delay: 0.1s;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(2)) {
+    animation-delay: 0.2s;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(3)) {
+    animation-delay: 0.3s;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(4)) {
+    animation-delay: 0.4s;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(5)) {
+    animation-delay: 0.5s;
+  }
+
+  .testimonials-section__grid > :global(*:nth-child(6)) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT
+   * =================================================================
+   */
+
+  html[data-theme="dark"] .testimonials-section--bg-subtle {
+    background-color: var(--color-background-subtle);
+  }
+
+  html[data-theme="dark"] .testimonials-section__empty {
+    background-color: var(--color-background-muted);
+    border-color: var(--color-border);
+  }
+
+  html[data-theme="dark"] .testimonials-section__empty-text {
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * =================================================================
+   */
+
+  @media (prefers-reduced-motion: reduce) {
+    .testimonials-section__grid > :global(*) {
+      animation: none;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * =================================================================
+   */
+
+  @media print {
+    .testimonials-section {
+      padding: var(--spacing-8) 0;
+      background-color: transparent !important;
+      background: none !important;
+    }
+
+    .testimonials-section--bg-primary {
+      color: var(--color-text-primary);
+    }
+
+    .testimonials-section--bg-primary .testimonials-section__heading,
+    .testimonials-section--bg-primary .testimonials-section__subheading {
+      color: var(--color-text-primary);
+    }
+
+    .testimonials-section__carousel {
+      display: none;
+    }
+
+    .testimonials-section__grid,
+    .testimonials-section__grid--auto {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-4);
+    }
+
+    .testimonials-section__grid > :global(*) {
+      animation: none;
+    }
+  }
+</style>

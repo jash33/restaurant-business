@@ -1,0 +1,246 @@
+---
+/**
+ * Specials Showcase Demo Page
+ * Demonstrates the SpecialsShowcase component with various configurations.
+ * This page is for testing and verification purposes.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import SpecialsShowcase from '../components/SpecialsShowcase.astro';
+import {
+  SPECIALS,
+  getAllActiveSpecials,
+  getTodaysSpecials,
+  getFeaturedSpecials,
+} from '../config/specials-showcase.config';
+import { getCurrentDayOfWeek } from '../types/specials-showcase';
+
+// Get today's day for display
+const today = getCurrentDayOfWeek();
+const todaysSpecials = getTodaysSpecials();
+const featuredSpecials = getFeaturedSpecials(1);
+const allActiveSpecials = getAllActiveSpecials();
+---
+
+<Layout
+  title="Specials Showcase Demo"
+  description="Demonstration of the SpecialsShowcase component"
+>
+  <main class="demo-page">
+    <div class="demo-container">
+      <h1 class="demo-title">Specials Showcase Demo</h1>
+      <p class="demo-description">
+        This page demonstrates the SpecialsShowcase component with different
+        layout styles, configurations, and special types. Today is <strong>{today}</strong>.
+      </p>
+
+      <!-- Section 1: Carousel Layout (Default) -->
+      <section class="demo-section" data-testid="carousel-layout">
+        <h2 class="demo-section-title">1. Carousel Layout (Default)</h2>
+        <p class="demo-section-description">
+          Full-featured carousel with auto-rotation, navigation arrows, and dot indicators.
+          Hover to pause auto-rotation. Use keyboard arrows or swipe on mobile to navigate.
+        </p>
+        <SpecialsShowcase
+          specials={allActiveSpecials}
+          config={{
+            heading: "Today's Specials",
+            subheading: "Discover our rotating selection of limited-time offers and daily favorites",
+            layout: 'carousel',
+            autoRotateInterval: 5000,
+            showArrows: true,
+            showIndicators: true,
+            showBadges: true,
+            showPrices: true,
+          }}
+          testId="carousel-showcase"
+        />
+      </section>
+
+      <!-- Section 2: Grid Layout -->
+      <section class="demo-section" data-testid="grid-layout">
+        <h2 class="demo-section-title">2. Grid Layout</h2>
+        <p class="demo-section-description">
+          Display multiple specials in a responsive grid. Great for showing all available
+          specials at a glance.
+        </p>
+        <SpecialsShowcase
+          specials={allActiveSpecials.slice(0, 6)}
+          config={{
+            heading: "Weekly Specials",
+            subheading: "Something special every day of the week",
+            layout: 'grid',
+            showBadges: true,
+            showPrices: true,
+          }}
+          testId="grid-showcase"
+        />
+      </section>
+
+      <!-- Section 3: Featured Layout -->
+      <section class="demo-section" data-testid="featured-layout">
+        <h2 class="demo-section-title">3. Featured Layout</h2>
+        <p class="demo-section-description">
+          Highlight a single special with a large image and detailed description.
+          Perfect for promoting a flagship offer.
+        </p>
+        <SpecialsShowcase
+          specials={featuredSpecials}
+          config={{
+            heading: "Featured Special",
+            layout: 'featured',
+            showBadges: true,
+            showPrices: true,
+          }}
+          testId="featured-showcase"
+        />
+      </section>
+
+      <!-- Section 4: Today's Specials Only -->
+      <section class="demo-section" data-testid="todays-specials">
+        <h2 class="demo-section-title">4. Today's Specials ({today})</h2>
+        <p class="demo-section-description">
+          Filtered to show only specials available today. Uses the filterByToday configuration
+          to automatically filter based on daysAvailable.
+        </p>
+        {todaysSpecials.length > 0 ? (
+          <SpecialsShowcase
+            specials={todaysSpecials}
+            config={{
+              heading: `${today} Specials`,
+              subheading: "Available today only",
+              layout: 'grid',
+              showBadges: true,
+              showPrices: true,
+            }}
+            testId="todays-showcase"
+          />
+        ) : (
+          <div class="demo-empty-state" data-testid="no-specials-today">
+            <p>No day-specific specials are available today, but check out our all-week specials above!</p>
+          </div>
+        )}
+      </section>
+
+      <!-- Section 5: Carousel without Auto-Rotate -->
+      <section class="demo-section" data-testid="manual-carousel">
+        <h2 class="demo-section-title">5. Manual Carousel (No Auto-Rotate)</h2>
+        <p class="demo-section-description">
+          Carousel with manual navigation only. Auto-rotation is disabled
+          for users who prefer to browse at their own pace.
+        </p>
+        <SpecialsShowcase
+          specials={allActiveSpecials.slice(0, 4)}
+          config={{
+            heading: "Browse Our Specials",
+            layout: 'carousel',
+            autoRotateInterval: 0,
+            showArrows: true,
+            showIndicators: true,
+            showBadges: true,
+            showPrices: false,
+          }}
+          testId="manual-carousel-showcase"
+        />
+      </section>
+
+      <!-- Section 6: Minimal Grid (No Badges/Prices) -->
+      <section class="demo-section" data-testid="minimal-grid">
+        <h2 class="demo-section-title">6. Minimal Grid</h2>
+        <p class="demo-section-description">
+          Clean grid layout without badges or prices. Useful for teaser displays
+          or when you want to drive traffic to a detailed menu page.
+        </p>
+        <SpecialsShowcase
+          specials={allActiveSpecials.slice(0, 3)}
+          config={{
+            heading: "This Week's Highlights",
+            layout: 'grid',
+            showBadges: false,
+            showPrices: false,
+          }}
+          testId="minimal-grid-showcase"
+        />
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .demo-page {
+    min-height: 100vh;
+    background-color: var(--color-background-subtle);
+    padding: var(--spacing-8) var(--spacing-4);
+  }
+
+  .demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .demo-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4);
+    text-align: center;
+  }
+
+  .demo-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--spacing-12);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .demo-section {
+    margin-bottom: var(--spacing-16);
+    padding: var(--spacing-8);
+    background: var(--color-background);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .demo-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .demo-section-description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-6);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .demo-empty-state {
+    text-align: center;
+    padding: var(--spacing-8);
+    background: var(--color-background-muted);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .demo-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .demo-section {
+      padding: var(--spacing-4);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .demo-section-title {
+      font-size: var(--font-size-xl);
+    }
+  }
+</style>

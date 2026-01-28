@@ -1,0 +1,523 @@
+---
+/**
+ * MenuCategorySection Component
+ * A reusable menu category section with decorative heading, optional description,
+ * and flexible grid layout for menu items. Supports different layout styles
+ * (compact, detailed, photo-heavy) per category.
+ *
+ * Features:
+ * - Decorative heading with optional line decorations
+ * - Optional category description
+ * - Three layout styles: compact, detailed, photo-heavy
+ * - Configurable grid columns (1-4)
+ * - Toggle for images, prices, and dietary tags
+ * - Responsive design with mobile-first approach
+ * - Accessible with proper semantic structure
+ * - Staggered animation on load
+ * - Print-friendly styling
+ * - WCAG 2.1 AA compliant
+ *
+ * @example Basic usage
+ * ```astro
+ * <MenuCategorySection
+ *   category="appetizers"
+ *   layout="detailed"
+ * />
+ * ```
+ *
+ * @example With custom items and styling
+ * ```astro
+ * <MenuCategorySection
+ *   title="Featured Starters"
+ *   description="Begin your culinary journey"
+ *   items={customItems}
+ *   layout="photo-heavy"
+ *   columns={3}
+ *   showImages={true}
+ * />
+ * ```
+ */
+
+import type {
+  MenuCategorySectionProps,
+  MenuCategorySectionLayout,
+  MenuItem,
+  MenuCategory,
+} from '../types/menu';
+import { getMenuItemsByCategory } from '../config/menu.config';
+import { MENU_CATEGORY_OPTIONS } from '../types/menu';
+import MenuItem from './MenuItem.astro';
+
+interface Props extends MenuCategorySectionProps {}
+
+const {
+  category,
+  title,
+  description,
+  items: providedItems,
+  layout = 'detailed',
+  columns = 2,
+  showImages = true,
+  showPrices = true,
+  showDietaryTags = true,
+  headerImage,
+  decoratedHeading = true,
+  id,
+  class: className = '',
+} = Astro.props;
+
+// Get items either from props or from category
+let menuItems: MenuItem[] = providedItems || [];
+if (!providedItems && category) {
+  menuItems = getMenuItemsByCategory(category);
+}
+
+// Get default title and description from category options
+const categoryOption = category
+  ? MENU_CATEGORY_OPTIONS.find((opt) => opt.value === category)
+  : null;
+
+const sectionTitle = title || categoryOption?.label || 'Menu';
+const sectionDescription = description || categoryOption?.description;
+const sectionId = id || (category ? `menu-${category}` : 'menu-section');
+
+// Build CSS classes
+const sectionClasses = [
+  'menu-category-section',
+  `menu-category-section--layout-${layout}`,
+  `menu-category-section--columns-${columns}`,
+  className,
+].filter(Boolean).join(' ');
+
+// Determine if items should show images based on layout and prop
+const shouldShowImages = layout === 'photo-heavy' ? true : showImages;
+
+// Check if we have items to display
+const hasItems = menuItems && menuItems.length > 0;
+---
+
+<section
+  class={sectionClasses}
+  id={sectionId}
+  aria-labelledby={`${sectionId}-heading`}
+  data-layout={layout}
+  data-columns={columns}
+>
+  <div class="menu-category-section__container">
+    <!-- Section Header -->
+    <header class:list={[
+      'menu-category-section__header',
+      { 'menu-category-section__header--decorated': decoratedHeading }
+    ]}>
+      {headerImage && (
+        <div class="menu-category-section__header-image">
+          <img
+            src={headerImage.src}
+            alt={headerImage.alt}
+            width={headerImage.width || 1200}
+            height={headerImage.height || 300}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      )}
+      <div class="menu-category-section__header-content">
+        {decoratedHeading && <span class="menu-category-section__heading-line" aria-hidden="true"></span>}
+        <h2 id={`${sectionId}-heading`} class="menu-category-section__heading">
+          {sectionTitle}
+        </h2>
+        {decoratedHeading && <span class="menu-category-section__heading-line" aria-hidden="true"></span>}
+      </div>
+      {sectionDescription && (
+        <p class="menu-category-section__description">{sectionDescription}</p>
+      )}
+    </header>
+
+    <!-- Menu Items Grid -->
+    {hasItems ? (
+      <div
+        class="menu-category-section__grid"
+        role="list"
+        aria-label={`${sectionTitle} menu items`}
+        style={`--grid-columns: ${columns};`}
+      >
+        {menuItems.map((item, index) => (
+          <div
+            class="menu-category-section__item"
+            role="listitem"
+            style={`--animation-index: ${index};`}
+          >
+            <MenuItem
+              name={item.name}
+              description={item.description}
+              shortDescription={item.shortDescription}
+              price={item.price}
+              dietaryTags={showDietaryTags ? item.dietaryTags : []}
+              image={shouldShowImages ? item.image : undefined}
+              showImage={shouldShowImages && !!item.image}
+              featured={item.featured}
+              chefRecommended={item.chefRecommended}
+              isNew={item.isNew}
+              seasonal={item.seasonal}
+              showFullDescription={layout !== 'compact'}
+              id={item.id}
+              isSignatureDish={item.isSignatureDish}
+              chefStory={item.chefStory}
+              signatureStyle={item.signatureStyle}
+              allergens={item.allergens}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <!-- Empty State -->
+      <div class="menu-category-section__empty" role="status" aria-live="polite">
+        <p class="menu-category-section__empty-text">
+          Menu items coming soon.
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * MENU CATEGORY SECTION COMPONENT STYLES
+   * =================================================================
+   * Uses design system variables from variables.css
+   * Follows BEM naming convention for maintainability
+   */
+
+  .menu-category-section {
+    padding: var(--spacing-12) var(--spacing-4);
+    background-color: var(--color-background);
+  }
+
+  .menu-category-section__container {
+    max-width: var(--container-6xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER STYLES
+   * ================================================================= */
+  .menu-category-section__header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .menu-category-section__header--decorated .menu-category-section__header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-4);
+  }
+
+  .menu-category-section__heading-line {
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-terracotta) 50%,
+      transparent 100%
+    );
+  }
+
+  .menu-category-section__header-image {
+    width: 100%;
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-6);
+  }
+
+  .menu-category-section__header-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .menu-category-section__heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+    white-space: nowrap;
+  }
+
+  .menu-category-section__description {
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    margin: var(--spacing-3) auto 0;
+    max-width: 36rem;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * GRID STYLES
+   * ================================================================= */
+  .menu-category-section__grid {
+    display: grid;
+    gap: var(--spacing-6);
+  }
+
+  /* Default: 1 column on mobile */
+  .menu-category-section__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-category-section__item {
+    animation: fadeSlideUp 0.4s ease-out backwards;
+    animation-delay: calc(var(--animation-index, 0) * 0.05s);
+  }
+
+  /* =================================================================
+   * LAYOUT VARIANTS
+   * ================================================================= */
+
+  /* Compact Layout - Single column list style */
+  .menu-category-section--layout-compact .menu-category-section__grid {
+    max-width: 48rem;
+    margin: 0 auto;
+    gap: var(--spacing-2);
+  }
+
+  .menu-category-section--layout-compact .menu-category-section__item {
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--spacing-2);
+  }
+
+  .menu-category-section--layout-compact .menu-category-section__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Detailed Layout - Grid with full info */
+  .menu-category-section--layout-detailed .menu-category-section__grid {
+    gap: var(--spacing-6);
+  }
+
+  .menu-category-section--layout-detailed .menu-category-section__item {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    transition:
+      box-shadow var(--duration-200) var(--ease-in-out),
+      transform var(--duration-200) var(--ease-in-out);
+  }
+
+  .menu-category-section--layout-detailed .menu-category-section__item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* Photo-heavy Layout - Large images, prominent visuals */
+  .menu-category-section--layout-photo-heavy .menu-category-section__grid {
+    gap: var(--spacing-8);
+  }
+
+  .menu-category-section--layout-photo-heavy .menu-category-section__item {
+    background-color: var(--color-background-elevated);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition:
+      box-shadow var(--duration-300) var(--ease-in-out),
+      transform var(--duration-300) var(--ease-spring-soft);
+  }
+
+  .menu-category-section--layout-photo-heavy .menu-category-section__item:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  /* =================================================================
+   * EMPTY STATE
+   * ================================================================= */
+  .menu-category-section__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-12) var(--spacing-8);
+    background-color: var(--color-background-muted);
+    border-radius: var(--radius-xl);
+    border: 2px dashed var(--color-border);
+  }
+
+  .menu-category-section__empty-text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    text-align: center;
+  }
+
+  /* =================================================================
+   * RESPONSIVE STYLES
+   * ================================================================= */
+
+  /* Tablet (640px) */
+  @media screen and (min-width: 640px) {
+    .menu-category-section {
+      padding: var(--spacing-16) var(--spacing-6);
+    }
+
+    .menu-category-section__heading {
+      font-size: var(--font-size-3xl);
+    }
+
+    .menu-category-section__heading-line {
+      max-width: 160px;
+    }
+
+    /* 2 columns for layouts that support it */
+    .menu-category-section--columns-2 .menu-category-section__grid,
+    .menu-category-section--columns-3 .menu-category-section__grid,
+    .menu-category-section--columns-4 .menu-category-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Compact stays single column */
+    .menu-category-section--layout-compact .menu-category-section__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Desktop (1024px) */
+  @media screen and (min-width: 1024px) {
+    .menu-category-section {
+      padding: var(--spacing-20) var(--spacing-8);
+    }
+
+    .menu-category-section__header {
+      margin-bottom: var(--spacing-12);
+    }
+
+    .menu-category-section__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .menu-category-section__heading-line {
+      max-width: 200px;
+    }
+
+    /* 3 columns */
+    .menu-category-section--columns-3 .menu-category-section__grid,
+    .menu-category-section--columns-4 .menu-category-section__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Large Desktop (1280px) */
+  @media screen and (min-width: 1280px) {
+    /* 4 columns only on very large screens */
+    .menu-category-section--columns-4 .menu-category-section__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * ANIMATIONS
+   * ================================================================= */
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .menu-category-section__item {
+      animation: none;
+    }
+
+    .menu-category-section--layout-detailed .menu-category-section__item:hover,
+    .menu-category-section--layout-photo-heavy .menu-category-section__item:hover {
+      transform: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .menu-category-section__heading-line {
+      background: currentColor;
+    }
+
+    .menu-category-section__empty {
+      border: 2px solid currentColor;
+    }
+
+    .menu-category-section--layout-detailed .menu-category-section__item,
+    .menu-category-section--layout-photo-heavy .menu-category-section__item {
+      border: 1px solid currentColor;
+    }
+  }
+
+  /* =================================================================
+   * PRINT STYLES
+   * ================================================================= */
+  @media print {
+    .menu-category-section {
+      padding: var(--spacing-6) 0;
+      background-color: transparent;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .menu-category-section__header {
+      margin-bottom: var(--spacing-4);
+    }
+
+    .menu-category-section__heading {
+      font-size: 14pt;
+      color: #000;
+    }
+
+    .menu-category-section__heading-line {
+      background: #ccc;
+      max-width: 80px;
+    }
+
+    .menu-category-section__description {
+      font-size: 10pt;
+      color: #333;
+    }
+
+    .menu-category-section__grid {
+      gap: var(--spacing-3);
+    }
+
+    .menu-category-section__item {
+      animation: none;
+      box-shadow: none;
+      background-color: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .menu-category-section__header-image {
+      display: none;
+    }
+
+    /* Force 2 columns in print for detailed/photo-heavy */
+    .menu-category-section--layout-detailed .menu-category-section__grid,
+    .menu-category-section--layout-photo-heavy .menu-category-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

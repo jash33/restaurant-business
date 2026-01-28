@@ -1,0 +1,1361 @@
+---
+/**
+ * Private Event Inquiry Form Component
+ * A fully accessible, validated form for private event inquiries with Formspree integration.
+ *
+ * Features:
+ * - Event type, date picker, guest count fields
+ * - Venue space and package selection
+ * - Real-time client-side validation
+ * - Honeypot spam prevention
+ * - Time-based submission validation
+ * - WCAG 2.1 AA compliant accessibility
+ * - Loading and success/error states
+ * - Responsive design
+ * - Formspree integration for form handling
+ *
+ * @example
+ * ```astro
+ * <PrivateEventInquiryForm
+ *   venueSpaces={venueSpaces}
+ *   packages={packages}
+ *   formspreeId="your-formspree-id"
+ * />
+ * ```
+ */
+
+import {
+  PRIVATE_EVENT_TYPE_OPTIONS,
+  DEFAULT_PRIVATE_EVENT_VALIDATION_CONFIG,
+} from '../types/private-events';
+import type { VenueSpace, EventPackage } from '../types/private-events';
+
+interface Props {
+  /** Available venue spaces for selection */
+  venueSpaces?: VenueSpace[];
+  /** Available event packages for selection */
+  packages?: EventPackage[];
+  /** Formspree form ID for handling submissions */
+  formspreeId?: string;
+  /** Section heading */
+  heading?: string;
+  /** Section description */
+  description?: string;
+}
+
+const {
+  venueSpaces = [],
+  packages = [],
+  formspreeId = 'xyzgvqkl',
+  heading = 'Start Planning Your Event',
+  description = "Tell us about your special occasion and we'll create a customized proposal for you.",
+} = Astro.props;
+
+const eventTypeOptions = PRIVATE_EVENT_TYPE_OPTIONS;
+const config = DEFAULT_PRIVATE_EVENT_VALIDATION_CONFIG;
+
+// Calculate minimum date (today)
+const today = new Date().toISOString().split('T')[0];
+---
+
+<section class="private-event-form-section" aria-labelledby="private-event-form-heading">
+  <div class="private-event-form-container">
+    <div class="private-event-form-header">
+      <h2 id="private-event-form-heading" class="private-event-form-title reveal reveal--up">{heading}</h2>
+      <p class="private-event-form-description reveal reveal--up reveal--delay-1">
+        {description}
+      </p>
+    </div>
+
+    <form
+      id="private-event-form"
+      class="private-event-form reveal reveal--up reveal--delay-2"
+      action={`https://formspree.io/f/${formspreeId}`}
+      method="POST"
+      novalidate
+      aria-describedby="private-event-form-description"
+    >
+      <!-- Hidden field for spam prevention timing -->
+      <input type="hidden" id="private-event-form-start-time" name="_formStartTime" value="" />
+
+      <!-- Honeypot field - hidden from real users -->
+      <div class="private-event-form__honeypot" aria-hidden="true" tabindex="-1">
+        <label for="private-event-website-url">Website URL</label>
+        <input
+          type="text"
+          id="private-event-website-url"
+          name="_gotcha"
+          autocomplete="off"
+          tabindex="-1"
+        />
+      </div>
+
+      <p id="private-event-form-description" class="sr-only">
+        Required fields are marked with an asterisk (*).
+      </p>
+
+      <!-- Section: Contact Information -->
+      <div class="private-event-form__section">
+        <h3 class="private-event-form__section-title">Contact Information</h3>
+
+        <!-- Name Field -->
+        <div class="private-event-form__field">
+          <label for="private-event-name" class="private-event-form__label">
+            Name <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="private-event-name"
+            name="name"
+            class="private-event-form__input"
+            required
+            autocomplete="name"
+            maxlength={config.maxNameLength}
+            aria-describedby="private-event-name-error"
+            aria-invalid="false"
+            placeholder="Your full name"
+          />
+          <span id="private-event-name-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Email Field -->
+        <div class="private-event-form__field">
+          <label for="private-event-email" class="private-event-form__label">
+            Email <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="email"
+            id="private-event-email"
+            name="email"
+            class="private-event-form__input"
+            required
+            autocomplete="email"
+            maxlength={config.maxEmailLength}
+            aria-describedby="private-event-email-error"
+            aria-invalid="false"
+            placeholder="your@email.com"
+          />
+          <span id="private-event-email-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="private-event-form__field">
+          <label for="private-event-phone" class="private-event-form__label">
+            Phone <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="tel"
+            id="private-event-phone"
+            name="phone"
+            class="private-event-form__input"
+            required
+            autocomplete="tel"
+            maxlength={config.maxPhoneLength}
+            aria-describedby="private-event-phone-hint private-event-phone-error"
+            aria-invalid="false"
+            placeholder="(123) 456-7890"
+          />
+          <span id="private-event-phone-hint" class="private-event-form__hint">We'll call to discuss your event details</span>
+          <span id="private-event-phone-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Section: Event Details -->
+      <div class="private-event-form__section">
+        <h3 class="private-event-form__section-title">Event Details</h3>
+
+        <!-- Event Type Dropdown -->
+        <div class="private-event-form__field">
+          <label for="private-event-type" class="private-event-form__label">
+            Event Type <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <select
+            id="private-event-type"
+            name="eventType"
+            class="private-event-form__select"
+            required
+            aria-describedby="private-event-type-error"
+            aria-invalid="false"
+          >
+            {eventTypeOptions.map((option) => (
+              <option value={option.value} disabled={option.value === ''} selected={option.value === ''}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <span id="private-event-type-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Event Date -->
+        <div class="private-event-form__field">
+          <label for="private-event-date" class="private-event-form__label">
+            Preferred Date <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="date"
+            id="private-event-date"
+            name="eventDate"
+            class="private-event-form__input"
+            required
+            min={today}
+            aria-describedby="private-event-date-hint private-event-date-error"
+            aria-invalid="false"
+          />
+          <span id="private-event-date-hint" class="private-event-form__hint">We recommend booking 4-6 weeks in advance</span>
+          <span id="private-event-date-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Alternate Date (Optional) -->
+        <div class="private-event-form__field">
+          <label for="private-event-alt-date" class="private-event-form__label">
+            Alternate Date <span class="private-event-form__optional">(optional)</span>
+          </label>
+          <input
+            type="date"
+            id="private-event-alt-date"
+            name="alternateDate"
+            class="private-event-form__input"
+            min={today}
+            aria-describedby="private-event-alt-date-error"
+            aria-invalid="false"
+          />
+          <span id="private-event-alt-date-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Guest Count -->
+        <div class="private-event-form__field">
+          <label for="private-event-guest-count" class="private-event-form__label">
+            Expected Number of Guests <span class="private-event-form__required" aria-label="required">*</span>
+          </label>
+          <input
+            type="number"
+            id="private-event-guest-count"
+            name="guestCount"
+            class="private-event-form__input"
+            required
+            min={config.minGuestCount}
+            max={config.maxGuestCount}
+            aria-describedby="private-event-guest-count-hint private-event-guest-count-error"
+            aria-invalid="false"
+            placeholder="e.g., 50"
+          />
+          <span id="private-event-guest-count-hint" class="private-event-form__hint">Minimum {config.minGuestCount} guests for private events</span>
+          <span id="private-event-guest-count-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Section: Preferences (Full Width) -->
+      <div class="private-event-form__section private-event-form__section--full">
+        <h3 class="private-event-form__section-title">Your Preferences</h3>
+
+        <div class="private-event-form__preferences-grid">
+          <!-- Venue Space Selection (Optional) -->
+          {venueSpaces.length > 0 && (
+            <div class="private-event-form__field">
+              <label for="private-event-space" class="private-event-form__label">
+                Preferred Venue Space <span class="private-event-form__optional">(optional)</span>
+              </label>
+              <select
+                id="private-event-space"
+                name="preferredSpace"
+                class="private-event-form__select"
+                aria-describedby="private-event-space-error"
+                aria-invalid="false"
+              >
+                <option value="">No preference / Not sure yet</option>
+                {venueSpaces.map((space) => (
+                  <option value={space.id}>
+                    {space.name} ({space.capacity.min}-{space.capacity.max} guests)
+                  </option>
+                ))}
+              </select>
+              <span id="private-event-space-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+            </div>
+          )}
+
+          <!-- Package Selection (Optional) -->
+          {packages.length > 0 && (
+            <div class="private-event-form__field">
+              <label for="private-event-package" class="private-event-form__label">
+                Interested In Package <span class="private-event-form__optional">(optional)</span>
+              </label>
+              <select
+                id="private-event-package"
+                name="selectedPackage"
+                class="private-event-form__select"
+                aria-describedby="private-event-package-error"
+                aria-invalid="false"
+              >
+                <option value="">No preference / Not sure yet</option>
+                {packages.map((pkg) => (
+                  <option value={pkg.id}>
+                    {pkg.name} - {pkg.price} {pkg.priceNote}
+                  </option>
+                ))}
+              </select>
+              <span id="private-event-package-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Message Textarea -->
+      <div class="private-event-form__field private-event-form__field--full">
+        <label for="private-event-message" class="private-event-form__label">
+          Tell Us About Your Event <span class="private-event-form__required" aria-label="required">*</span>
+        </label>
+        <textarea
+          id="private-event-message"
+          name="message"
+          class="private-event-form__textarea"
+          required
+          rows="5"
+          minlength={config.minMessageLength}
+          maxlength={config.maxMessageLength}
+          aria-describedby="private-event-message-hint private-event-message-error private-event-message-count"
+          aria-invalid="false"
+          placeholder="Share your vision for the event, any special requests, dietary requirements, preferred timing, or questions you may have..."
+        ></textarea>
+        <div class="private-event-form__textarea-footer">
+          <span id="private-event-message-hint" class="private-event-form__hint">
+            Include any specific requirements or questions
+          </span>
+          <span id="private-event-message-count" class="private-event-form__char-count" aria-live="polite">
+            <span class="private-event-form__char-current">0</span>/<span class="private-event-form__char-max">{config.maxMessageLength}</span>
+          </span>
+        </div>
+        <span id="private-event-message-error" class="private-event-form__error" role="alert" aria-live="polite"></span>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div class="private-event-form__privacy">
+        <p>
+          By submitting this form, you agree to our
+          <a href="/privacy" class="private-event-form__link">Privacy Policy</a>.
+          Your information will only be used to respond to your inquiry and plan your event.
+        </p>
+      </div>
+
+      <!-- Form Error Message (general) -->
+      <div
+        id="private-event-form-error"
+        class="private-event-form__message private-event-form__message--error"
+        role="alert"
+        aria-live="assertive"
+        hidden
+      >
+        <svg class="private-event-form__message-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+        </svg>
+        <span id="private-event-form-error-text">An error occurred. Please try again.</span>
+      </div>
+
+      <!-- Success Message -->
+      <div
+        id="private-event-form-success"
+        class="private-event-form__message private-event-form__message--success"
+        role="status"
+        aria-live="polite"
+        hidden
+      >
+        <svg class="private-event-form__message-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+        </svg>
+        <div class="private-event-form__success-content">
+          <strong>Thank you for your inquiry!</strong>
+          <p>Our events team will review your request and contact you within 24-48 hours to discuss your special occasion.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="private-event-form__actions">
+        <button
+          type="submit"
+          id="private-event-submit-button"
+          class="private-event-form__submit"
+          aria-describedby="private-event-submit-hint"
+        >
+          <span class="private-event-form__submit-text">Submit Inquiry</span>
+          <span class="private-event-form__submit-loading" aria-hidden="true">
+            <svg class="private-event-form__spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="31.4 31.4" />
+            </svg>
+            <span>Sending...</span>
+          </span>
+        </button>
+        <span id="private-event-submit-hint" class="sr-only">
+          Submitting will send your event inquiry for review
+        </span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* =================================================================
+   * PRIVATE EVENT FORM SECTION
+   * ================================================================= */
+  .private-event-form-section {
+    padding: var(--spacing-16) var(--spacing-4);
+    background-color: var(--color-background-subtle);
+  }
+
+  .private-event-form-container {
+    max-width: var(--container-4xl);
+    margin: 0 auto;
+  }
+
+  /* =================================================================
+   * HEADER
+   * ================================================================= */
+  .private-event-form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+  }
+
+  .private-event-form-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .private-event-form-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 40rem;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* =================================================================
+   * FORM LAYOUT
+   * ================================================================= */
+  .private-event-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+    background-color: var(--color-background);
+    padding: var(--spacing-8);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media (min-width: 768px) {
+    .private-event-form {
+      grid-template-columns: 1fr 1fr;
+      padding: var(--spacing-10);
+    }
+  }
+
+  /* =================================================================
+   * SECTION GROUPING
+   * ================================================================= */
+  .private-event-form__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+  }
+
+  .private-event-form__section--full {
+    grid-column: 1 / -1;
+  }
+
+  .private-event-form__section-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    padding-bottom: var(--spacing-2);
+    border-bottom: var(--border-width-1) solid var(--color-border);
+  }
+
+  .private-event-form__preferences-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-5);
+  }
+
+  @media (min-width: 640px) {
+    .private-event-form__preferences-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* =================================================================
+   * HONEYPOT (SPAM PREVENTION)
+   * ================================================================= */
+  .private-event-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  /* =================================================================
+   * FORM FIELD
+   * ================================================================= */
+  .private-event-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .private-event-form__field--full {
+    grid-column: 1 / -1;
+  }
+
+  /* =================================================================
+   * LABEL
+   * ================================================================= */
+  .private-event-form__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  .private-event-form__required {
+    color: var(--color-error);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .private-event-form__optional {
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-normal);
+  }
+
+  /* =================================================================
+   * INPUT & SELECT BASE STYLES
+   * ================================================================= */
+  .private-event-form__input,
+  .private-event-form__select,
+  .private-event-form__textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    border: var(--border-width-1) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      border-color var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .private-event-form__input::placeholder,
+  .private-event-form__textarea::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  /* Hover State */
+  .private-event-form__input:hover:not(:focus):not([aria-invalid="true"]),
+  .private-event-form__select:hover:not(:focus):not([aria-invalid="true"]),
+  .private-event-form__textarea:hover:not(:focus):not([aria-invalid="true"]) {
+    border-color: var(--color-border-dark);
+  }
+
+  /* Focus State */
+  .private-event-form__input:focus,
+  .private-event-form__select:focus,
+  .private-event-form__textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-primary-100);
+  }
+
+  /* Error State */
+  .private-event-form__input[aria-invalid="true"],
+  .private-event-form__select[aria-invalid="true"],
+  .private-event-form__textarea[aria-invalid="true"] {
+    border-color: var(--color-error);
+    background-color: var(--color-error-light);
+  }
+
+  .private-event-form__input[aria-invalid="true"]:focus,
+  .private-event-form__select[aria-invalid="true"]:focus,
+  .private-event-form__textarea[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-error-light);
+  }
+
+  /* Valid State */
+  .private-event-form__input[data-valid="true"],
+  .private-event-form__select[data-valid="true"],
+  .private-event-form__textarea[data-valid="true"] {
+    border-color: var(--color-success);
+  }
+
+  /* =================================================================
+   * SELECT SPECIFIC STYLES
+   * ================================================================= */
+  .private-event-form__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right var(--spacing-3) center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+    padding-right: var(--spacing-10);
+    cursor: pointer;
+  }
+
+  /* =================================================================
+   * DATE INPUT STYLES
+   * ================================================================= */
+  .private-event-form__input[type="date"] {
+    cursor: pointer;
+  }
+
+  .private-event-form__input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--duration-150) var(--ease-in-out);
+  }
+
+  .private-event-form__input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* =================================================================
+   * NUMBER INPUT STYLES
+   * ================================================================= */
+  .private-event-form__input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .private-event-form__input[type="number"]::-webkit-outer-spin-button,
+  .private-event-form__input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* =================================================================
+   * TEXTAREA SPECIFIC STYLES
+   * ================================================================= */
+  .private-event-form__textarea {
+    min-height: 8rem;
+    resize: vertical;
+  }
+
+  .private-event-form__textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-4);
+  }
+
+  .private-event-form__char-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .private-event-form__char-count[data-over="true"] {
+    color: var(--color-error);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .private-event-form__char-count[data-near="true"] {
+    color: var(--color-warning-dark);
+  }
+
+  /* =================================================================
+   * HINT TEXT
+   * ================================================================= */
+  .private-event-form__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  /* =================================================================
+   * ERROR MESSAGE
+   * ================================================================= */
+  .private-event-form__error {
+    font-size: var(--font-size-sm);
+    color: var(--color-error-text);
+    min-height: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+  }
+
+  .private-event-form__error:empty {
+    display: none;
+  }
+
+  .private-event-form__error::before {
+    content: '';
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23991b1b'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-size: contain;
+    flex-shrink: 0;
+  }
+
+  .private-event-form__error:empty::before {
+    display: none;
+  }
+
+  /* =================================================================
+   * PRIVACY NOTICE
+   * ================================================================= */
+  .private-event-form__privacy {
+    grid-column: 1 / -1;
+    padding: var(--spacing-4);
+    background-color: var(--color-background-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .private-event-form__privacy p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  .private-event-form__link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .private-event-form__link:hover {
+    color: var(--color-primary-hover);
+  }
+
+  /* =================================================================
+   * FORM MESSAGES (SUCCESS/ERROR)
+   * ================================================================= */
+  .private-event-form__message {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+  }
+
+  .private-event-form__message[hidden] {
+    display: none;
+  }
+
+  .private-event-form__message--success {
+    background-color: var(--color-success-light);
+    border: var(--border-width-1) solid var(--color-success-border);
+    color: var(--color-success-text);
+  }
+
+  .private-event-form__message--error {
+    background-color: var(--color-error-light);
+    border: var(--border-width-1) solid var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  .private-event-form__message-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .private-event-form__success-content p {
+    margin: var(--spacing-1) 0 0;
+    font-weight: var(--font-weight-normal);
+  }
+
+  /* =================================================================
+   * SUBMIT BUTTON
+   * ================================================================= */
+  .private-event-form__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .private-event-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    min-width: 12rem;
+    padding: var(--spacing-3) var(--spacing-8);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-inverse);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      transform var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .private-event-form__submit:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .private-event-form__submit:active:not(:disabled) {
+    background-color: var(--color-primary-active);
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .private-event-form__submit:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 var(--focus-ring-offset) var(--color-background),
+      0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-primary-900);
+  }
+
+  .private-event-form__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .private-event-form__submit-loading {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .private-event-form__submit[data-loading="true"] .private-event-form__submit-text {
+    display: none;
+  }
+
+  .private-event-form__submit[data-loading="true"] .private-event-form__submit-loading {
+    display: flex;
+  }
+
+  .private-event-form__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: private-event-spin 1s linear infinite;
+  }
+
+  @keyframes private-event-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* =================================================================
+   * SCREEN READER ONLY
+   * ================================================================= */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* =================================================================
+   * RESPONSIVE ADJUSTMENTS
+   * ================================================================= */
+  @media (max-width: 767px) {
+    .private-event-form-section {
+      padding: var(--spacing-10) var(--spacing-4);
+    }
+
+    .private-event-form-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .private-event-form-description {
+      font-size: var(--font-size-base);
+    }
+
+    .private-event-form {
+      padding: var(--spacing-6);
+    }
+
+    .private-event-form__submit {
+      width: 100%;
+    }
+  }
+
+  /* =================================================================
+   * DARK MODE
+   * ================================================================= */
+  :global(html[data-theme="dark"]) .private-event-form-section {
+    background-color: var(--color-background-muted);
+  }
+
+  :global(html[data-theme="dark"]) .private-event-form {
+    background-color: var(--color-background-elevated);
+  }
+
+  /* =================================================================
+   * REDUCED MOTION
+   * ================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .private-event-form__submit {
+      transition: none;
+    }
+
+    .private-event-form__submit:hover:not(:disabled) {
+      transform: none;
+    }
+
+    .private-event-form__spinner {
+      animation: none;
+    }
+
+    .private-event-form__input,
+    .private-event-form__select,
+    .private-event-form__textarea {
+      transition: none;
+    }
+  }
+
+  /* =================================================================
+   * HIGH CONTRAST MODE
+   * ================================================================= */
+  @media (forced-colors: active) {
+    .private-event-form__input,
+    .private-event-form__select,
+    .private-event-form__textarea {
+      border: 2px solid CanvasText;
+    }
+
+    .private-event-form__input:focus,
+    .private-event-form__select:focus,
+    .private-event-form__textarea:focus {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    .private-event-form__submit {
+      border: 2px solid currentColor;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Private Event Inquiry Form Client-Side Logic
+   * Handles validation, spam prevention, and form submission to Formspree
+   */
+
+  // Import validation config constants
+  const VALIDATION_CONFIG = {
+    minMessageLength: 10,
+    maxMessageLength: 2000,
+    maxNameLength: 100,
+    maxEmailLength: 254,
+    maxPhoneLength: 20,
+    minGuestCount: 10,
+    maxGuestCount: 200,
+    minSubmitTime: 3000, // 3 seconds
+  };
+
+  // Regex patterns
+  const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const US_PHONE_REGEX = /^(\+1\s?)?(\([0-9]{3}\)|[0-9]{3})[\s.\-]?[0-9]{3}[\s.\-]?[0-9]{4}$/;
+  const DANGEROUS_CONTENT_REGEX = /<script|<\/script|javascript:|on\w+\s*=/i;
+
+  // Form elements
+  const form = document.getElementById('private-event-form') as HTMLFormElement;
+  const formStartTimeInput = document.getElementById('private-event-form-start-time') as HTMLInputElement;
+  const honeypotInput = document.getElementById('private-event-website-url') as HTMLInputElement;
+  const submitButton = document.getElementById('private-event-submit-button') as HTMLButtonElement;
+  const formError = document.getElementById('private-event-form-error') as HTMLDivElement;
+  const formErrorText = document.getElementById('private-event-form-error-text') as HTMLSpanElement;
+  const formSuccess = document.getElementById('private-event-form-success') as HTMLDivElement;
+
+  // Field elements
+  const nameInput = document.getElementById('private-event-name') as HTMLInputElement;
+  const emailInput = document.getElementById('private-event-email') as HTMLInputElement;
+  const phoneInput = document.getElementById('private-event-phone') as HTMLInputElement;
+  const eventTypeSelect = document.getElementById('private-event-type') as HTMLSelectElement;
+  const eventDateInput = document.getElementById('private-event-date') as HTMLInputElement;
+  const guestCountInput = document.getElementById('private-event-guest-count') as HTMLInputElement;
+  const messageTextarea = document.getElementById('private-event-message') as HTMLTextAreaElement;
+  const charCountSpan = document.getElementById('private-event-message-count') as HTMLSpanElement;
+  const charCurrentSpan = charCountSpan?.querySelector('.private-event-form__char-current') as HTMLSpanElement;
+
+  // Error elements
+  const errorElements: Record<string, HTMLSpanElement | null> = {
+    name: document.getElementById('private-event-name-error') as HTMLSpanElement,
+    email: document.getElementById('private-event-email-error') as HTMLSpanElement,
+    phone: document.getElementById('private-event-phone-error') as HTMLSpanElement,
+    eventType: document.getElementById('private-event-type-error') as HTMLSpanElement,
+    eventDate: document.getElementById('private-event-date-error') as HTMLSpanElement,
+    guestCount: document.getElementById('private-event-guest-count-error') as HTMLSpanElement,
+    message: document.getElementById('private-event-message-error') as HTMLSpanElement,
+  };
+
+  // Track form start time for spam prevention
+  let formStartTime: number;
+
+  // Initialize form
+  function initForm(): void {
+    if (!form) return;
+
+    formStartTime = Date.now();
+    if (formStartTimeInput) {
+      formStartTimeInput.value = formStartTime.toString();
+    }
+
+    // Add event listeners for real-time validation
+    nameInput?.addEventListener('blur', () => validateField('name'));
+    nameInput?.addEventListener('input', () => clearFieldError('name'));
+
+    emailInput?.addEventListener('blur', () => validateField('email'));
+    emailInput?.addEventListener('input', () => clearFieldError('email'));
+
+    phoneInput?.addEventListener('blur', () => validateField('phone'));
+    phoneInput?.addEventListener('input', () => clearFieldError('phone'));
+
+    eventTypeSelect?.addEventListener('change', () => validateField('eventType'));
+    eventTypeSelect?.addEventListener('blur', () => validateField('eventType'));
+
+    eventDateInput?.addEventListener('change', () => validateField('eventDate'));
+    eventDateInput?.addEventListener('blur', () => validateField('eventDate'));
+
+    guestCountInput?.addEventListener('blur', () => validateField('guestCount'));
+    guestCountInput?.addEventListener('input', () => clearFieldError('guestCount'));
+
+    messageTextarea?.addEventListener('blur', () => validateField('message'));
+    messageTextarea?.addEventListener('input', () => {
+      clearFieldError('message');
+      updateCharCount();
+    });
+
+    // Form submission
+    form?.addEventListener('submit', handleSubmit);
+
+    // Initial char count
+    updateCharCount();
+  }
+
+  // Validation functions
+  function validateName(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Name is required';
+    if (trimmed.length < 2) return 'Name must be at least 2 characters';
+    if (trimmed.length > VALIDATION_CONFIG.maxNameLength) {
+      return `Name must be less than ${VALIDATION_CONFIG.maxNameLength} characters`;
+    }
+    if (DANGEROUS_CONTENT_REGEX.test(trimmed)) return 'Name contains invalid characters';
+    return null;
+  }
+
+  function validateEmail(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Email is required';
+    if (trimmed.length > VALIDATION_CONFIG.maxEmailLength) {
+      return `Email must be less than ${VALIDATION_CONFIG.maxEmailLength} characters`;
+    }
+    if (!EMAIL_REGEX.test(trimmed)) return 'Please enter a valid email address';
+    return null;
+  }
+
+  function validatePhone(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Phone number is required';
+    if (trimmed.length > VALIDATION_CONFIG.maxPhoneLength) {
+      return `Phone must be less than ${VALIDATION_CONFIG.maxPhoneLength} characters`;
+    }
+    if (!US_PHONE_REGEX.test(trimmed)) return 'Please enter a valid US phone number';
+    return null;
+  }
+
+  function validateEventType(value: string): string | null {
+    if (!value) return 'Please select an event type';
+    return null;
+  }
+
+  function validateEventDate(value: string): string | null {
+    if (!value) return 'Please select an event date';
+
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return 'Event date must be in the future';
+    }
+    return null;
+  }
+
+  function validateGuestCount(value: string): string | null {
+    if (!value) return 'Please enter the expected number of guests';
+
+    const count = parseInt(value, 10);
+    if (isNaN(count)) return 'Please enter a valid number';
+    if (count < VALIDATION_CONFIG.minGuestCount) {
+      return `Minimum ${VALIDATION_CONFIG.minGuestCount} guests required`;
+    }
+    if (count > VALIDATION_CONFIG.maxGuestCount) {
+      return `Maximum ${VALIDATION_CONFIG.maxGuestCount} guests. Contact us for larger events.`;
+    }
+    return null;
+  }
+
+  function validateMessage(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Please tell us about your event';
+    if (trimmed.length < VALIDATION_CONFIG.minMessageLength) {
+      return `Please provide at least ${VALIDATION_CONFIG.minMessageLength} characters`;
+    }
+    if (trimmed.length > VALIDATION_CONFIG.maxMessageLength) {
+      return `Message must be less than ${VALIDATION_CONFIG.maxMessageLength} characters`;
+    }
+    if (DANGEROUS_CONTENT_REGEX.test(trimmed)) return 'Message contains invalid content';
+    return null;
+  }
+
+  // Validate a single field
+  function validateField(fieldName: string): boolean {
+    let error: string | null = null;
+    let inputElement: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null = null;
+
+    switch (fieldName) {
+      case 'name':
+        inputElement = nameInput;
+        error = validateName(nameInput?.value || '');
+        break;
+      case 'email':
+        inputElement = emailInput;
+        error = validateEmail(emailInput?.value || '');
+        break;
+      case 'phone':
+        inputElement = phoneInput;
+        error = validatePhone(phoneInput?.value || '');
+        break;
+      case 'eventType':
+        inputElement = eventTypeSelect;
+        error = validateEventType(eventTypeSelect?.value || '');
+        break;
+      case 'eventDate':
+        inputElement = eventDateInput;
+        error = validateEventDate(eventDateInput?.value || '');
+        break;
+      case 'guestCount':
+        inputElement = guestCountInput;
+        error = validateGuestCount(guestCountInput?.value || '');
+        break;
+      case 'message':
+        inputElement = messageTextarea;
+        error = validateMessage(messageTextarea?.value || '');
+        break;
+    }
+
+    const errorElement = errorElements[fieldName];
+
+    if (error) {
+      if (errorElement) errorElement.textContent = error;
+      inputElement?.setAttribute('aria-invalid', 'true');
+      inputElement?.removeAttribute('data-valid');
+      return false;
+    } else {
+      if (errorElement) errorElement.textContent = '';
+      inputElement?.setAttribute('aria-invalid', 'false');
+      if (inputElement?.value.trim()) {
+        inputElement?.setAttribute('data-valid', 'true');
+      }
+      return true;
+    }
+  }
+
+  // Clear field error
+  function clearFieldError(fieldName: string): void {
+    const errorElement = errorElements[fieldName];
+    if (errorElement) {
+      errorElement.textContent = '';
+    }
+
+    let inputElement: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null = null;
+    switch (fieldName) {
+      case 'name': inputElement = nameInput; break;
+      case 'email': inputElement = emailInput; break;
+      case 'phone': inputElement = phoneInput; break;
+      case 'eventType': inputElement = eventTypeSelect; break;
+      case 'eventDate': inputElement = eventDateInput; break;
+      case 'guestCount': inputElement = guestCountInput; break;
+      case 'message': inputElement = messageTextarea; break;
+    }
+
+    inputElement?.setAttribute('aria-invalid', 'false');
+    inputElement?.removeAttribute('data-valid');
+  }
+
+  // Update character count
+  function updateCharCount(): void {
+    const currentLength = messageTextarea?.value.length || 0;
+    if (charCurrentSpan) {
+      charCurrentSpan.textContent = currentLength.toString();
+    }
+
+    if (charCountSpan) {
+      const isOver = currentLength > VALIDATION_CONFIG.maxMessageLength;
+      const isNear = currentLength > VALIDATION_CONFIG.maxMessageLength * 0.9;
+
+      charCountSpan.setAttribute('data-over', isOver.toString());
+      charCountSpan.setAttribute('data-near', (!isOver && isNear).toString());
+    }
+  }
+
+  // Validate all fields
+  function validateAllFields(): boolean {
+    const fields = ['name', 'email', 'phone', 'eventType', 'eventDate', 'guestCount', 'message'];
+    let allValid = true;
+
+    for (const field of fields) {
+      const isValid = validateField(field);
+      if (!isValid) allValid = false;
+    }
+
+    return allValid;
+  }
+
+  // Check honeypot
+  function isHoneypotFilled(): boolean {
+    return honeypotInput?.value.trim() !== '';
+  }
+
+  // Check submission time
+  function isSubmittedTooQuickly(): boolean {
+    const elapsedTime = Date.now() - formStartTime;
+    return elapsedTime < VALIDATION_CONFIG.minSubmitTime;
+  }
+
+  // Set loading state
+  function setLoadingState(loading: boolean): void {
+    if (submitButton) {
+      submitButton.disabled = loading;
+      submitButton.setAttribute('data-loading', loading.toString());
+    }
+  }
+
+  // Show form error
+  function showFormError(message: string): void {
+    if (formError && formErrorText) {
+      formErrorText.textContent = message;
+      formError.hidden = false;
+      formSuccess.hidden = true;
+      formError.focus();
+    }
+  }
+
+  // Show form success
+  function showFormSuccess(): void {
+    if (formSuccess && formError) {
+      formSuccess.hidden = false;
+      formError.hidden = true;
+      formSuccess.focus();
+    }
+  }
+
+  // Hide all messages
+  function hideMessages(): void {
+    if (formError) formError.hidden = true;
+    if (formSuccess) formSuccess.hidden = true;
+  }
+
+  // Reset form
+  function resetForm(): void {
+    form?.reset();
+    formStartTime = Date.now();
+    if (formStartTimeInput) {
+      formStartTimeInput.value = formStartTime.toString();
+    }
+    updateCharCount();
+
+    const fields = ['name', 'email', 'phone', 'eventType', 'eventDate', 'guestCount', 'message'];
+    for (const field of fields) {
+      clearFieldError(field);
+    }
+  }
+
+  // Handle form submission
+  async function handleSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    hideMessages();
+
+    if (isHoneypotFilled()) {
+      showFormSuccess();
+      return;
+    }
+
+    if (isSubmittedTooQuickly()) {
+      showFormError('Please take a moment to fill out the form completely.');
+      return;
+    }
+
+    if (!validateAllFields()) {
+      showFormError('Please correct the errors above before submitting.');
+      const firstInvalidField = form?.querySelector('[aria-invalid="true"]') as HTMLElement;
+      firstInvalidField?.focus();
+      return;
+    }
+
+    setLoadingState(true);
+
+    try {
+      const formData = new FormData(form);
+
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        showFormSuccess();
+        resetForm();
+      } else {
+        const data = await response.json();
+        if (data.errors) {
+          showFormError(data.errors.map((e: {message: string}) => e.message).join(', '));
+        } else {
+          showFormError('An error occurred. Please try again later.');
+        }
+      }
+
+    } catch (error) {
+      console.error('Form submission error:', error);
+
+      if (error instanceof Error) {
+        if (error.message.includes('network') || error.message.includes('fetch')) {
+          showFormError('Unable to connect. Please check your internet connection and try again.');
+        } else {
+          showFormError('An unexpected error occurred. Please try again later.');
+        }
+      } else {
+        showFormError('An unexpected error occurred. Please try again later.');
+      }
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initForm);
+  } else {
+    initForm();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initForm);
+</script>

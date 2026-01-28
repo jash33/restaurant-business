@@ -1,0 +1,14 @@
+{
+  "id": "specials-showcase",
+  "category": "UI",
+  "title": "Daily/Weekly Specials Section",
+  "description": "Create dedicated component for showcasing rotating specials with large photos, limited-time badges, and day-specific offerings. Supports manual updates via JSON configuration.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "menu-preview-section"
+  ],
+  "createdAt": "2026-01-26T01:50:42.125Z",
+  "updatedAt": "2026-01-26T01:50:42.125Z"
+}
