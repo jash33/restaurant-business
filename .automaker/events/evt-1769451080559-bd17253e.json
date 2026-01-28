@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769451080559-bd17253e",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-26T18:11:20.559Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "google-business-integration",
+  "featureName": "Google Business Profile Integration",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

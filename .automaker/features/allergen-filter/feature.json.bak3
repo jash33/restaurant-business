@@ -1,0 +1,15 @@
+{
+  "id": "allergen-filter",
+  "category": "UI",
+  "title": "Menu Allergen and Dietary Filter",
+  "description": "Implement client-side filtering for menu items by dietary restrictions and allergens. Shows/hides items based on selected filters and displays count of available options.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [
+    "dietary-indicators"
+  ],
+  "createdAt": "2026-01-26T01:50:42.130Z",
+  "updatedAt": "2026-01-26T01:50:42.130Z",
+  "descriptionHistory": []
+}

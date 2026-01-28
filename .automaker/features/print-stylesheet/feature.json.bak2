@@ -1,0 +1,23 @@
+{
+  "id": "print-stylesheet",
+  "category": "UI",
+  "title": "Menu Page Print Stylesheet",
+  "description": "Create dedicated print CSS for menu page with clean formatting, proper page breaks, hidden navigation, black-and-white optimization, and readable typography for physical menus.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.106Z",
+  "updatedAt": "2026-01-26T21:07:07.755Z",
+  "descriptionHistory": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "imagePaths": [],
+  "textFilePaths": [],
+  "branchName": "main",
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "workMode": "current",
+  "dependencies": []
+}

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.16.10"
+    "astro": "^5.16.10",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0"

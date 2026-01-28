@@ -1,0 +1,12 @@
+{
+  "id": "contact-page-restaurant",
+  "category": "Core",
+  "title": "Restaurant Contact Page with Multiple CTAs",
+  "description": "Build contact page with general inquiries form, catering form toggle, phone/email info, location map, and links to reservation platforms (OpenTable, Resy). Includes office hours for callbacks.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.101Z",
+  "updatedAt": "2026-01-26T04:02:34.264Z",
+  "descriptionHistory": []
+}

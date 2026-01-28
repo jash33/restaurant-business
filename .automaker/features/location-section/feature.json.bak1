@@ -1,0 +1,12 @@
+{
+  "id": "location-section",
+  "category": "Core",
+  "title": "Location and Hours Section",
+  "description": "Create comprehensive location section with address, hours display, parking notes, public transit info, and Get Directions CTA linking to Google/Apple Maps with proper deep linking.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.087Z",
+  "updatedAt": "2026-01-26T04:00:00.429Z",
+  "descriptionHistory": []
+}

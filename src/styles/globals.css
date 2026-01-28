@@ -18,12 +18,25 @@
 /* =================================================================
  * FONT IMPORTS
  * =================================================================
- * Import Inter and DM Sans from Google Fonts
- * Inter: Body text font with excellent readability
- * DM Sans: Heading font with geometric, modern style
+ * Google Fonts for Restaurant Typography
+ *
+ * Playfair Display: Elegant serif for hero headings and display text
+ *   - Weights: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+ *   - Perfect for upscale restaurant branding and large headlines
+ *
+ * DM Serif Display: Refined serif for section headings and menu titles
+ *   - Weights: 400 (regular) - display font, single weight by design
+ *   - Ideal for menu item names and elegant subheadings
+ *
+ * Lora: Readable serif for body text and menu descriptions
+ *   - Weights: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+ *   - Excellent readability for menu descriptions and food stories
+ *
+ * Font loading: display=swap for FOUT (Flash of Unstyled Text)
+ * This ensures text is visible immediately with fallback fonts
  */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
 /* =================================================================
  * CSS RESET & BASE STYLES

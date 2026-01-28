@@ -1,0 +1,23 @@
+{
+  "id": "mobile-horizontal-gallery",
+  "category": "UI",
+  "title": "Mobile Horizontal Scrolling Photo Gallery",
+  "description": "Create mobile-optimized horizontal scrolling gallery with snap points, scroll indicators, and touch-friendly navigation. Alternative layout for smaller screens to showcase multiple photos efficiently.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.094Z",
+  "updatedAt": "2026-01-26T01:50:42.094Z",
+  "descriptionHistory": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "imagePaths": [],
+  "textFilePaths": [],
+  "branchName": "main",
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "workMode": "current",
+  "dependencies": []
+}

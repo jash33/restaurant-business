@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769455002143-5e7208af",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-26T19:16:42.143Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "instagram-feed-embed",
+  "featureName": "Instagram Feed Embed Component",
+  "error": "Feature completed in 384s",
+  "passes": true
+}

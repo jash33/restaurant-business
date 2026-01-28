@@ -1,0 +1,23 @@
+{
+  "id": "instagram-feed-embed",
+  "category": "Integration",
+  "title": "Instagram Feed Embed Component",
+  "description": "Integrate Instagram feed showing latest food and atmosphere posts using native embed or Behold service. Includes loading states, error handling, and falls back gracefully if unavailable.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.121Z",
+  "updatedAt": "2026-01-26T01:50:42.121Z",
+  "descriptionHistory": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "imagePaths": [],
+  "textFilePaths": [],
+  "branchName": "main",
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "workMode": "custom",
+  "dependencies": []
+}

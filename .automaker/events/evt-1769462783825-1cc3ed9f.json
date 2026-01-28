@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769462783825-1cc3ed9f",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-26T21:26:23.825Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "menu-pdf-generation",
+  "featureName": "Downloadable Menu PDF",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

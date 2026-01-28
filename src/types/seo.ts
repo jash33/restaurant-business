@@ -316,6 +316,120 @@ export interface WebPageSchema {
   primaryImageOfPage?: string;
 }
 
+// ============================================================================
+// Menu Schema Types (for Rich Snippets)
+// ============================================================================
+
+/**
+ * Nutrition information for a menu item
+ * Based on schema.org NutritionInformation
+ */
+export interface NutritionInformationSchema {
+  /** Calories in the item */
+  calories?: string;
+  /** Protein content (e.g., "18 g") */
+  proteinContent?: string;
+  /** Carbohydrate content (e.g., "32 g") */
+  carbohydrateContent?: string;
+  /** Fat content (e.g., "24 g") */
+  fatContent?: string;
+  /** Saturated fat content */
+  saturatedFatContent?: string;
+  /** Fiber content */
+  fiberContent?: string;
+  /** Sugar content */
+  sugarContent?: string;
+  /** Sodium content (e.g., "680 mg") */
+  sodiumContent?: string;
+  /** Serving size description */
+  servingSize?: string;
+}
+
+/**
+ * Offer schema for menu item pricing
+ * Based on schema.org Offer
+ */
+export interface MenuItemOfferSchema {
+  /** Price of the item */
+  price: number | string;
+  /** Currency code (e.g., "USD") */
+  priceCurrency: string;
+  /** Availability status */
+  availability?: 'InStock' | 'OutOfStock' | 'PreOrder';
+}
+
+/**
+ * Menu item schema for individual dishes
+ * Based on schema.org MenuItem
+ */
+export interface MenuItemSchema {
+  /** Unique identifier for the menu item */
+  id?: string;
+  /** Name of the menu item */
+  name: string;
+  /** Description of the menu item */
+  description?: string;
+  /** Image URL(s) for the menu item */
+  image?: string | string[];
+  /** Pricing information */
+  offers?: MenuItemOfferSchema;
+  /** Dietary restrictions (e.g., "Vegetarian", "Vegan", "Gluten-Free") */
+  suitableForDiet?: string | string[];
+  /** Nutrition information */
+  nutrition?: NutritionInformationSchema;
+  /** URL to the menu item's page */
+  url?: string;
+  /** The menu section this item belongs to */
+  menuAddOn?: string[];
+}
+
+/**
+ * Menu section schema for grouping menu items
+ * Based on schema.org MenuSection
+ */
+export interface MenuSectionSchema {
+  /** Name of the section (e.g., "Appetizers", "Main Courses") */
+  name: string;
+  /** Description of the section */
+  description?: string;
+  /** Menu items in this section */
+  hasMenuItem?: MenuItemSchema[];
+  /** Image for the section */
+  image?: string;
+  /** URL for the section */
+  url?: string;
+}
+
+/**
+ * Complete menu schema
+ * Based on schema.org Menu
+ */
+export interface MenuSchema {
+  type: 'Menu';
+  /** Name of the menu (e.g., "Dinner Menu", "Lunch Menu") */
+  name: string;
+  /** Description of the menu */
+  description?: string;
+  /** URL of the menu page */
+  url?: string;
+  /** Main image for the menu */
+  image?: string | string[];
+  /** Menu sections (categories) */
+  hasMenuSection?: MenuSectionSchema[];
+  /** Direct menu items (if not using sections) */
+  hasMenuItem?: MenuItemSchema[];
+  /** Restaurant offering this menu */
+  mainEntityOfPage?: string;
+  /** When the menu is available */
+  availabilityStarts?: string;
+  /** When the menu availability ends */
+  availabilityEnds?: string;
+}
+
+// ============================================================================
+// End of Menu Schema Types
+// ============================================================================
+
 /**
  * Union type for all supported JSON-LD schema types
  */
@@ -325,7 +439,8 @@ export type JsonLdSchema =
   | LocalBusinessSchema
   | ProductSchema
   | BreadcrumbSchema
-  | WebPageSchema;
+  | WebPageSchema
+  | MenuSchema;
 
 /**
  * Custom meta tag definition

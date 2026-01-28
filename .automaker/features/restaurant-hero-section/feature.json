@@ -1,0 +1,12 @@
+{
+  "id": "restaurant-hero-section",
+  "category": "Core",
+  "title": "Full-Bleed Restaurant Hero with Food Photography",
+  "description": "Adapt existing hero component for full-viewport food photography with restaurant name overlay, tagline, View Menu/Find Us CTAs, and optional hours badge. Includes warm gradient overlays and moody lighting aesthetic.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.077Z",
+  "updatedAt": "2026-01-26T09:14:39.712Z",
+  "descriptionHistory": []
+}

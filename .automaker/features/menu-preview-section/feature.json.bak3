@@ -1,0 +1,15 @@
+{
+  "id": "menu-preview-section",
+  "category": "UI",
+  "title": "Homepage Menu Preview with Featured Dishes",
+  "description": "Create homepage section showcasing 3-6 highlighted menu items in masonry grid or alternating layout with large photos. Includes 'View Full Menu' CTA and optional category filters.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [
+    "restaurant-hero-section"
+  ],
+  "createdAt": "2026-01-26T01:50:42.083Z",
+  "updatedAt": "2026-01-26T01:50:42.083Z",
+  "descriptionHistory": []
+}

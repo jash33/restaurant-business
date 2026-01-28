@@ -1,0 +1,14 @@
+{
+  "id": "chef-signature-dishes",
+  "category": "UI",
+  "title": "Chef's Signature Dishes Highlight",
+  "description": "Design special menu item variant for signature dishes with chef badge, story/inspiration snippet, and premium visual treatment. Helps guide first-time visitors to standout items.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [
+    "menu-item-component"
+  ],
+  "createdAt": "2026-01-26T01:50:42.127Z",
+  "updatedAt": "2026-01-26T01:50:42.127Z"
+}

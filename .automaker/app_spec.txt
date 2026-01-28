@@ -1,166 +1,460 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project_specification>
-  <project_name>Houston Web Services Portfolio</project_name>
+  <project_name>Restaurant Business Website Template</project_name>
 
   <overview>
-    A professional portfolio website for a freelance web designer/developer targeting small businesses in the west Houston area (Energy Corridor, Katy, Memorial). The site serves as the primary marketing and lead generation tool for the business, designed to establish credibility, attract inbound leads through local SEO, communicate services and pricing transparently, provide easy contact methods, and showcase portfolio work. The target audience includes small business owners in west Houston (77077 and surrounding areas) such as service businesses (plumbers, HVAC, landscapers), local retail, restaurants, and professional services with budgets ranging from $500-$3,000. The site emphasizes a professional but approachable voice, clean minimal design with generous whitespace, mobile-first responsive design, and fast-loading performance with Lighthouse scores of 95+.
+    A restaurant-focused website template targeting restaurants, cafes, taquerias, BBQ joints, pho shops, bakeries, food trucks, bars, and coffee shops. The template emphasizes warm, appetizing, and atmospheric design with food photography as the dominant visual language and the menu as the functional centerpiece. Built on the existing Houston Web Services Astro framework, this template will feature full-bleed hero imagery, moody warm lighting aesthetics, cuisine-specific accent colors, and beautifully formatted menu displays. The design philosophy is inviting and unpretentious, proud of the food, avoiding corporate or chain-like aesthetics. Key goals include making visitors hungry and curious, providing glimpses into the restaurant&apos;s space, lighting, vibe, and personality of the owners.
   </overview>
 
   <technology_stack>
-    <technology>Astro 5.x Static Site Generator</technology>
-    <technology>TypeScript (strict mode)</technology>
-    <technology>HTML5 Semantic Markup</technology>
-    <technology>CSS3 with Mobile-First Responsive Design</technology>
-    <technology>AWS S3 for Static File Hosting</technology>
-    <technology>AWS CloudFront CDN for HTTPS and Edge Caching</technology>
-    <technology>AWS Route 53 for DNS (optional)</technology>
-    <technology>Formspree/AWS SES/Lambda for Contact Form Submission</technology>
-    <technology>Google Analytics 4</technology>
-    <technology>JSON-LD Structured Data for Local Business Schema</technology>
-    <technology>Inter/DM Sans Typography (Clean Sans-Serif)</technology>
-    <technology>Git Version Control</technology>
+    <technology>Astro 5.x (Static Site Generation)</technology>
+    <technology>TypeScript</technology>
+    <technology>CSS Custom Properties (Design System)</technology>
+    <technology>Google Fonts (Playfair Display, Lora, DM Serif Display for headings; Karla, Rubik for body)</technology>
+    <technology>Astro Image Optimization</technology>
+    <technology>JSON/Markdown for menu data</technology>
+    <technology>Vanilla JavaScript (lightbox, current day highlighting)</technology>
+    <technology>@astrojs/sitemap</technology>
+    <technology>Formspree (contact/catering forms)</technology>
+    <technology>Google Analytics 4 (consent-based)</technology>
+    <technology>JSON-LD Structured Data (Restaurant + LocalBusiness schema)</technology>
+    <technology>Playwright (testing)</technology>
   </technology_stack>
 
   <core_capabilities>
-    <capability>Static Site Generation with Astro for optimal performance and SEO</capability>
-    <capability>Mobile-first responsive design with 768px breakpoint for hamburger menu</capability>
-    <capability>Local SEO optimization with semantic HTML5, unique meta tags, and LocalBusiness schema markup</capability>
-    <capability>Contact form with validation, spam prevention (honeypot/reCAPTCHA), and form submission handling</capability>
-    <capability>Portfolio showcase with project cards, thumbnails, and live site links</capability>
-    <capability>Service pricing tiers with clear package descriptions and inclusions</capability>
-    <capability>FAQ section with accessible accordion/expandable list</capability>
-    <capability>Reusable component architecture (Header, Footer, CTA Button, SEO Head)</capability>
-    <capability>Open Graph and Twitter card meta tags for social sharing</capability>
-    <capability>Sitemap.xml and robots.txt generation for search engines</capability>
-    <capability>Clean URL structure without trailing .html extensions</capability>
-    <capability>Optimized images with alt text for accessibility</capability>
-    <capability>Performance-focused with sub-1.5s First Contentful Paint and under 500kb page weight</capability>
+    <capability>Full-viewport hero section with signature dish/interior imagery and hours badge overlay</capability>
+    <capability>Restaurant story/introduction snippet section with owner photos</capability>
+    <capability>Menu preview section with masonry grid or alternating layouts for featured dishes</capability>
+    <capability>Atmosphere photo gallery with lightbox functionality and lazy loading</capability>
+    <capability>Location and hours display with Google/Apple Maps integration</capability>
+    <capability>Beautifully formatted menu page with categories, dietary indicators, and optional item photos</capability>
+    <capability>About/Our Story page with founders narrative and sourcing philosophy</capability>
+    <capability>Contact page with catering/events inquiry form via Formspree</capability>
+    <capability>Responsive header with transparent-over-hero and solid-on-scroll behavior</capability>
+    <capability>Dark mode support with warm color palette variations</capability>
+    <capability>Restaurant schema markup for local search optimization</capability>
+    <capability>Mobile horizontal scrolling photo galleries</capability>
+    <capability>Print stylesheet for menu page</capability>
+    <capability>WCAG 2.1 AA accessibility compliance</capability>
+    <capability>Performance optimized (Lighthouse 90+) with heavy image optimization</capability>
   </core_capabilities>
 
   <implemented_features>
     <feature>
-      <name>Astro Project Foundation</name>
-      <description>Basic Astro 5.x project structure initialized with TypeScript support, build scripts (dev, build, preview), and module-type configuration</description>
+      <name>Astro Static Site Framework</name>
+      <description>Core Astro 5.x setup with static generation, sitemap integration, Vite build optimizations, and prefetch configuration</description>
       <file_locations>
-        <location>package.json</location>
         <location>astro.config.mjs</location>
-        <location>tsconfig.json</location>
+        <location>package.json</location>
       </file_locations>
     </feature>
     <feature>
-      <name>Base Layout Component</name>
-      <description>HTML5 document structure with meta viewport, favicon reference, and slot-based content injection for page layouts</description>
+      <name>Comprehensive Design System</name>
+      <description>CSS custom properties foundation including colors, typography, spacing, shadows, gradients, glow effects, and animation timings with full dark mode support</description>
       <file_locations>
+        <location>src/styles/variables.css</location>
+        <location>src/styles/globals.css</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>SEO Component System</name>
+      <description>Centralized SEO management with meta tags, Open Graph, Twitter Cards, JSON-LD structured data generation for multiple schema types including LocalBusiness and Restaurant</description>
+      <file_locations>
+        <location>src/components/SEO.astro</location>
+        <location>src/config/seo.config.ts</location>
+        <location>src/utils/local-business-jsonld.ts</location>
+        <location>src/types/seo.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Responsive Header Component</name>
+      <description>Sticky header with mobile hamburger menu, keyboard navigation, ARIA accessibility, and theme toggle integration</description>
+      <file_locations>
+        <location>src/components/Header.astro</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Footer Component</name>
+      <description>Global footer with contact info, service areas, social media links with animated gradient effects, and responsive grid layout</description>
+      <file_locations>
+        <location>src/components/Footer.astro</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Hero Section Component</name>
+      <description>Conversion-optimized hero with animated grid background, floating gradient orbs, trust badges, and dual CTA buttons</description>
+      <file_locations>
+        <location>src/components/HeroSection.astro</location>
+        <location>src/types/hero.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Contact Form Component</name>
+      <description>Fully accessible contact form with real-time validation, honeypot spam prevention, time-based submission validation, and loading states</description>
+      <file_locations>
+        <location>src/components/ContactForm.astro</location>
+        <location>src/types/contact-form.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Button Component System</name>
+      <description>Reusable button component with multiple variants, sizes, icon positions, and accessibility features</description>
+      <file_locations>
+        <location>src/components/Button.astro</location>
+        <location>src/types/button.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Services Section</name>
+      <description>Service cards with icons, descriptions, and CTAs in configurable grid layouts</description>
+      <file_locations>
+        <location>src/components/ServicesSection.astro</location>
+        <location>src/components/ServiceCard.astro</location>
+        <location>src/types/service.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Portfolio/Projects Section</name>
+      <description>Featured projects preview with project cards and filtering capabilities</description>
+      <file_locations>
+        <location>src/components/FeaturedProjectsPreview.astro</location>
+        <location>src/components/ProjectCard.astro</location>
+        <location>src/types/portfolio.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>FAQ Accordion</name>
+      <description>Accessible accordion component for frequently asked questions with expand/collapse functionality</description>
+      <file_locations>
+        <location>src/components/FAQAccordion.astro</location>
+        <location>src/types/faq.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Google Analytics Integration</name>
+      <description>Privacy-compliant GA4 integration with consent management and cookie consent banner</description>
+      <file_locations>
+        <location>src/components/GoogleAnalytics.astro</location>
+        <location>src/components/CookieConsent.astro</location>
+        <location>src/config/analytics.config.ts</location>
+        <location>src/types/analytics.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Performance Monitoring</name>
+      <description>Core Web Vitals monitoring component for performance tracking</description>
+      <file_locations>
+        <location>src/components/PerformanceMonitor.astro</location>
+        <location>src/styles/performance.css</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Theme Toggle</name>
+      <description>Dark/light mode toggle with localStorage persistence and system preference detection</description>
+      <file_locations>
+        <location>src/components/ThemeToggle.astro</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Scroll Reveal Animations</name>
+      <description>CSS-based scroll-reveal animations with Intersection Observer, respecting reduced motion preferences</description>
+      <file_locations>
+        <location>src/styles/globals.css</location>
         <location>src/layouts/Layout.astro</location>
       </file_locations>
     </feature>
     <feature>
-      <name>Index Page Shell</name>
-      <description>Homepage entry point with Layout and Welcome component integration, ready for customization</description>
+      <name>Decorative Elements System</name>
+      <description>Reusable decorative components including gradient accent lines, glow effects, floating animations, and section heading decorations</description>
       <file_locations>
-        <location>src/pages/index.astro</location>
+        <location>src/styles/globals.css</location>
       </file_locations>
     </feature>
     <feature>
-      <name>Welcome Component (Template)</name>
-      <description>Starter component with Inter font family, responsive CSS, flexbox layout, and media queries for mobile responsiveness (768px breakpoint) - serves as a reference for styling patterns</description>
+      <name>Type System</name>
+      <description>Comprehensive TypeScript type definitions for all components and configurations</description>
       <file_locations>
-        <location>src/components/Welcome.astro</location>
+        <location>src/types/index.ts</location>
       </file_locations>
     </feature>
     <feature>
-      <name>Public Assets Directory</name>
-      <description>Static assets directory with SVG favicon for browser tab display</description>
-      <file_locations>
-        <location>public/favicon.svg</location>
-      </file_locations>
+      <name>Catering and Events Inquiry Form</name>
+      <description>Adapt existing contact form for restaurant-specific inquiries including event type (wedding, corporate, private), guest count, date picker, menu preferences, and dietary restrictions. Integrates with Formspree.</description>
     </feature>
     <feature>
-      <name>Development Environment</name>
-      <description>VS Code configuration with Astro extensions and launch settings for debugging</description>
-      <file_locations>
-        <location>.vscode/extensions.json</location>
-        <location>.vscode/launch.json</location>
-      </file_locations>
+      <name>Heavy Image Optimization Configuration</name>
+      <description>Configure Astro Image with aggressive optimization for food photography: WebP/AVIF formats, responsive srcsets, quality settings, blur-up placeholders, and lazy loading. Targets Lighthouse 90+ despite image-heavy content.</description>
     </feature>
     <feature>
-      <name>Remove diamond shape from fancy border</name>
-      <description>on the home page, the fancy border has a diamond shape at the bottom-center. could you remove it </description>
+      <name>Menu Data Schema and JSON Structure</name>
+      <description>Create TypeScript interfaces and JSON schema for menu data including categories, items, prices, descriptions, dietary tags, and optional photo references. Supports multiple menu types (lunch, dinner, brunch).</description>
+    </feature>
+    <feature>
+      <name>Restaurant Warm Color Palette</name>
+      <description>Implement warm restaurant-specific color system with deep burgundy (#722f37), espresso brown (#3c2415), charcoal (#2d3748), cream (#fffbeb), and soft terracotta (#c4a77d). Includes cuisine-specific accent colors and dark mode variations with warm tones.</description>
+    </feature>
+    <feature>
+      <name>Restaurant Hours Display with Current Day Highlight</name>
+      <description>Build hours display component that highlights current day, shows open/closed status, and handles special hours (holidays, events). Includes client-side JavaScript for real-time status updates.</description>
+    </feature>
+    <feature>
+      <name>Location and Hours Section</name>
+      <description>Create comprehensive location section with address, hours display, parking notes, public transit info, and Get Directions CTA linking to Google/Apple Maps with proper deep linking.</description>
+    </feature>
+    <feature>
+      <name>Restaurant Contact Page with Multiple CTAs</name>
+      <description>Build contact page with general inquiries form, catering form toggle, phone/email info, location map, and links to reservation platforms (OpenTable, Resy). Includes office hours for callbacks.</description>
+    </feature>
+    <feature>
+      <name>Atmosphere Photo Gallery Grid</name>
+      <description>Build responsive photo gallery with masonry or grid layout showcasing restaurant interior, exterior, and food photography. Includes lazy loading, aspect ratio preservation, and alt text support.</description>
+    </feature>
+    <feature>
+      <name>Photo Lightbox with Keyboard Navigation</name>
+      <description>Implement accessible lightbox overlay for gallery photos with keyboard navigation (arrows, ESC), swipe gestures for mobile, and zoom capability. Includes proper focus management and ARIA attributes.</description>
+    </feature>
+    <feature>
+      <name>Restaurant Display Typography System</name>
+      <description>Configure Google Fonts including Playfair Display, DM Serif Display, and Lora for headings and menu items. Set up font loading optimization and fallback stacks with appropriate weights for food photography context.</description>
+    </feature>
+    <feature>
+      <name>Menu Item Display Component</name>
+      <description>Build reusable menu item component with name, price, description, dietary indicator icons (GF, V, VG, DF), optional photo thumbnail, and proper semantic markup. Includes print-friendly styling.</description>
+    </feature>
+    <feature>
+      <name>Menu Category Section Component</name>
+      <description>Create menu category section with decorative heading, optional description, and grid layout for menu items. Supports different layout styles (compact, detailed, photo-heavy) per category.</description>
+    </feature>
+    <feature>
+      <name>Complete Menu Page with All Categories</name>
+      <description>Assemble full menu page using category sections with navigation jump links, PDF download button, and print stylesheet. Ensures readability without images and proper hierarchy for screen readers.</description>
+    </feature>
+    <feature>
+      <name>Full-Bleed Restaurant Hero with Food Photography</name>
+      <description>Adapt existing hero component for full-viewport food photography with restaurant name overlay, tagline, View Menu/Find Us CTAs, and optional hours badge. Includes warm gradient overlays and moody lighting aesthetic.</description>
+    </feature>
+    <feature>
+      <name>Homepage Menu Preview with Featured Dishes</name>
+      <description>Create homepage section showcasing 3-6 highlighted menu items in masonry grid or alternating layout with large photos. Includes &apos;View Full Menu&apos; CTA and optional category filters.</description>
+    </feature>
+    <feature>
+      <name>Restaurant JSON-LD Structured Data</name>
+      <description>Implement combined Restaurant + LocalBusiness JSON-LD schema with cuisine type, price range, hours, address, phone, menu URL, accepted reservations, and aggregate rating. Enhances local search visibility.</description>
+    </feature>
+    <feature>
+      <name>Restaurant Story Introduction Section</name>
+      <description>Build homepage section with restaurant origin story snippet, owner/chef photo, and &apos;Read More&apos; CTA to full About page. Includes pull quote styling and warm, personal narrative tone.</description>
+    </feature>
+    <feature>
+      <name>Restaurant About/Our Story Page</name>
+      <description>Create narrative-driven about page with founders story, team bios with photos, sourcing philosophy, and ingredient partnerships. Includes timeline component for restaurant history milestones.</description>
+    </feature>
+    <feature>
+      <name>Chef&apos;s Signature Dishes Highlight</name>
+      <description>Design special menu item variant for signature dishes with chef badge, story/inspiration snippet, and premium visual treatment. Helps guide first-time visitors to standout items.</description>
+    </feature>
+    <feature>
+      <name>Cuisine-Specific Accent Color Variants</name>
+      <description>Define accent color palettes for different cuisine types (Mexican: warm orange/red, BBQ: smoky red/brown, Asian: jade green, Italian: tomato red, Bakery: pastel pink). Configurable in site settings.</description>
+    </feature>
+    <feature>
+      <name>Food Delivery Platform Integration</name>
+      <description>Create section with buttons linking to DoorDash, UberEats, Toast, Grubhub with brand-compliant styling. Includes order tracking and supports affiliate/partnership links if applicable.</description>
+    </feature>
+    <feature>
+      <name>Dietary Restriction Icon System</name>
+      <description>Design and implement icon set for dietary indicators (Gluten-Free, Vegan, Vegetarian, Dairy-Free, Nut-Free, Spicy) with tooltip explanations and legend. Includes accessible labels for screen readers.</description>
+    </feature>
+    <feature>
+      <name>Menu Allergen and Dietary Filter</name>
+      <description>Implement client-side filtering for menu items by dietary restrictions and allergens. Shows/hides items based on selected filters and displays count of available options.</description>
+    </feature>
+    <feature>
+      <name>Google Business Profile Integration</name>
+      <description>Embed or link to Google Business Profile with reviews, photos, and Q&amp;A. Includes review schema markup and encourages customers to leave reviews with gentle CTAs.</description>
+    </feature>
+    <feature>
+      <name>Downloadable Menu PDF</name>
+      <description>Generate printer-friendly PDF version of menu using print stylesheet or PDF generation service. Includes restaurant branding, proper formatting, and auto-update when menu changes.</description>
+    </feature>
+    <feature>
+      <name>Special Events and Announcements Banner</name>
+      <description>Create dismissible banner component for special events, holiday hours, prix fixe menus, and announcements. Includes date-based auto-display/hide logic and persistent dismissal via localStorage.</description>
+    </feature>
+    <feature>
+      <name>Daily/Weekly Specials Section</name>
+      <description>Create dedicated component for showcasing rotating specials with large photos, limited-time badges, and day-specific offerings. Supports manual updates via JSON configuration.</description>
+    </feature>
+    <feature>
+      <name>Static Map Image with Marker</name>
+      <description>Integrate static map image or stylized illustrated map showing restaurant location with custom marker. Optimized for performance and includes fallback to address text if image fails.</description>
+    </feature>
+    <feature>
+      <name>Team Member Bio Card</name>
+      <description>Design team member component with photo, name, role, and short bio. Supports optional social links and emphasizes personality and passion for food. Used in About page.</description>
+    </feature>
+    <feature>
+      <name>Customer Testimonials and Reviews Section</name>
+      <description>Create testimonials carousel or grid showcasing customer quotes, star ratings, and source attribution (Google, Yelp, Facebook). Includes review schema markup for rich snippets.</description>
+    </feature>
+    <feature>
+      <name>Warm Gradient Photo Overlays</name>
+      <description>Design gradient overlays for hero and section backgrounds that enhance food photography with warm, moody tones (golden hour, candlelight). Ensures text legibility while maintaining atmosphere.</description>
+    </feature>
+    <feature>
+      <name>Yelp Business Page Integration</name>
+      <description>Add Yelp badge, review highlights, and link to full Yelp page. Follows Yelp brand guidelines and includes proper attribution for review content.</description>
+    </feature>
+    <feature>
+      <name>Awards and Recognition Badges</name>
+      <description>Display section for awards, press mentions, best-of lists, and certifications. Includes logos, quotes from publications, and links to articles. Builds credibility and trust.</description>
+    </feature>
+    <feature>
+      <name>Paper and Linen Texture Overlays</name>
+      <description>Add subtle paper, linen, or canvas texture overlays to sections for tactile warmth. Includes grain/noise overlay option for analog photography aesthetic. Respects performance budget.</description>
+    </feature>
+    <feature>
+      <name>Change default development port to 3004</name>
+      <description>change the default dev port to 3004</description>
+    </feature>
+    <feature>
+      <name>Hero Hours Badge Overlay Component</name>
+      <description>Create floating badge component showing current open/closed status and today&apos;s hours, positioned over hero image. Includes subtle backdrop blur and warm accent colors. Auto-hides when closed.</description>
+    </feature>
+    <feature>
+      <name>Instagram Feed Embed Component</name>
+      <description>Integrate Instagram feed showing latest food and atmosphere posts using native embed or Behold service. Includes loading states, error handling, and falls back gracefully if unavailable.</description>
+    </feature>
+    <feature>
+      <name>Menu Schema Markup Integration</name>
+      <description>Add Menu and MenuItem schema to menu page for rich snippets in search results. Includes name, description, price, nutrition info, and dietary properties for each menu item.</description>
+    </feature>
+    <feature>
+      <name>Mobile Horizontal Scrolling Photo Gallery</name>
+      <description>Create mobile-optimized horizontal scrolling gallery with snap points, scroll indicators, and touch-friendly navigation. Alternative layout for smaller screens to showcase multiple photos efficiently.</description>
+    </feature>
+    <feature>
+      <name>Parking and Transit Information Component</name>
+      <description>Create dedicated section for parking instructions (street, lot, valet), public transit directions, bike parking, and accessibility information. Includes helpful tips for first-time visitors.</description>
+    </feature>
+    <feature>
+      <name>Menu Page Print Stylesheet</name>
+      <description>Create dedicated print CSS for menu page with clean formatting, proper page breaks, hidden navigation, black-and-white optimization, and readable typography for physical menus.</description>
+    </feature>
+    <feature>
+      <name>Private Events and Catering Page</name>
+      <description>Build dedicated page for private events with venue photos, capacity info, sample menus, package pricing, and inquiry form. Showcases versatility for weddings, corporate events, and parties.</description>
+    </feature>
+    <feature>
+      <name>Reservation Platform Links</name>
+      <description>Add prominent CTAs and links to reservation platforms (OpenTable, Resy, Yelp Reservations) with proper tracking. Includes availability status if API integration is configured.</description>
     </feature>
   </implemented_features>
 
   <additional_requirements>
-    <requirement>Lighthouse Performance Score: 95+</requirement>
-    <requirement>Lighthouse SEO Score: 95+</requirement>
-    <requirement>Lighthouse Accessibility Score: 90+</requirement>
-    <requirement>First Contentful Paint: under 1.5 seconds</requirement>
-    <requirement>Total page weight: under 500kb per page (excluding images)</requirement>
-    <requirement>Browser Support: Chrome, Firefox, Safari, Edge (modern evergreen)</requirement>
-    <requirement>Mobile Support: Safari and Chrome on iOS/Android</requirement>
-    <requirement>No IE11 support required</requirement>
-    <requirement>Domain with HTTPS via AWS CloudFront</requirement>
-    <requirement>Google Business Profile integration post-launch</requirement>
-    <requirement>Google Search Console setup with sitemap submission</requirement>
+    <requirement>Node.js 18+ runtime</requirement>
+    <requirement>Images must be properly sized and lazy-loaded with WebP format and fallbacks</requirement>
+    <requirement>Lighthouse performance score 90+ (slightly more forgiving due to image-heavy nature)</requirement>
+    <requirement>WCAG 2.1 AA accessibility compliance with descriptive alt text for food photos</requirement>
+    <requirement>Menu page must be readable without images</requirement>
+    <requirement>Print stylesheet required for menu page</requirement>
+    <requirement>No external menu embeds (they look terrible)</requirement>
+    <requirement>External links only for Yelp, Google Business Profile, DoorDash/UberEats/Toast</requirement>
+    <requirement>Instagram feed embed optional (native embed or Behold)</requirement>
+    <requirement>Formspree integration for catering/events contact forms</requirement>
+    <requirement>Static map image or stylized illustrated map for location section</requirement>
   </additional_requirements>
 
   <development_guidelines>
-    <guideline>Use semantic HTML5 structure for accessibility and SEO</guideline>
-    <guideline>Follow mobile-first responsive design approach</guideline>
-    <guideline>Maintain clean, minimal design with generous whitespace</guideline>
-    <guideline>Use professional color palette: navy/dark blue primary, white background, accent color for CTAs</guideline>
-    <guideline>Typography: clean sans-serif (Inter, DM Sans) for headings, readable body font</guideline>
-    <guideline>Keep pages fast-loading with no unnecessary animations or heavy assets</guideline>
-    <guideline>Write professional but approachable copy using first person (&quot;I&quot; not &quot;we&quot;)</guideline>
-    <guideline>Ensure all images have descriptive alt text</guideline>
-    <guideline>Implement unique meta titles and descriptions per page</guideline>
-    <guideline>Use component-based architecture for reusability (Header, Footer, CTA Button, SEO Head)</guideline>
-    <guideline>Generate sitemap.xml and robots.txt at build time</guideline>
-    <guideline>Include JSON-LD LocalBusiness schema on all pages</guideline>
-    <guideline>Test on real mobile devices before deployment</guideline>
-    <guideline>Validate forms with inline error messages and success states</guideline>
-    <guideline>Maintain consistent padding, spacing, and border-radius across site</guideline>
+    <guideline>Use BEM naming convention for CSS classes</guideline>
+    <guideline>Follow component-based architecture with Astro components</guideline>
+    <guideline>Maintain TypeScript type definitions for all props</guideline>
+    <guideline>Use CSS custom properties from design system for consistency</guideline>
+    <guideline>Implement mobile-first responsive design</guideline>
+    <guideline>Ensure all interactive elements have minimum 44x44px touch targets</guideline>
+    <guideline>Respect prefers-reduced-motion for all animations</guideline>
+    <guideline>Include aria-labels and proper semantic HTML for accessibility</guideline>
+    <guideline>Use JSON or Markdown for menu data to enable easy client updates</guideline>
+    <guideline>Optimize all images using Astro&apos;s built-in image optimization</guideline>
+    <guideline>Test with Playwright for cross-browser compatibility</guideline>
+    <guideline>Keep food photography guidance in placeholder components</guideline>
   </development_guidelines>
 
   <implementation_roadmap>
     <phase>
-      <name>Phase 1: Foundation &amp; Global Components</name>
-      <status>in_progress</status>
-      <description>Set up project structure, create global components (Header with mobile hamburger menu, Footer with contact info and service area, CTA Button component, SEO Head component with Open Graph tags, LocalBusiness JSON-LD schema), and establish base styling with CSS variables for colors and typography</description>
+      <name>Core Framework Setup</name>
+      <status>completed</status>
+      <description>Astro project structure, design system variables, global styles, layout component, and build configuration</description>
     </phase>
     <phase>
-      <name>Phase 2: Homepage Implementation</name>
-      <status>pending</status>
-      <description>Build all homepage sections: Hero with value proposition and CTA, Services Overview with 3-4 service cards, Why Choose Me differentiators section, Portfolio Preview with 2-3 featured projects, optional Testimonial section placeholder, and Contact CTA section</description>
+      <name>Common Components</name>
+      <status>completed</status>
+      <description>Header, Footer, Button, SEO, Analytics, Cookie Consent, Theme Toggle, and Performance Monitor components</description>
     </phase>
     <phase>
-      <name>Phase 3: Services &amp; Pricing Page</name>
+      <name>Restaurant Color Palette</name>
       <status>pending</status>
-      <description>Create Services page with hero intro, 2-3 pricing tier cards (Starter $800, Professional $1,500, Premium $2,500+), What&apos;s Included checklist, Add-Ons pricing table, Process Overview timeline, and FAQ accordion with 5-8 questions</description>
+      <description>Implement warm restaurant color system: deep burgundy (#722f37), espresso brown (#3c2415), charcoal (#2d3748), cream (#fffbeb), soft terracotta (#c4a77d) with cuisine-specific accent colors</description>
     </phase>
     <phase>
-      <name>Phase 4: Portfolio Page</name>
+      <name>Restaurant Typography</name>
       <status>pending</status>
-      <description>Build Portfolio page with hero intro and responsive grid of 6-12 project cards featuring thumbnails, project names, descriptions, and links to live sites with hover states</description>
+      <description>Configure display fonts (Playfair Display, DM Serif Display) for headings and warm body fonts (Lora, Merriweather) for menu items and descriptions</description>
     </phase>
     <phase>
-      <name>Phase 5: About Page</name>
+      <name>Hero Section Adaptation</name>
       <status>pending</status>
-      <description>Implement About page with personal introduction, professional photo placeholder, 2-3 paragraph bio, Skills/Experience section, and optional Personal Touch humanizing details</description>
+      <description>Modify hero for full-bleed food photography with restaurant name, tagline, View Menu/Find Us CTAs, and optional hours badge overlay</description>
     </phase>
     <phase>
-      <name>Phase 6: Contact Page</name>
+      <name>Menu Component System</name>
       <status>pending</status>
-      <description>Create Contact page with form (name, email, phone, business name, project type dropdown, budget range, message textarea), form validation, spam prevention, success/error states, direct contact info, and service area note</description>
+      <description>Build menu page with category sections, item components (name, price, description, dietary tags), optional photos, and PDF download link</description>
     </phase>
     <phase>
-      <name>Phase 7: Additional Features &amp; Polish</name>
+      <name>Menu Preview Section</name>
       <status>pending</status>
-      <description>Implement 404 page, sitemap.xml generation, robots.txt, favicon and app icons (ico, svg, apple-touch-icon), Google Analytics 4 integration, and final performance optimization</description>
+      <description>Create homepage menu preview with 3-6 highlighted dishes in masonry grid or alternating layout</description>
     </phase>
     <phase>
-      <name>Phase 8: Testing &amp; Launch Preparation</name>
+      <name>Atmosphere Gallery</name>
       <status>pending</status>
-      <description>Cross-browser testing, mobile device testing, Lighthouse audits for performance/SEO/accessibility, form submission testing, AWS S3/CloudFront deployment configuration, domain connection with HTTPS, and launch checklist completion</description>
+      <description>Implement photo gallery with lightbox functionality, lazy loading, and horizontal scroll option for mobile</description>
+    </phase>
+    <phase>
+      <name>Location &amp; Hours Section</name>
+      <status>pending</status>
+      <description>Build location component with address, hours display (current day highlighted), parking notes, and maps integration</description>
+    </phase>
+    <phase>
+      <name>About/Story Page</name>
+      <status>pending</status>
+      <description>Create narrative-driven about page template with founders story, philosophy, team photos, and sourcing information</description>
+    </phase>
+    <phase>
+      <name>Contact/Catering Page</name>
+      <status>pending</status>
+      <description>Adapt contact form for restaurant inquiries including catering and private events with Formspree integration</description>
+    </phase>
+    <phase>
+      <name>Restaurant Schema Markup</name>
+      <status>pending</status>
+      <description>Implement Restaurant + LocalBusiness combined JSON-LD schema with cuisine type, hours, address, and menu schema</description>
+    </phase>
+    <phase>
+      <name>Print Styles</name>
+      <status>pending</status>
+      <description>Create print stylesheet specifically for menu page with clean, readable formatting</description>
+    </phase>
+    <phase>
+      <name>Image Optimization</name>
+      <status>pending</status>
+      <description>Configure heavy image optimization for food photography with WebP conversion and responsive sizing</description>
+    </phase>
+    <phase>
+      <name>Final Polish</name>
+      <status>pending</status>
+      <description>Add subtle paper/linen textures, decorative cuisine-specific elements, warm gradient overlays, and optional grain/noise overlay for analog warmth</description>
     </phase>
   </implementation_roadmap>
 </project_specification>

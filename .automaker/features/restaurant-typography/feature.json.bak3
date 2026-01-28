@@ -1,0 +1,14 @@
+{
+  "id": "restaurant-typography",
+  "category": "Design System",
+  "title": "Restaurant Display Typography System",
+  "description": "Configure Google Fonts including Playfair Display, DM Serif Display, and Lora for headings and menu items. Set up font loading optimization and fallback stacks with appropriate weights for food photography context.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [
+    "css-variables-typography"
+  ],
+  "createdAt": "2026-01-26T01:50:42.076Z",
+  "updatedAt": "2026-01-26T01:50:42.076Z"
+}

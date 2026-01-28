@@ -1,0 +1,12 @@
+{
+  "id": "catering-contact-form",
+  "category": "Core",
+  "title": "Catering and Events Inquiry Form",
+  "description": "Adapt existing contact form for restaurant-specific inquiries including event type (wedding, corporate, private), guest count, date picker, menu preferences, and dietary restrictions. Integrates with Formspree.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.100Z",
+  "updatedAt": "2026-01-26T02:22:28.082Z",
+  "descriptionHistory": []
+}

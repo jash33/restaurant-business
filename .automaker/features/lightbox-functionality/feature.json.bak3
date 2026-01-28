@@ -1,0 +1,14 @@
+{
+  "id": "lightbox-functionality",
+  "category": "UI",
+  "title": "Photo Lightbox with Keyboard Navigation",
+  "description": "Implement accessible lightbox overlay for gallery photos with keyboard navigation (arrows, ESC), swipe gestures for mobile, and zoom capability. Includes proper focus management and ARIA attributes.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [
+    "photo-gallery-component"
+  ],
+  "createdAt": "2026-01-26T01:50:42.092Z",
+  "updatedAt": "2026-01-26T01:50:42.092Z"
+}

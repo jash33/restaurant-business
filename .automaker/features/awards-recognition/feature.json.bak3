@@ -1,0 +1,14 @@
+{
+  "id": "awards-recognition",
+  "category": "UI",
+  "title": "Awards and Recognition Badges",
+  "description": "Display section for awards, press mentions, best-of lists, and certifications. Includes logos, quotes from publications, and links to articles. Builds credibility and trust.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [
+    "about-page-restaurant"
+  ],
+  "createdAt": "2026-01-26T01:50:42.138Z",
+  "updatedAt": "2026-01-26T01:50:42.138Z"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "dietary-indicators",
+  "category": "UI",
+  "title": "Dietary Restriction Icon System",
+  "description": "Design and implement icon set for dietary indicators (Gluten-Free, Vegan, Vegetarian, Dairy-Free, Nut-Free, Spicy) with tooltip explanations and legend. Includes accessible labels for screen readers.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [
+    "menu-item-component"
+  ],
+  "createdAt": "2026-01-26T01:50:42.084Z",
+  "updatedAt": "2026-01-26T01:50:42.084Z"
+}

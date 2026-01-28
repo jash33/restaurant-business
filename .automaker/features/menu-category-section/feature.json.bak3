@@ -1,0 +1,12 @@
+{
+  "id": "menu-category-section",
+  "category": "UI",
+  "title": "Menu Category Section Component",
+  "description": "Create menu category section with decorative heading, optional description, and grid layout for menu items. Supports different layout styles (compact, detailed, photo-heavy) per category.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.081Z",
+  "updatedAt": "2026-01-26T08:59:52.484Z",
+  "descriptionHistory": []
+}

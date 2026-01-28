@@ -44,6 +44,7 @@ import type {
   ProductSchema,
   BreadcrumbSchema,
   WebPageSchema,
+  MenuSchema,
   CustomMetaTag,
 } from '../types/seo';
 import {
@@ -56,7 +57,11 @@ import {
 } from '../config/seo.config';
 
 import { generateLocalBusinessSchema } from '../utils/local-business-jsonld';
+import { generateRestaurantSchema } from '../utils/restaurant-jsonld';
+import { generateMenuSchema } from '../utils/menu-jsonld';
 import type { LocalBusinessSchema, LocalBusinessType } from '../types/seo';
+import type { RestaurantSchema } from '../types/restaurant-schema';
+import { isRestaurantSchema } from '../types/restaurant-schema';
 // Define props interface using Astro's Props pattern
 interface Props extends SEOProps {}
 
@@ -332,10 +337,18 @@ function generateJsonLd(schema: JsonLdSchema): object {
       return generateArticleSchema(schema as ArticleSchema);
     case 'Organization':
       return generateOrganizationSchema(schema as OrganizationSchema);
+    case 'Restaurant':
+    case 'FoodEstablishment':
+      // Use the comprehensive Restaurant generator for restaurant-related types
+      // This handles servesCuisine, hasMenu, acceptsReservations, etc.
+      return generateRestaurantSchema(schema as RestaurantSchema, siteUrl);
+    case 'Menu':
+      // Use the Menu generator for menu structured data
+      // This handles menu sections, items, prices, nutrition, and dietary info
+      return generateMenuSchema(schema as MenuSchema, siteUrl);
     case 'ProfessionalService':
     case 'LocalBusiness':
     case 'Store':
-    case 'Restaurant':
     case 'MedicalBusiness':
     case 'FinancialService':
     case 'LegalService':
@@ -344,9 +357,8 @@ function generateJsonLd(schema: JsonLdSchema): object {
     case 'HealthAndBeautyBusiness':
     case 'HomeAndConstructionBusiness':
     case 'EntertainmentBusiness':
-    case 'FoodEstablishment':
     case 'LodgingBusiness':
-      // Use the comprehensive LocalBusiness generator for all LocalBusiness subtypes
+      // Use the comprehensive LocalBusiness generator for non-restaurant LocalBusiness subtypes
       return generateLocalBusinessSchema(schema as LocalBusinessSchema, siteUrl);
     case 'Product':
       return generateProductSchema(schema as ProductSchema);

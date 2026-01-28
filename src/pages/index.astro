@@ -1,16 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/HeroSection.astro';
+import OriginStorySection from '../components/OriginStorySection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import DifferentiatorsSection from '../components/DifferentiatorsSection.astro';
 import FeaturedProjectsPreview from '../components/FeaturedProjectsPreview.astro';
+import MenuPreviewSection from '../components/MenuPreviewSection.astro';
+import DeliveryPlatformLinks from '../components/DeliveryPlatformLinks.astro';
+import InstagramFeed from '../components/InstagramFeed.astro';
+import GoogleBusinessProfile from '../components/GoogleBusinessProfile.astro';
+import AwardsSection from '../components/AwardsSection.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import type { Service } from '../types/service';
 import type { Differentiator } from '../types/differentiator';
 import { DEFAULT_FAQ_ITEMS } from '../types/faq';
-import { localBusinessSchema } from '../config/seo.config';
+import { restaurantSchema } from '../config/restaurant.config';
 import { FEATURED_PROJECTS, FEATURED_PROJECTS_CONFIG } from '../config/featured-projects.config';
+import { awards, AWARDS_CONFIG } from '../config/awards.config';
 
 /**
  * Homepage - Houston Web Services
@@ -124,7 +131,7 @@ const differentiators: Differentiator[] = [
 	openGraph={{
 		type: 'website',
 	}}
-	jsonLd={localBusinessSchema}
+	jsonLd={restaurantSchema}
 >
 	<main>
 		<!-- Hero Section -->
@@ -145,6 +152,19 @@ const differentiators: Differentiator[] = [
 				{ icon: 'projects', text: '50+ Local Businesses Helped' },
 				{ icon: 'tech', text: 'Fast & Search-Friendly Sites' },
 			]}
+		/>
+
+		<!-- Origin Story Section -->
+		<OriginStorySection
+			id="our-story"
+			heading="Our Story"
+			storySnippet={"What began as a dream in a small family kitchen has blossomed into a beloved gathering place for our Houston community. Every dish we serve carries the love, tradition, and passion that's been passed down through generations.\n\nOur founder's journey started with a simple belief: that food has the power to bring people together, to create memories, and to tell stories. From our grandmother's treasured recipes to our modern culinary innovations, we honor the past while embracing the future."}
+			pullQuote="Every plate we serve tells a story — of family, of tradition, of love poured into every ingredient."
+			chefName="The Family"
+			chefTitle="Founders & Proprietors"
+			establishedYear="Est. 2016"
+			ctaText="Read Our Full Story"
+			ctaHref="/about"
 		/>
 
 		<!-- Services Section -->
@@ -172,6 +192,54 @@ const differentiators: Differentiator[] = [
 			projects={FEATURED_PROJECTS}
 			viewAllText={FEATURED_PROJECTS_CONFIG.viewAllText}
 			viewAllHref={FEATURED_PROJECTS_CONFIG.viewAllHref}
+		/>
+
+		<!-- Menu Preview Section -->
+		<MenuPreviewSection
+			id="menu-preview"
+			heading="Featured Menu Items"
+			subheading="Discover our signature dishes crafted with passion and the finest ingredients."
+			layout="masonry"
+			itemsToShow={6}
+			viewAllText="View Full Menu"
+			viewAllHref="/menu"
+		/>
+
+		<!-- Instagram Feed Section -->
+		<InstagramFeed
+			id="instagram-feed"
+			heading="Follow Us on Instagram"
+			subheading="See our latest food photos and restaurant atmosphere"
+			maxPosts={6}
+			columns={3}
+			showCaptions={true}
+			showViewOnInstagram={true}
+		/>
+
+		<!-- Delivery Platform Links Section -->
+		<DeliveryPlatformLinks />
+
+		<!-- Google Business Profile / Reviews Section -->
+		<GoogleBusinessProfile
+			id="reviews"
+			heading="What Our Guests Are Saying"
+			subheading="See why Houston food lovers rate us 4.7 stars on Google"
+			showReviewCTA={true}
+			maxReviews={4}
+		/>
+
+		<!-- Awards & Recognition Section -->
+		<AwardsSection
+			id="awards"
+			heading={AWARDS_CONFIG.defaultHeading}
+			subheading={AWARDS_CONFIG.defaultSubheading}
+			awards={awards}
+			layout="grid"
+			maxItems={6}
+			showLogos={true}
+			showYears={true}
+			showQuotes={true}
+			background="default"
 		/>
 
 		<!-- FAQ Section -->

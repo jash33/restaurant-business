@@ -127,6 +127,57 @@
   --color-accent-alt-subtle: #cffafe;
 
   /* -----------------------------------------------------------------
+   * Cuisine-Specific Accent Colors
+   * Colors tailored for different cuisine styles.
+   * Configure active theme in cuisine-theme.config.ts
+   * ----------------------------------------------------------------- */
+
+  /* Italian Cuisine - Tomato Red & Olive Green */
+  --color-cuisine-italian-primary: #c4402f;   /* Tomato red */
+  --color-cuisine-italian-secondary: #6b8e23; /* Olive green */
+  --color-cuisine-italian-accent: #f4d03f;    /* Golden pasta */
+
+  /* French Cuisine - Navy Blue & Gold */
+  --color-cuisine-french-primary: #1e3a5f;    /* French navy */
+  --color-cuisine-french-secondary: #c9a227;  /* Gold */
+  --color-cuisine-french-accent: #8b0000;     /* Wine red */
+
+  /* Japanese Cuisine - Indigo & Cherry Blossom */
+  --color-cuisine-japanese-primary: #3d5a80;  /* Indigo blue */
+  --color-cuisine-japanese-secondary: #ffb7c5; /* Sakura pink */
+  --color-cuisine-japanese-accent: #2d5016;   /* Matcha green */
+
+  /* Mexican Cuisine - Warm Orange/Red (Terracotta & Teal) */
+  --color-cuisine-mexican-primary: #e07a3a;   /* Terracotta orange */
+  --color-cuisine-mexican-secondary: #008b8b; /* Teal */
+  --color-cuisine-mexican-accent: #8b0000;    /* Chile red */
+
+  /* American BBQ - Smoky Red/Brown (Smoky Brown & Ember Orange) */
+  --color-cuisine-bbq-primary: #4a3728;       /* Smoky brown */
+  --color-cuisine-bbq-secondary: #ff6b35;     /* Ember orange */
+  --color-cuisine-bbq-accent: #ffd700;        /* Mustard gold */
+
+  /* Mediterranean - Azure Blue & Olive */
+  --color-cuisine-mediterranean-primary: #1e90ff; /* Azure */
+  --color-cuisine-mediterranean-secondary: #808000; /* Olive */
+  --color-cuisine-mediterranean-accent: #ff6347; /* Tomato */
+
+  /* Asian Fusion - Jade Green (Crimson & Gold) */
+  --color-cuisine-asian-primary: #dc143c;     /* Crimson */
+  --color-cuisine-asian-secondary: #ffd700;   /* Gold */
+  --color-cuisine-asian-accent: #228b22;      /* Jade green */
+
+  /* Indian Cuisine - Saffron & Curry */
+  --color-cuisine-indian-primary: #ff9933;    /* Saffron */
+  --color-cuisine-indian-secondary: #138808;  /* India green */
+  --color-cuisine-indian-accent: #c41e3a;     /* Cardinal red */
+
+  /* Bakery - Pastel Pink & Cream */
+  --color-cuisine-bakery-primary: #e8b4b8;    /* Pastel pink (blush) */
+  --color-cuisine-bakery-secondary: #f5e6d3;  /* Warm cream/vanilla */
+  --color-cuisine-bakery-accent: #8b4513;     /* Cocoa brown */
+
+  /* -----------------------------------------------------------------
    * Semantic Colors - UI Feedback States
    * Each with base, light (backgrounds), and dark (text) variants
    * ----------------------------------------------------------------- */
@@ -435,6 +486,123 @@
   --gradient-border-fade: linear-gradient(90deg, transparent 0%, var(--color-primary-500) 50%, transparent 100%);
   --gradient-underline: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
 
+  /* -----------------------------------------------------------------
+   * Warm Gradient Overlays - For food photography enhancement
+   * Creates moody, atmospheric lighting effects (golden hour, candlelight)
+   * while ensuring text legibility. Use with mix-blend-mode: multiply.
+   * ----------------------------------------------------------------- */
+
+  /* Warm color palette for overlays */
+  --color-warm-burgundy: rgba(114, 47, 55, 1);
+  --color-warm-gold: rgba(196, 167, 125, 1);
+  --color-warm-brown: rgba(60, 36, 21, 1);
+  --color-warm-amber: rgba(180, 120, 60, 1);
+  --color-warm-terracotta: rgba(186, 99, 67, 1);
+  --color-warm-charcoal: rgba(26, 20, 18, 1);
+  --color-warm-cream: rgba(255, 251, 235, 1);
+
+  /* Golden Hour - Warm sunset tones for outdoor/natural lighting feel */
+  --gradient-warm-golden-hour: linear-gradient(
+    135deg,
+    rgba(196, 167, 125, 0.35) 0%,
+    rgba(180, 120, 60, 0.25) 35%,
+    rgba(114, 47, 55, 0.2) 70%,
+    rgba(60, 36, 21, 0.35) 100%
+  );
+
+  /* Candlelight - Intimate, warm restaurant ambiance */
+  --gradient-warm-candlelight: linear-gradient(
+    160deg,
+    rgba(180, 120, 60, 0.3) 0%,
+    rgba(114, 47, 55, 0.2) 40%,
+    rgba(60, 36, 21, 0.35) 75%,
+    rgba(26, 20, 18, 0.4) 100%
+  );
+
+  /* Moody Burgundy - Sophisticated wine/restaurant tones */
+  --gradient-warm-moody: linear-gradient(
+    135deg,
+    rgba(114, 47, 55, 0.25) 0%,
+    rgba(196, 167, 125, 0.15) 30%,
+    rgba(60, 36, 21, 0.2) 60%,
+    rgba(114, 47, 55, 0.35) 100%
+  );
+
+  /* Terracotta Warmth - Earthy, rustic tones */
+  --gradient-warm-terracotta: linear-gradient(
+    145deg,
+    rgba(186, 99, 67, 0.3) 0%,
+    rgba(180, 120, 60, 0.2) 40%,
+    rgba(60, 36, 21, 0.25) 70%,
+    rgba(114, 47, 55, 0.3) 100%
+  );
+
+  /* Ember Glow - Warm hearth/fireplace feel */
+  --gradient-warm-ember: radial-gradient(
+    ellipse at 30% 70%,
+    rgba(180, 120, 60, 0.4) 0%,
+    rgba(186, 99, 67, 0.25) 30%,
+    rgba(114, 47, 55, 0.2) 60%,
+    rgba(26, 20, 18, 0.35) 100%
+  );
+
+  /* Vignette overlays - For moody edge darkening */
+  --gradient-vignette-soft: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 50%,
+    rgba(26, 20, 18, 0.2) 80%,
+    rgba(26, 20, 18, 0.4) 100%
+  );
+
+  --gradient-vignette-strong: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 40%,
+    rgba(26, 20, 18, 0.3) 70%,
+    rgba(26, 20, 18, 0.6) 100%
+  );
+
+  /* Base dark overlay for text legibility - Use beneath warm gradients */
+  --gradient-overlay-legibility: linear-gradient(
+    180deg,
+    rgba(26, 20, 18, 0.3) 0%,
+    rgba(26, 20, 18, 0.2) 30%,
+    rgba(26, 20, 18, 0.25) 60%,
+    rgba(26, 20, 18, 0.5) 100%
+  );
+
+  /* -----------------------------------------------------------------
+   * Texture Overlays - For tactile warmth and analog aesthetics
+   * Creates subtle paper, linen, canvas, and grain textures using
+   * CSS-only patterns (no image files for better performance).
+   * Use with mix-blend-mode: overlay or soft-light.
+   * ----------------------------------------------------------------- */
+
+  /* Paper texture - Subtle organic fiber pattern */
+  --texture-paper: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
+
+  /* Linen texture - Fabric weave pattern */
+  --texture-linen: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='linen'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23linen)'/%3E%3C/svg%3E");
+
+  /* Canvas texture - Artistic woven canvas finish */
+  --texture-canvas: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='canvas'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.02 0.05' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23canvas)'/%3E%3C/svg%3E");
+
+  /* Film grain - Analog photography noise (fine) */
+  --texture-grain-fine: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+
+  /* Film grain - Analog photography noise (coarse) */
+  --texture-grain-coarse: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+
+  /* Noise texture - Very fine static/noise */
+  --texture-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+
+  /* Texture opacity levels */
+  --texture-opacity-subtle: 0.03;
+  --texture-opacity-light: 0.06;
+  --texture-opacity-medium: 0.1;
+  --texture-opacity-strong: 0.15;
+
   /* =================================================================
    * 11. DESIGN FLAIR - GLOW EFFECTS
    * =================================================================
@@ -671,12 +839,133 @@ html[data-theme="dark"] {
 
   --glow-text-subtle: 0 0 15px rgba(248, 250, 252, 0.4);
   --glow-text-accent: 0 0 25px rgba(167, 139, 250, 0.7);
+
+  /* -----------------------------------------------------------------
+   * Cuisine Colors - Dark mode adjustments (lighter variants for visibility)
+   * ----------------------------------------------------------------- */
+  --color-cuisine-italian-primary: #e86a5a;
+  --color-cuisine-italian-secondary: #8fb03a;
+  --color-cuisine-italian-accent: #f7e05a;
+
+  --color-cuisine-french-primary: #4a6fa5;
+  --color-cuisine-french-secondary: #e0c04a;
+  --color-cuisine-french-accent: #c05050;
+
+  --color-cuisine-japanese-primary: #6a8ab0;
+  --color-cuisine-japanese-secondary: #ffccd5;
+  --color-cuisine-japanese-accent: #5a8a40;
+
+  --color-cuisine-mexican-primary: #f09060;
+  --color-cuisine-mexican-secondary: #40b0b0;
+  --color-cuisine-mexican-accent: #c05050;
+
+  --color-cuisine-bbq-primary: #7a6050;
+  --color-cuisine-bbq-secondary: #ff8a55;
+  --color-cuisine-bbq-accent: #ffe040;
+
+  --color-cuisine-mediterranean-primary: #50b0ff;
+  --color-cuisine-mediterranean-secondary: #a0a040;
+  --color-cuisine-mediterranean-accent: #ff7a60;
+
+  --color-cuisine-asian-primary: #f05070;
+  --color-cuisine-asian-secondary: #ffe040;
+  --color-cuisine-asian-accent: #50b050;
+
+  --color-cuisine-indian-primary: #ffb050;
+  --color-cuisine-indian-secondary: #40a040;
+  --color-cuisine-indian-accent: #e05060;
+
+  --color-cuisine-bakery-primary: #f0c8cc;
+  --color-cuisine-bakery-secondary: #fff0e0;
+  --color-cuisine-bakery-accent: #a0623a;
 }
 
 /* Selection styling for dark mode */
 html[data-theme="dark"] ::selection {
   background-color: var(--color-primary-700);
   color: var(--color-primary-100);
+}
+
+/* =================================================================
+ * CUISINE THEME STYLES
+ * =================================================================
+ * When a cuisine theme is active (via data-cuisine-theme attribute),
+ * these selectors map the cuisine-specific colors to the primary
+ * accent variables used throughout the site.
+ *
+ * Usage: Set CUISINE_THEME_CONFIG.activeTheme in cuisine-theme.config.ts
+ */
+
+/* Mexican Cuisine Theme - Warm orange/red */
+html[data-cuisine-theme="mexican"] {
+  --color-accent: var(--color-cuisine-mexican-primary);
+  --color-accent-light: var(--color-cuisine-mexican-secondary);
+  --color-accent-dark: var(--color-cuisine-mexican-accent);
+  --color-accent-alt: var(--color-cuisine-mexican-secondary);
+}
+
+/* BBQ Theme - Smoky red/brown */
+html[data-cuisine-theme="bbq"] {
+  --color-accent: var(--color-cuisine-bbq-secondary);
+  --color-accent-light: var(--color-cuisine-bbq-accent);
+  --color-accent-dark: var(--color-cuisine-bbq-primary);
+  --color-accent-alt: var(--color-cuisine-bbq-primary);
+}
+
+/* Asian Theme - Jade green focus */
+html[data-cuisine-theme="asian"] {
+  --color-accent: var(--color-cuisine-asian-accent);
+  --color-accent-light: var(--color-cuisine-asian-secondary);
+  --color-accent-dark: var(--color-cuisine-asian-primary);
+  --color-accent-alt: var(--color-cuisine-asian-primary);
+}
+
+/* Italian Theme - Tomato red */
+html[data-cuisine-theme="italian"] {
+  --color-accent: var(--color-cuisine-italian-primary);
+  --color-accent-light: var(--color-cuisine-italian-accent);
+  --color-accent-dark: var(--color-cuisine-italian-secondary);
+  --color-accent-alt: var(--color-cuisine-italian-secondary);
+}
+
+/* Bakery Theme - Pastel pink */
+html[data-cuisine-theme="bakery"] {
+  --color-accent: var(--color-cuisine-bakery-primary);
+  --color-accent-light: var(--color-cuisine-bakery-secondary);
+  --color-accent-dark: var(--color-cuisine-bakery-accent);
+  --color-accent-alt: var(--color-cuisine-bakery-accent);
+}
+
+/* French Theme - Navy blue & gold */
+html[data-cuisine-theme="french"] {
+  --color-accent: var(--color-cuisine-french-secondary);
+  --color-accent-light: var(--color-cuisine-french-accent);
+  --color-accent-dark: var(--color-cuisine-french-primary);
+  --color-accent-alt: var(--color-cuisine-french-primary);
+}
+
+/* Japanese Theme - Indigo & cherry blossom */
+html[data-cuisine-theme="japanese"] {
+  --color-accent: var(--color-cuisine-japanese-secondary);
+  --color-accent-light: var(--color-cuisine-japanese-accent);
+  --color-accent-dark: var(--color-cuisine-japanese-primary);
+  --color-accent-alt: var(--color-cuisine-japanese-primary);
+}
+
+/* Mediterranean Theme - Azure blue & olive */
+html[data-cuisine-theme="mediterranean"] {
+  --color-accent: var(--color-cuisine-mediterranean-primary);
+  --color-accent-light: var(--color-cuisine-mediterranean-secondary);
+  --color-accent-dark: var(--color-cuisine-mediterranean-accent);
+  --color-accent-alt: var(--color-cuisine-mediterranean-secondary);
+}
+
+/* Indian Theme - Saffron & curry */
+html[data-cuisine-theme="indian"] {
+  --color-accent: var(--color-cuisine-indian-primary);
+  --color-accent-light: var(--color-cuisine-indian-secondary);
+  --color-accent-dark: var(--color-cuisine-indian-accent);
+  --color-accent-alt: var(--color-cuisine-indian-secondary);
 }
 
 /* =================================================================

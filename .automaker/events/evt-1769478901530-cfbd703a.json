@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769478901530-cfbd703a",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-27T01:55:01.530Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "team-member-component",
+  "featureName": "Team Member Bio Card",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

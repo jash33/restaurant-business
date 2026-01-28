@@ -1,0 +1,12 @@
+{
+  "id": "google-business-integration",
+  "category": "Integration",
+  "title": "Google Business Profile Integration",
+  "description": "Embed or link to Google Business Profile with reviews, photos, and Q&A. Includes review schema markup and encourages customers to leave reviews with gentle CTAs.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.118Z",
+  "updatedAt": "2026-01-26T18:59:56.360Z",
+  "descriptionHistory": []
+}

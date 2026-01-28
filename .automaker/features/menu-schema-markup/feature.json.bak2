@@ -1,0 +1,23 @@
+{
+  "id": "menu-schema-markup",
+  "category": "SEO",
+  "title": "Menu Schema Markup Integration",
+  "description": "Add Menu and MenuItem schema to menu page for rich snippets in search results. Includes name, description, price, nutrition info, and dietary properties for each menu item.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.105Z",
+  "updatedAt": "2026-01-26T19:16:43.976Z",
+  "descriptionHistory": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "imagePaths": [],
+  "textFilePaths": [],
+  "branchName": "main",
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "workMode": "custom",
+  "dependencies": []
+}

@@ -1,175 +1,134 @@
 ---
 /**
- * About Page - Houston Web Services
- * A comprehensive page establishing credibility and local  Houston connection.
+ * About Page - The Main Street Bistro
+ * A narrative-driven page showcasing the restaurant's story, team,
+ * sourcing philosophy, partnerships, and history.
  *
  * Features:
- * - Professional introduction with photo placeholder
- * - Skills and expertise showcase
- * - Personal touch and community involvement
- * -  Houston local connection emphasis
+ * - Hero section with restaurant branding
+ * - Founders story with personal narrative
+ * - Team bios with photos
+ * - Sourcing philosophy with principles
+ * - Ingredient partnership showcase
+ * - Restaurant history timeline
  * - Full SEO optimization with structured data
  * - WCAG 2.1 AA accessible
  */
 
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import TeamBios from '../components/TeamBios.astro';
+import SourcingPhilosophy from '../components/SourcingPhilosophy.astro';
+import PartnershipShowcase from '../components/PartnershipShowcase.astro';
+import RestaurantTimeline from '../components/RestaurantTimeline.astro';
+import YelpReviews from '../components/YelpReviews.astro';
 
-/**
- * Skills organized by category for the expertise section
- */
-const skillCategories = [
-  {
-    title: 'Website Design',
-    skills: [
-      { name: 'Custom Website Design', years: 8 },
-      { name: 'Mobile-Friendly Websites', years: 8 },
-      { name: 'Online Stores & Shopping', years: 6 },
-      { name: 'Easy-to-Update Websites', years: 7 },
-    ],
-  },
-  {
-    title: 'Getting Found Online',
-    skills: [
-      { name: 'Google Search Rankings', years: 7 },
-      { name: 'Local Search Visibility', years: 6 },
-      { name: 'Website Performance Tracking', years: 6 },
-      { name: 'Turning Visitors into Customers', years: 5 },
-    ],
-  },
-  {
-    title: 'Ongoing Support',
-    skills: [
-      { name: 'Brand & Visual Identity', years: 5 },
-      { name: 'Website Hosting & Updates', years: 8 },
-      { name: 'Speed & Performance', years: 6 },
-      { name: 'Security & Protection', years: 7 },
-    ],
-  },
-];
+import {
+  ABOUT_PAGE_CONFIG,
+  FOUNDERS_STORY,
+  TEAM_MEMBERS,
+  SOURCING_PRINCIPLES,
+  INGREDIENT_PARTNERSHIPS,
+  RESTAURANT_TIMELINE,
+} from '../config/about.config';
 
-/**
- * Key achievements and stats to display
- */
+const { hero, foundersStory } = ABOUT_PAGE_CONFIG;
+
+// Restaurant stats for the achievement section
 const achievements = [
-  { number: '8+', label: 'Years Experience' },
-  { number: '150+', label: 'Projects Completed' },
-  { number: '98%', label: 'Client Satisfaction' },
-  { number: '50+', label: 'Local Businesses Served' },
-];
-
-/**
- * Community involvement and personal interests
- */
-const communityHighlights = [
-  {
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-    title: 'Houston Resident',
-    description: "Living and working in Houston for over 10 years. I know our neighborhoods, our businesses, and what makes our community unique.",
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
-    title: 'Community Supporter',
-    description: 'Active participant in local business networking groups and proud sponsor of youth sports programs throughout Houston.',
-  },
-  {
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
-    title: 'Local Business Advocate',
-    description: "I believe in supporting local. That's why I focus exclusively on helping small businesses in  Houston compete and thrive in the digital landscape.",
-  },
-];
-
-/**
- * Fun facts to add personality
- */
-const funFacts = [
-  "I've visited every coffee shop within 5 miles of downtown Houston (research, of course!)",
-  "Weekend mornings usually find me at Terry Hershey Park",
-  "Die-hard Texans fan - yes, even through the tough seasons",
-  "Self-taught coder who built my first website at age 15",
+  { number: '9+', label: 'Years Serving Houston' },
+  { number: '15+', label: 'Local Farm Partners' },
+  { number: '85%', label: 'Locally Sourced' },
+  { number: '50K+', label: 'Guests Served' },
 ];
 ---
 
 <Layout
-  title="About"
-  description="Meet the team behind Houston Web Services. Based in Houston, we bring 8+ years of web design expertise to help local businesses succeed online."
+  title="About Us"
+  description="Discover the story behind The Main Street Bistro. Meet our passionate team, learn about our farm-to-table philosophy, and explore our journey from a small dream to Houston's beloved neighborhood bistro."
   openGraph={{
     type: 'profile',
   }}
   jsonLd={{
     type: 'AboutPage',
-    name: 'About Houston Web Services',
-    description: 'Learn about the experience, expertise, and local commitment behind Houston Web Services - your  Houston web design partner.',
+    name: 'About The Main Street Bistro',
+    description: 'Learn about the founders, team, sourcing philosophy, and history of The Main Street Bistro - Houston\'s farm-to-table destination since 2015.',
   }}
 >
   <main>
     <!-- Hero Section -->
     <section class="about-hero" aria-labelledby="about-hero-heading">
       <div class="about-hero__container">
-        <span class="about-hero__eyebrow reveal reveal--up">About Us</span>
+        <span class="about-hero__eyebrow reveal reveal--up">{hero.eyebrow}</span>
         <h1 id="about-hero-heading" class="about-hero__title reveal reveal--up reveal--delay-1">
-          Your  Houston<br />Web Partner
+          {hero.headline}
         </h1>
         <p class="about-hero__subtitle reveal reveal--up reveal--delay-2">
-          Building beautiful, effective websites for local businesses since 2016.
-          We're not just developers — we're your neighbors.
+          {hero.subheadline}
         </p>
       </div>
     </section>
 
-    <!-- Personal Introduction Section -->
-    <section class="about-intro" aria-labelledby="about-intro-heading">
-      <div class="about-intro__container">
-        <div class="about-intro__content">
-          <div class="about-intro__photo-wrapper reveal reveal--left">
-            <!-- Professional Photo Placeholder -->
-            <div class="about-intro__photo" role="img" aria-label="Professional headshot of the Houston Web Services founder">
-              <svg class="about-intro__photo-placeholder" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="200" height="200" fill="currentColor" opacity="0.1"/>
-                <circle cx="100" cy="70" r="35" fill="currentColor" opacity="0.2"/>
-                <ellipse cx="100" cy="160" rx="55" ry="40" fill="currentColor" opacity="0.2"/>
-              </svg>
-              <span class="about-intro__photo-label">Photo Coming Soon</span>
-            </div>
-            <div class="about-intro__badge">
-              <span class="about-intro__badge-text">Est. 2016</span>
+    <!-- Founders Story Section -->
+    <section class="founders-story" aria-labelledby="founders-story-heading">
+      <div class="founders-story__container">
+        <div class="founders-story__content">
+          <div class="founders-story__photo-column reveal reveal--left">
+            <div class="founders-story__photo-wrapper">
+              {foundersStory.photoSrc ? (
+                <img
+                  src={foundersStory.photoSrc}
+                  alt={foundersStory.photoAlt}
+                  class="founders-story__photo"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <div class="founders-story__photo-placeholder" role="img" aria-label={foundersStory.photoAlt}>
+                  <svg class="founders-story__placeholder-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="200" height="200" fill="currentColor" opacity="0.08"/>
+                    <!-- Two figures representing founders -->
+                    <circle cx="75" cy="65" r="25" fill="currentColor" opacity="0.15"/>
+                    <ellipse cx="75" cy="130" rx="35" ry="30" fill="currentColor" opacity="0.12"/>
+                    <circle cx="125" cy="65" r="25" fill="currentColor" opacity="0.15"/>
+                    <ellipse cx="125" cy="130" rx="35" ry="30" fill="currentColor" opacity="0.12"/>
+                  </svg>
+                  <span class="founders-story__placeholder-label">Photo Coming Soon</span>
+                </div>
+              )}
+              <div class="founders-story__badge" aria-hidden="true">
+                <span class="founders-story__badge-text">{foundersStory.establishedYear}</span>
+              </div>
             </div>
           </div>
 
-          <div class="about-intro__text reveal reveal--up reveal--delay-1">
-            <h2 id="about-intro-heading" class="about-intro__heading">
-              Hi, I'm James — and I'm Passionate About Helping Local Businesses Succeed Online
+          <div class="founders-story__text-column reveal reveal--up reveal--delay-1">
+            <span class="founders-story__eyebrow">Our Beginning</span>
+            <h2 id="founders-story-heading" class="founders-story__heading">
+              {foundersStory.heading}
             </h2>
 
-            <div class="about-intro__bio">
-              <p>
-                When I started Houston Web Services back in 2016, I had one simple goal: to give small businesses
-                in my community the same quality web presence that big corporations enjoy, but with the personal
-                attention and care that only a local partner can provide. As a  Houston resident for over a
-                decade, I've watched our neighborhoods grow and evolve throughout the greater Houston area.
-              </p>
+            {foundersStory.pullQuote && (
+              <blockquote class="founders-story__pullquote">
+                <svg class="founders-story__quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+                </svg>
+                <p>{foundersStory.pullQuote}</p>
+                {foundersStory.pullQuoteAttribution && (
+                  <cite class="founders-story__quote-attribution">— {foundersStory.pullQuoteAttribution}</cite>
+                )}
+              </blockquote>
+            )}
 
-              <p>
-                My journey into web development started long before it became my career. As a teenager, I was
-                fascinated by how websites could connect people and ideas. That curiosity led me through years of
-                self-study, professional certifications, and hands-on experience with businesses of all sizes.
-                But what I discovered along the way is that my real passion isn't just building websites — it's
-                helping local business owners like you turn their digital presence into a powerful tool for growth.
-              </p>
-
-              <p>
-                Today, I've had the privilege of working with over 150 businesses right here in the greater
-                Houston area. From the restaurant owner who needed online ordering capabilities to the law firm
-                seeking better local visibility, each project has reinforced my belief that great web design
-                combined with genuine understanding of local needs creates something truly special. When you
-                work with me, you're not getting an outsourced agency — you're getting a neighbor who genuinely
-                cares about your success.
-              </p>
+            <div class="founders-story__paragraphs">
+              {foundersStory.story.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
             </div>
 
-            <div class="about-intro__cta">
+            <div class="founders-story__cta">
               <Button
-                text="Let's Talk About Your Project"
+                text="Make a Reservation"
                 href="/contact"
                 variant="primary"
                 size="large"
@@ -183,7 +142,7 @@ const funFacts = [
     <!-- Achievements Stats Section -->
     <section class="about-stats" aria-labelledby="about-stats-heading">
       <div class="about-stats__container">
-        <h2 id="about-stats-heading" class="sr-only">Our Achievements in Numbers</h2>
+        <h2 id="about-stats-heading" class="sr-only">Our Impact in Numbers</h2>
         <div class="about-stats__grid">
           {achievements.map((stat, index) => (
             <div class={`about-stats__item reveal reveal--scale-up reveal--delay-${index + 1}`}>
@@ -195,94 +154,66 @@ const funFacts = [
       </div>
     </section>
 
-    <!-- Skills & Expertise Section -->
-    <section class="about-skills" aria-labelledby="about-skills-heading">
-      <div class="about-skills__container">
-        <div class="about-skills__header section-heading--decorated reveal reveal--up">
-          <h2 id="about-skills-heading" class="about-skills__title">
-            How I Help Your Business
-          </h2>
-          <p class="about-skills__subtitle">
-            Over the years, I've focused on what actually matters for small business owners—
-            getting you found online and turning website visitors into paying customers.
-          </p>
-        </div>
+    <!-- Team Bios Section -->
+    <TeamBios
+      members={TEAM_MEMBERS}
+      heading="Meet Our Team"
+      subheading="The passionate individuals who bring our vision to life every day."
+      foundersFirst={true}
+    />
 
-        <div class="about-skills__grid">
-          {skillCategories.map((category, index) => (
-            <div class={`about-skills__category reveal reveal--up reveal--delay-${index + 1}`}>
-              <h3 class="about-skills__category-title">{category.title}</h3>
-              <ul class="about-skills__list" role="list">
-                {category.skills.map((skill) => (
-                  <li class="about-skills__item">
-                    <span class="about-skills__item-name">{skill.name}</span>
-                    <span class="about-skills__item-years">{skill.years}+ years</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- Yelp Reviews Section -->
+    <YelpReviews
+      heading="What Yelpers Are Saying"
+      maxReviews={4}
+      showHighlights={true}
+      maxHighlights={4}
+      showReviewCTA={true}
+      showYelpLink={true}
+    />
 
-    <!-- Community & Personal Touch Section -->
-    <section class="about-community" aria-labelledby="about-community-heading">
-      <div class="about-community__container">
-        <div class="about-community__header section-heading--decorated reveal reveal--up">
-          <h2 id="about-community-heading" class="about-community__title">
-            Rooted in  Houston
-          </h2>
-          <p class="about-community__subtitle">
-            I'm more than just a web developer — I'm a proud member of the  Houston community.
-          </p>
-        </div>
+    <!-- Sourcing Philosophy Section -->
+    <SourcingPhilosophy
+      principles={SOURCING_PRINCIPLES}
+      heading="Our Sourcing Philosophy"
+      subheading="We believe exceptional dishes start with exceptional ingredients."
+      intro="At The Main Street Bistro, sourcing isn't just logistics — it's a core part of our culinary identity. We've built lasting relationships with local farmers, ranchers, and artisans who share our commitment to quality, sustainability, and ethical practices."
+    />
 
-        <div class="about-community__grid">
-          {communityHighlights.map((item, index) => (
-            <article class={`about-community__card reveal reveal--up reveal--delay-${index + 1}`}>
-              <div class="about-community__icon" aria-hidden="true" set:html={item.icon} />
-              <h3 class="about-community__card-title">{item.title}</h3>
-              <p class="about-community__card-text">{item.description}</p>
-            </article>
-          ))}
-        </div>
+    <!-- Partnership Showcase Section -->
+    <PartnershipShowcase
+      partnerships={INGREDIENT_PARTNERSHIPS}
+      heading="Our Partners"
+      subheading="The local farms, ranches, and artisans who help us bring our vision to life."
+    />
 
-        <!-- Fun Facts -->
-        <div class="about-funfacts reveal reveal--up">
-          <h3 class="about-funfacts__title">A Few Fun Facts</h3>
-          <ul class="about-funfacts__list" role="list">
-            {funFacts.map((fact, index) => (
-              <li class={`about-funfacts__item reveal reveal--left reveal--delay-${index + 1}`}>
-                <span class="about-funfacts__bullet" aria-hidden="true">☕</span>
-                {fact}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
+    <!-- Restaurant Timeline Section -->
+    <RestaurantTimeline
+      milestones={RESTAURANT_TIMELINE}
+      heading="Our Journey"
+      subheading="From our humble beginnings to today, every milestone tells a story of passion, perseverance, and community."
+    />
 
     <!-- Call to Action Section -->
     <section class="about-cta" aria-labelledby="about-cta-heading">
       <div class="about-cta__container">
         <h2 id="about-cta-heading" class="about-cta__title reveal reveal--up">
-          Ready to Work with a Local Expert?
+          Experience Our Story Firsthand
         </h2>
         <p class="about-cta__description reveal reveal--up reveal--delay-1">
-          Let's sit down — virtually or at your favorite  Houston coffee shop — and discuss
-          how we can help your business grow online. The first consultation is always free.
+          Join us for a meal and become part of our continuing story.
+          We can't wait to share our passion with you.
         </p>
         <div class="about-cta__buttons reveal reveal--up reveal--delay-2">
           <Button
-            text="Schedule a Free Consultation"
+            text="Make a Reservation"
             href="/contact"
             variant="primary"
             size="large"
           />
           <Button
-            text="View My Work"
-            href="/portfolio"
+            text="View Our Menu"
+            href="/menu"
             variant="secondary"
             size="large"
           />
@@ -336,67 +267,77 @@ const funFacts = [
     font-family: var(--font-body);
     font-size: var(--font-size-lg);
     color: var(--color-text-secondary);
-    max-width: 36rem;
+    max-width: 48rem;
     margin: 0 auto;
     line-height: var(--line-height-relaxed);
   }
 
   /* =================================================================
-   * PERSONAL INTRODUCTION SECTION
+   * FOUNDERS STORY SECTION
    * ================================================================= */
-  .about-intro {
+  .founders-story {
     padding: var(--spacing-20) var(--spacing-4);
     background-color: var(--color-background);
   }
 
-  .about-intro__container {
+  .founders-story__container {
     max-width: var(--container-6xl);
     margin: 0 auto;
   }
 
-  .about-intro__content {
+  .founders-story__content {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-12);
     align-items: start;
   }
 
-  @media (min-width: 1024px) {
-    .about-intro__content {
-      grid-template-columns: 300px 1fr;
-      gap: var(--spacing-16);
-    }
-  }
-
-  .about-intro__photo-wrapper {
-    position: relative;
+  .founders-story__photo-column {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  .about-intro__photo {
+  .founders-story__photo-wrapper {
     position: relative;
     width: 100%;
-    max-width: 280px;
-    aspect-ratio: 1;
-    background-color: var(--color-background-subtle);
+    max-width: 400px;
+  }
+
+  .founders-story__photo {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
     border-radius: var(--radius-2xl);
-    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .founders-story__photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      var(--color-background-subtle) 50%,
+      var(--color-primary-50) 100%
+    );
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
   }
 
-  .about-intro__photo-placeholder {
-    width: 100%;
-    height: 100%;
+  .founders-story__placeholder-svg {
+    width: 60%;
+    height: auto;
     color: var(--color-primary);
   }
 
-  .about-intro__photo-label {
+  .founders-story__placeholder-label {
     position: absolute;
     bottom: var(--spacing-4);
     font-family: var(--font-body);
@@ -405,7 +346,7 @@ const funFacts = [
     color: var(--color-text-tertiary);
   }
 
-  .about-intro__badge {
+  .founders-story__badge {
     position: absolute;
     bottom: -0.75rem;
     right: 10%;
@@ -414,35 +355,92 @@ const funFacts = [
     padding: var(--spacing-2) var(--spacing-4);
     border-radius: var(--radius-full);
     box-shadow: var(--shadow-md);
+    transform: rotate(-3deg);
   }
 
-  .about-intro__badge-text {
-    font-family: var(--font-body);
+  .founders-story__badge-text {
+    font-family: var(--font-heading);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     white-space: nowrap;
+    letter-spacing: var(--letter-spacing-wide);
   }
 
-  .about-intro__text {
-    padding-top: var(--spacing-4);
+  .founders-story__text-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
   }
 
-  .about-intro__heading {
+  .founders-story__eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+  }
+
+  .founders-story__heading {
     font-family: var(--font-heading);
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-6);
-    line-height: var(--line-height-snug);
+    margin: 0;
+    line-height: var(--line-height-tight);
   }
 
-  .about-intro__bio {
+  .founders-story__pullquote {
+    position: relative;
+    margin: var(--spacing-4) 0;
+    padding: var(--spacing-6) var(--spacing-8);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-50) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--color-primary);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+
+  .founders-story__quote-icon {
+    position: absolute;
+    top: var(--spacing-3);
+    left: var(--spacing-3);
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-primary);
+    opacity: 0.3;
+  }
+
+  .founders-story__pullquote p {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    font-style: italic;
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  .founders-story__quote-attribution {
+    display: block;
+    margin-top: var(--spacing-3);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-style: normal;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+  }
+
+  .founders-story__paragraphs {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
   }
 
-  .about-intro__bio p {
+  .founders-story__paragraphs p {
     font-family: var(--font-body);
     font-size: var(--font-size-base);
     color: var(--color-text-secondary);
@@ -450,8 +448,8 @@ const funFacts = [
     margin: 0;
   }
 
-  .about-intro__cta {
-    margin-top: var(--spacing-8);
+  .founders-story__cta {
+    margin-top: var(--spacing-4);
   }
 
   /* =================================================================
@@ -472,12 +470,6 @@ const funFacts = [
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-8);
     text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    .about-stats__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
   }
 
   .about-stats__item {
@@ -501,264 +493,6 @@ const funFacts = [
     color: var(--color-primary-100);
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-wide);
-  }
-
-  /* =================================================================
-   * SKILLS & EXPERTISE SECTION
-   * ================================================================= */
-  .about-skills {
-    padding: var(--spacing-20) var(--spacing-4);
-    background-color: var(--color-background-subtle);
-  }
-
-  .about-skills__container {
-    max-width: var(--container-6xl);
-    margin: 0 auto;
-  }
-
-  .about-skills__header {
-    text-align: center;
-    margin-bottom: var(--spacing-12);
-  }
-
-  .about-skills__title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-4);
-    line-height: var(--line-height-tight);
-  }
-
-  .about-skills__subtitle {
-    font-family: var(--font-body);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-secondary);
-    max-width: 36rem;
-    margin: 0 auto;
-    line-height: var(--line-height-relaxed);
-  }
-
-  .about-skills__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-8);
-  }
-
-  @media (min-width: 768px) {
-    .about-skills__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .about-skills__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .about-skills__category {
-    background-color: var(--color-background);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-6);
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--duration-200) var(--ease-in-out);
-  }
-
-  .about-skills__category:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .about-skills__category-title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-primary);
-    margin: 0 0 var(--spacing-4);
-    padding-bottom: var(--spacing-3);
-    border-bottom: 2px solid var(--color-primary-100);
-  }
-
-  .about-skills__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-3);
-  }
-
-  .about-skills__item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-2) 0;
-    border-bottom: 1px solid var(--color-border-light);
-  }
-
-  .about-skills__item:last-child {
-    border-bottom: none;
-  }
-
-  .about-skills__item-name {
-    font-family: var(--font-body);
-    font-size: var(--font-size-base);
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .about-skills__item-years {
-    font-family: var(--font-body);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-tertiary);
-    font-weight: var(--font-weight-normal);
-    white-space: nowrap;
-  }
-
-  /* =================================================================
-   * COMMUNITY SECTION
-   * ================================================================= */
-  .about-community {
-    padding: var(--spacing-20) var(--spacing-4);
-    background-color: var(--color-background);
-  }
-
-  .about-community__container {
-    max-width: var(--container-6xl);
-    margin: 0 auto;
-  }
-
-  .about-community__header {
-    text-align: center;
-    margin-bottom: var(--spacing-12);
-  }
-
-  .about-community__title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-4);
-    line-height: var(--line-height-tight);
-  }
-
-  .about-community__subtitle {
-    font-family: var(--font-body);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-secondary);
-    max-width: 32rem;
-    margin: 0 auto;
-    line-height: var(--line-height-relaxed);
-  }
-
-  .about-community__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-6);
-    margin-bottom: var(--spacing-12);
-  }
-
-  @media (min-width: 768px) {
-    .about-community__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .about-community__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .about-community__card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--spacing-8);
-    background-color: var(--color-background-subtle);
-    border-radius: var(--radius-xl);
-    transition: box-shadow var(--duration-200) var(--ease-in-out);
-  }
-
-  .about-community__card:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .about-community__icon {
-    width: 3rem;
-    height: 3rem;
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-4);
-  }
-
-  .about-community__icon :global(svg) {
-    width: 100%;
-    height: 100%;
-  }
-
-  .about-community__card-title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-2);
-  }
-
-  .about-community__card-text {
-    font-family: var(--font-body);
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-    margin: 0;
-  }
-
-  /* =================================================================
-   * FUN FACTS SECTION
-   * ================================================================= */
-  .about-funfacts {
-    background-color: var(--color-primary-50);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-8);
-  }
-
-  .about-funfacts__title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-6);
-    text-align: center;
-  }
-
-  .about-funfacts__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-4);
-  }
-
-  @media (min-width: 768px) {
-    .about-funfacts__list {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .about-funfacts__item {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-3);
-    font-family: var(--font-body);
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-  }
-
-  .about-funfacts__bullet {
-    flex-shrink: 0;
-    font-size: var(--font-size-lg);
   }
 
   /* =================================================================
@@ -803,12 +537,6 @@ const funFacts = [
     align-items: center;
   }
 
-  @media (min-width: 640px) {
-    .about-cta__buttons {
-      flex-direction: row;
-    }
-  }
-
   /* Override secondary button colors for dark background */
   .about-cta :global(.btn--secondary) {
     color: var(--color-text-inverse);
@@ -837,7 +565,50 @@ const funFacts = [
   }
 
   /* =================================================================
-   * RESPONSIVE ADJUSTMENTS
+   * RESPONSIVE STYLES
+   * ================================================================= */
+  @media (min-width: 640px) {
+    .about-cta__buttons {
+      flex-direction: row;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .about-stats__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .founders-story__heading {
+      font-size: var(--font-size-4xl);
+    }
+
+    .founders-story__pullquote p {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .founders-story__content {
+      grid-template-columns: 400px 1fr;
+      gap: var(--spacing-16);
+      align-items: center;
+    }
+
+    .founders-story__photo-column {
+      position: sticky;
+      top: var(--spacing-8);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .founders-story__content {
+      grid-template-columns: 450px 1fr;
+      gap: var(--spacing-20);
+    }
+  }
+
+  /* =================================================================
+   * MOBILE ADJUSTMENTS
    * ================================================================= */
   @media (max-width: 767px) {
     .about-hero {
@@ -852,12 +623,29 @@ const funFacts = [
       font-size: var(--font-size-base);
     }
 
-    .about-intro {
+    .founders-story {
       padding: var(--spacing-12) var(--spacing-4);
     }
 
-    .about-intro__heading {
-      font-size: var(--font-size-xl);
+    .founders-story__photo-wrapper {
+      max-width: 320px;
+    }
+
+    .founders-story__heading {
+      font-size: var(--font-size-2xl);
+    }
+
+    .founders-story__pullquote {
+      padding: var(--spacing-4) var(--spacing-5);
+      margin: var(--spacing-2) 0;
+    }
+
+    .founders-story__pullquote p {
+      font-size: var(--font-size-base);
+    }
+
+    .founders-story__paragraphs p {
+      font-size: var(--font-size-sm);
     }
 
     .about-stats {
@@ -866,26 +654,6 @@ const funFacts = [
 
     .about-stats__number {
       font-size: var(--font-size-3xl);
-    }
-
-    .about-skills {
-      padding: var(--spacing-12) var(--spacing-4);
-    }
-
-    .about-skills__title {
-      font-size: var(--font-size-2xl);
-    }
-
-    .about-community {
-      padding: var(--spacing-12) var(--spacing-4);
-    }
-
-    .about-community__title {
-      font-size: var(--font-size-2xl);
-    }
-
-    .about-funfacts {
-      padding: var(--spacing-6);
     }
 
     .about-cta {
@@ -898,68 +666,41 @@ const funFacts = [
   }
 
   /* =================================================================
-   * SCROLL-REVEAL ANIMATION ENHANCEMENTS
-   * =================================================================
-   * Additional styles to enhance reveal animations on About page
-   * ================================================================= */
-
-  /* Override decoration positioning for About page headers that use section-heading--decorated */
-  .about-skills__header.section-heading--decorated,
-  .about-community__header.section-heading--decorated {
-    padding-top: var(--spacing-4);
-  }
-
-  /* Ensure the title and subtitle within decorated headers display properly */
-  .about-skills__header.section-heading--decorated .about-skills__title,
-  .about-skills__header.section-heading--decorated .about-skills__subtitle,
-  .about-community__header.section-heading--decorated .about-community__title,
-  .about-community__header.section-heading--decorated .about-community__subtitle {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Add subtle hover lift to skill categories and community cards */
-  .about-skills__category,
-  .about-community__card {
-    transition:
-      box-shadow var(--duration-200) var(--ease-in-out),
-      transform var(--duration-300) var(--ease-out);
-  }
-
-  .about-skills__category:hover,
-  .about-community__card:hover {
-    transform: translateY(-4px);
-  }
-
-  /* Stats counter animation effect */
-  .about-stats__number {
-    display: inline-block;
-  }
-
-  /* Fun facts list stagger container */
-  .about-funfacts__list {
-    position: relative;
-  }
-
-  /* =================================================================
    * REDUCED MOTION
    * ================================================================= */
   @media (prefers-reduced-motion: reduce) {
-    .about-skills__category,
-    .about-community__card {
-      transition: none;
-    }
-
-    .about-skills__category:hover,
-    .about-community__card:hover {
-      transform: none;
-    }
-
-    /* Ensure reveal elements are visible without animation */
     .reveal {
       opacity: 1;
       transform: none;
     }
+  }
+
+  /* =================================================================
+   * DARK MODE SUPPORT
+   * ================================================================= */
+  [data-theme="dark"] .about-hero {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background) 100%
+    );
+  }
+
+  [data-theme="dark"] .founders-story__photo-placeholder {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background-muted) 50%,
+      var(--color-primary-900) 100%
+    );
+  }
+
+  [data-theme="dark"] .founders-story__pullquote {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      transparent 100%
+    );
   }
 
   /* =================================================================
@@ -971,9 +712,22 @@ const funFacts = [
       padding: var(--spacing-8) 0;
     }
 
+    .founders-story {
+      padding: var(--spacing-8) 0;
+    }
+
+    .founders-story__photo-placeholder {
+      box-shadow: none;
+      border: 1px solid var(--color-border);
+    }
+
+    .founders-story__badge {
+      display: none;
+    }
+
     .about-stats {
       background: none;
-      border: 1px solid var(--color-border);
+      border: 2px solid var(--color-primary);
     }
 
     .about-stats__number,
@@ -982,12 +736,13 @@ const funFacts = [
     }
 
     .about-cta {
-      display: none;
+      background: none;
+      border-top: 2px solid var(--color-primary);
     }
 
-    .about-intro__photo {
-      box-shadow: none;
-      border: 1px solid var(--color-border);
+    .about-cta__title,
+    .about-cta__description {
+      color: var(--color-text-primary);
     }
   }
 </style>

@@ -119,3 +119,117 @@ export type {
   WebVitals,
   PerformanceEntry,
 } from './analytics';
+
+export type {
+  MenuType,
+  MenuCategory,
+  DietaryTag,
+  AllergenTag,
+  SpiceLevel,
+  PreparationStyle,
+  MenuTypeOption,
+  MenuCategoryOption,
+  DietaryTagOption,
+  AllergenTagOption,
+  MenuItemImage,
+  MenuItemPrice,
+  MenuItemPriceVariant,
+  MenuItemAddOn,
+  NutritionalInfo,
+  MenuItem,
+  MenuSection,
+  Menu,
+  MenuItemCardProps,
+  MenuSectionProps,
+  MenuCategorySectionLayout,
+  MenuCategorySectionProps,
+  MenuProps,
+  MenuFilterOptions,
+} from './menu';
+
+export {
+  MENU_TYPE_OPTIONS,
+  MENU_CATEGORY_OPTIONS,
+  DIETARY_TAG_OPTIONS,
+  ALLERGEN_TAG_OPTIONS,
+  SPICE_LEVEL_OPTIONS,
+  DEFAULT_CURRENCY,
+  createPrice,
+  formatPrice,
+} from './menu';
+
+export type {
+  DayOfWeek,
+  OperatingStatus,
+  TimeFormat,
+  TimeRange,
+  DailyHours,
+  SpecialHoursType,
+  SpecialHours,
+  BusinessHoursConfig,
+  CurrentStatus,
+  HoursDisplayProps,
+  HoursDisplayState,
+} from './hours';
+export type {
+  TeamMember,
+  SourcingPrinciple,
+  IngredientPartnership,
+  TimelineMilestone,
+  FoundersStory,
+  AboutPageConfig,
+  TeamBiosProps,
+  SourcingPhilosophyProps,
+  PartnershipShowcaseProps,
+  RestaurantTimelineProps,
+} from './about';
+
+export type {
+  CuisineThemeId,
+  CuisineColorPalette,
+  CuisineTheme,
+  CuisineThemeConfig,
+  CuisineThemeAwareProps,
+  CuisineThemeMap,
+} from './cuisine-theme';
+
+export type {
+  FloatingBadgePosition,
+  BadgeVisibility,
+  FloatingHoursBadgeProps,
+  FloatingBadgeState,
+} from './floating-hours-badge';
+
+export type {
+  ParkingType,
+  TransitType,
+  ParkingTip,
+  TransitTip,
+  BikeParkingInfo,
+  AccessibilityFeature,
+  FirstTimeVisitorTip,
+  RideshareInfo,
+  ParkingTransitInfoConfig,
+  ParkingTransitInfoSectionProps,
+  ParkingTransitInfoDisplayConfig,
+} from './parking-transit-info';
+
+export type {
+  PrivateEventType,
+  VenueSpace,
+  EventPackage,
+  SampleMenuItem,
+  SampleMenuCategory,
+  SampleMenu,
+  PrivateEventFAQ,
+  PrivateEventsHero,
+  PrivateEventsConfig,
+  PrivateEventInquiryData,
+  PrivateEventTypeOption,
+  PrivateEventValidationConfig,
+} from './private-events';
+
+export {
+  PRIVATE_EVENT_TYPE_OPTIONS,
+  DEFAULT_PRIVATE_EVENT_VALIDATION_CONFIG,
+} from './private-events';

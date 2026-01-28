@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769454617456-dbbeba72",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-26T19:10:17.456Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "hours-badge-overlay",
+  "featureName": "Hero Hours Badge Overlay Component",
+  "error": "Feature completed in 234s",
+  "passes": true
+}

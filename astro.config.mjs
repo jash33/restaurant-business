@@ -7,10 +7,38 @@ export default defineConfig({
   // IMPORTANT: Set this to your actual production domain
   site: 'https://houston-web-services.com',
 
+  // Image optimization configuration for food photography
+  // Targeting Lighthouse 90+ with aggressive optimization
+  image: {
+    // Use Sharp for highest quality image processing
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        // Limit concurrent image processing for memory efficiency
+        limitInputPixels: 268402689, // ~16384x16384 max
+      },
+    },
+    // Remote image optimization domains
+    domains: [],
+    // Remote patterns for external image sources
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cloudinary.com',
+      },
+    ],
+  },
+
   // Build optimizations
   build: {
     // Inline stylesheets smaller than 4kb
     inlineStylesheets: 'auto',
+    // Generate optimized assets
+    assets: '_astro',
   },
 
   // Vite configuration for bundling optimizations
@@ -75,6 +103,8 @@ export default defineConfig({
 
   // Server configuration
   server: {
+    // Default dev port
+    port: 3004,
     // Enable compression in dev
     headers: {
       // Security headers

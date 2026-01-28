@@ -1,0 +1,12 @@
+{
+  "id": "photo-gallery-component",
+  "category": "UI",
+  "title": "Atmosphere Photo Gallery Grid",
+  "description": "Build responsive photo gallery with masonry or grid layout showcasing restaurant interior, exterior, and food photography. Includes lazy loading, aspect ratio preservation, and alt text support.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.091Z",
+  "updatedAt": "2026-01-26T01:50:42.091Z",
+  "descriptionHistory": []
+}

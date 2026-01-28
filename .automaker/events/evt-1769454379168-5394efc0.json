@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769454379168-5394efc0",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-26T19:06:19.168Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "google-business-integration",
+  "featureName": "Google Business Profile Integration",
+  "error": "Feature completed in 380s - auto-verified",
+  "passes": true
+}

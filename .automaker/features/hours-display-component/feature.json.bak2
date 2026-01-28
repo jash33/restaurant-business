@@ -1,0 +1,12 @@
+{
+  "id": "hours-display-component",
+  "category": "UI",
+  "title": "Restaurant Hours Display with Current Day Highlight",
+  "description": "Build hours display component that highlights current day, shows open/closed status, and handles special hours (holidays, events). Includes client-side JavaScript for real-time status updates.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.085Z",
+  "updatedAt": "2026-01-26T01:50:42.085Z",
+  "descriptionHistory": []
+}

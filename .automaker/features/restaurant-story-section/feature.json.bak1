@@ -1,0 +1,12 @@
+{
+  "id": "restaurant-story-section",
+  "category": "UI",
+  "title": "Restaurant Story Introduction Section",
+  "description": "Build homepage section with restaurant origin story snippet, owner/chef photo, and 'Read More' CTA to full About page. Includes pull quote styling and warm, personal narrative tone.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.096Z",
+  "updatedAt": "2026-01-26T09:27:38.704Z",
+  "descriptionHistory": []
+}

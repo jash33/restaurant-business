@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769528427230-305e55d7",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-27T15:40:27.230Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "texture-overlays",
+  "featureName": "Paper and Linen Texture Overlays",
+  "error": "Feature completed in 427s - auto-verified",
+  "passes": true
+}

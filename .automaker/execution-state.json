@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "autoLoopWasRunning": false,
+  "maxConcurrency": 1,
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "branchName": null,
+  "runningFeatureIds": [
+    "events-calendar-page",
+    "texture-overlays"
+  ],
+  "savedAt": "2026-01-27T15:33:20.246Z"
+}

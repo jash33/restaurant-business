@@ -1,0 +1,12 @@
+{
+  "id": "restaurant-color-palette",
+  "category": "Design System",
+  "title": "Restaurant Warm Color Palette",
+  "description": "Implement warm restaurant-specific color system with deep burgundy (#722f37), espresso brown (#3c2415), charcoal (#2d3748), cream (#fffbeb), and soft terracotta (#c4a77d). Includes cuisine-specific accent colors and dark mode variations with warm tones.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.075Z",
+  "updatedAt": "2026-01-26T01:50:42.075Z",
+  "descriptionHistory": []
+}

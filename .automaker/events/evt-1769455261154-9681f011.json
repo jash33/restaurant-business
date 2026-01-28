@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769455261154-9681f011",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-26T19:21:01.154Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "menu-schema-markup",
+  "featureName": "Menu Schema Markup Integration",
+  "error": "Feature completed in 257s",
+  "passes": true
+}

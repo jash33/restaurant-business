@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769463985807-e87ac11d",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-26T21:46:25.807Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "menu-pdf-generation",
+  "featureName": "Downloadable Menu PDF",
+  "error": "Operation was cancelled",
+  "errorType": "cancellation"
+}

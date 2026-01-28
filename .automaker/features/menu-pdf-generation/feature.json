@@ -1,0 +1,12 @@
+{
+  "id": "menu-pdf-generation",
+  "category": "Feature",
+  "title": "Downloadable Menu PDF",
+  "description": "Generate printer-friendly PDF version of menu using print stylesheet or PDF generation service. Includes restaurant branding, proper formatting, and auto-update when menu changes.",
+  "status": "verified",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.132Z",
+  "updatedAt": "2026-01-27T01:12:55.861Z",
+  "descriptionHistory": []
+}

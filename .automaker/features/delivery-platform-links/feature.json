@@ -1,0 +1,12 @@
+{
+  "id": "delivery-platform-links",
+  "category": "Integration",
+  "title": "Food Delivery Platform Integration",
+  "description": "Create section with buttons linking to DoorDash, UberEats, Toast, Grubhub with brand-compliant styling. Includes order tracking and supports affiliate/partnership links if applicable.",
+  "status": "verified",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.117Z",
+  "updatedAt": "2026-01-26T14:24:40.978Z",
+  "descriptionHistory": []
+}

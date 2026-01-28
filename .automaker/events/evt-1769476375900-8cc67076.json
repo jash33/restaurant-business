@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769476375900-8cc67076",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-27T01:12:55.900Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "menu-pdf-generation",
+  "featureName": "Downloadable Menu PDF",
+  "error": "Feature completed in 246s - auto-verified",
+  "passes": true
+}

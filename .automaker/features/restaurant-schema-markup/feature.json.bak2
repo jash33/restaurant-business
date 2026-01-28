@@ -1,0 +1,12 @@
+{
+  "id": "restaurant-schema-markup",
+  "category": "SEO",
+  "title": "Restaurant JSON-LD Structured Data",
+  "description": "Implement combined Restaurant + LocalBusiness JSON-LD schema with cuisine type, price range, hours, address, phone, menu URL, accepted reservations, and aggregate rating. Enhances local search visibility.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.103Z",
+  "updatedAt": "2026-01-26T01:50:42.103Z",
+  "descriptionHistory": []
+}

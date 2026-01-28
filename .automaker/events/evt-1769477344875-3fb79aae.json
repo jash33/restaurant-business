@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769477344875-3fb79aae",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-27T01:29:04.875Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "reservation-integration",
+  "featureName": "Reservation Platform Links",
+  "error": "Feature completed in 418s",
+  "passes": true
+}

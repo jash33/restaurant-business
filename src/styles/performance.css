@@ -57,23 +57,36 @@
   .aspect-3-2 { aspect-ratio: 3 / 2; }
 }
 
-/* Font loading optimization - prevent FOIT */
+/* =================================================================
+ * FONT LOADING OPTIMIZATION
+ * =================================================================
+ * Prevent FOIT (Flash of Invisible Text) by using serif system fallbacks
+ * that visually match the target Google Fonts (Playfair Display, DM Serif
+ * Display, Lora) for minimal layout shift when fonts load.
+ */
+
+/* Body text fallback - serif stack matching Lora's characteristics */
 .fonts-loading body {
-  /* Use system fonts while custom fonts load */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Georgia', 'Cambria', 'Times New Roman', 'Palatino Linotype', serif;
+  /* Adjust metrics to minimize CLS during font swap */
+  letter-spacing: -0.01em;
 }
 
 .fonts-loaded body {
   font-family: var(--font-body);
+  letter-spacing: normal;
 }
 
+/* Heading fallback - serif stack matching Playfair/DM Serif Display */
 .fonts-loading h1,
 .fonts-loading h2,
 .fonts-loading h3,
 .fonts-loading h4,
 .fonts-loading h5,
 .fonts-loading h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Georgia', 'Times New Roman', 'Palatino Linotype', 'Book Antiqua', serif;
+  /* Match visual weight while fonts load */
+  letter-spacing: -0.02em;
 }
 
 .fonts-loaded h1,
@@ -83,6 +96,44 @@
 .fonts-loaded h5,
 .fonts-loaded h6 {
   font-family: var(--font-heading);
+  letter-spacing: normal;
+}
+
+/* Display text fallback (hero headlines, restaurant name) */
+.fonts-loading .font-display,
+.fonts-loading [data-font="display"] {
+  font-family: 'Georgia', 'Times New Roman', 'Palatino Linotype', serif;
+  letter-spacing: -0.02em;
+}
+
+.fonts-loaded .font-display,
+.fonts-loaded [data-font="display"] {
+  font-family: var(--font-display);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Menu item text fallback */
+.fonts-loading .font-menu-item,
+.fonts-loading [data-font="menu-item"] {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.fonts-loaded .font-menu-item,
+.fonts-loaded [data-font="menu-item"] {
+  font-family: var(--font-menu-item);
+}
+
+/* Accent text fallback (quotes, chef's notes) */
+.fonts-loading .font-accent,
+.fonts-loading [data-font="accent"] {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+}
+
+.fonts-loaded .font-accent,
+.fonts-loaded [data-font="accent"] {
+  font-family: var(--font-accent);
+  font-style: italic;
 }
 
 /* =================================================================

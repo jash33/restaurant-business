@@ -1,0 +1,12 @@
+{
+  "id": "full-menu-page",
+  "category": "Core",
+  "title": "Complete Menu Page with All Categories",
+  "description": "Assemble full menu page using category sections with navigation jump links, PDF download button, and print stylesheet. Ensures readability without images and proper hierarchy for screen readers.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.082Z",
+  "updatedAt": "2026-01-26T09:09:10.782Z",
+  "descriptionHistory": []
+}

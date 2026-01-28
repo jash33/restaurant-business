@@ -1,0 +1,12 @@
+{
+  "id": "menu-data-structure",
+  "category": "Data",
+  "title": "Menu Data Schema and JSON Structure",
+  "description": "Create TypeScript interfaces and JSON schema for menu data including categories, items, prices, descriptions, dietary tags, and optional photo references. Supports multiple menu types (lunch, dinner, brunch).",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-26T01:50:42.078Z",
+  "updatedAt": "2026-01-26T01:50:42.078Z"
+}

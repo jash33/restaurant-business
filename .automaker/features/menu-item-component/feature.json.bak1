@@ -1,0 +1,12 @@
+{
+  "id": "menu-item-component",
+  "category": "UI",
+  "title": "Menu Item Display Component",
+  "description": "Build reusable menu item component with name, price, description, dietary indicator icons (GF, V, VG, DF), optional photo thumbnail, and proper semantic markup. Includes print-friendly styling.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-26T01:50:42.079Z",
+  "updatedAt": "2026-01-26T06:13:07.446Z",
+  "descriptionHistory": []
+}

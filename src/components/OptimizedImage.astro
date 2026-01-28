@@ -5,7 +5,7 @@
  * A performance-optimized image component that supports:
  * - Lazy loading (native or intersection observer)
  * - Responsive images with srcset
- * - WebP format with fallback
+ * - AVIF and WebP format with fallback
  * - Proper width/height to prevent CLS
  * - Loading placeholder/blur-up effect
  *
@@ -61,6 +61,8 @@ interface Props {
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   /** Object position */
   objectPosition?: string;
+  /** Enable AVIF format (modern browsers, best compression) */
+  avif?: boolean;
 }
 
 const {
@@ -78,6 +80,7 @@ const {
   srcset,
   objectFit,
   objectPosition,
+  avif = true,
 } = Astro.props;
 
 // Generate responsive widths for srcset
@@ -89,6 +92,14 @@ function getWebPSrc(imageSrc: string): string {
   const lastDot = imageSrc.lastIndexOf('.');
   if (lastDot === -1) return imageSrc;
   return imageSrc.substring(0, lastDot) + '.webp';
+}
+
+// Function to get AVIF version of an image
+function getAvifSrc(imageSrc: string): string {
+  if (imageSrc.endsWith('.svg')) return imageSrc;
+  const lastDot = imageSrc.lastIndexOf('.');
+  if (lastDot === -1) return imageSrc;
+  return imageSrc.substring(0, lastDot) + '.avif';
 }
 
 // Function to generate srcset string
@@ -111,7 +122,7 @@ const computedSizes = sizes || (responsive
   ? '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
   : undefined);
 
-// Check if image is SVG (no WebP conversion needed)
+// Check if image is SVG (no format conversion needed)
 const isSVG = src.endsWith('.svg');
 
 // Compute style object
@@ -122,6 +133,11 @@ const imageStyle = [
 
 // Compute aspect ratio for placeholder
 const aspectRatio = width / height;
+
+// Generate AVIF srcset
+const avifSrcSet = avif && !isSVG && computedSrcSet
+  ? computedSrcSet.replace(/\.(jpg|jpeg|png|gif)/gi, '.avif')
+  : undefined;
 ---
 
 <div
@@ -130,7 +146,15 @@ const aspectRatio = width / height;
 >
   {!isSVG ? (
     <picture>
-      {/* WebP source for modern browsers */}
+      {/* AVIF source for modern browsers - best compression */}
+      {avif && (
+        <source
+          type="image/avif"
+          srcset={avifSrcSet || getAvifSrc(src)}
+          sizes={computedSizes}
+        />
+      )}
+      {/* WebP source for wide browser support */}
       <source
         type="image/webp"
         srcset={computedSrcSet ? computedSrcSet.replace(/\.(jpg|jpeg|png|gif)/gi, '.webp') : getWebPSrc(src)}

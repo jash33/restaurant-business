@@ -24,8 +24,10 @@ import Footer from '../components/Footer.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 import PerformanceMonitor from '../components/PerformanceMonitor.astro';
+import SpecialEventsBanner from '../components/SpecialEventsBanner.astro';
 import type { SEOProps } from '../types/seo';
 import { seoConfig } from '../config/seo.config';
+import { CUISINE_THEME_CONFIG } from '../config/cuisine-theme.config';
 
 // Extend SEOProps but make title and description optional with defaults
 interface Props extends Partial<SEOProps> {
@@ -47,10 +49,13 @@ const {
   disableAnalytics = false,
   ...seoProps
 } = Astro.props;
+
+// Get the active cuisine theme for data attribute
+const cuisineTheme = CUISINE_THEME_CONFIG.activeTheme;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-cuisine-theme={cuisineTheme}>
 	<head>
 		<!-- Charset must be within first 1024 bytes -->
 		<meta charset="UTF-8" />
@@ -65,6 +70,58 @@ const {
 
 				if (stored === 'dark' || (!stored && prefersDark)) {
 					document.documentElement.setAttribute('data-theme', 'dark');
+				}
+			})();
+		</script>
+
+		<!-- Font Loading Optimization - Prevents FOIT (Flash of Invisible Text) -->
+		<script is:inline>
+			(function() {
+				// Add fonts-loading class immediately to show fallback fonts
+				document.documentElement.classList.add('fonts-loading');
+
+				// Define the fonts we're loading
+				const fontFamilies = [
+					{ family: 'Playfair Display', weight: '400' },
+					{ family: 'Playfair Display', weight: '600' },
+					{ family: 'Playfair Display', weight: '700' },
+					{ family: 'DM Serif Display', weight: '400' },
+					{ family: 'Lora', weight: '400' },
+					{ family: 'Lora', weight: '500' },
+					{ family: 'Lora', weight: '600' }
+				];
+
+				// Use Font Loading API if available
+				if ('fonts' in document) {
+					// Create promises for each font
+					const fontPromises = fontFamilies.map(function(font) {
+						return document.fonts.load(font.weight + ' 1em "' + font.family + '"');
+					});
+
+					// Wait for all fonts to load (with timeout)
+					Promise.race([
+						Promise.all(fontPromises),
+						new Promise(function(resolve) { setTimeout(resolve, 3000); }) // 3s timeout
+					]).then(function() {
+						document.documentElement.classList.remove('fonts-loading');
+						document.documentElement.classList.add('fonts-loaded');
+					}).catch(function() {
+						// On error, still switch to loaded state (fonts may partially load)
+						document.documentElement.classList.remove('fonts-loading');
+						document.documentElement.classList.add('fonts-loaded');
+					});
+				} else {
+					// Fallback for browsers without Font Loading API
+					// Wait for window load event
+					if (document.readyState === 'complete') {
+						document.documentElement.classList.remove('fonts-loading');
+						document.documentElement.classList.add('fonts-loaded');
+					} else {
+						window.addEventListener('load', function() {
+							document.documentElement.classList.remove('fonts-loading');
+							document.documentElement.classList.add('fonts-loaded');
+						});
+					}
 				}
 			})();
 		</script>
@@ -92,6 +149,8 @@ const {
 	</head>
 	<body class={bodyClass}>
 		<a href="#main-content" class="skip-link">Skip to main content</a>
+		<!-- Special Events Banner (holiday hours, announcements, etc.) -->
+		<SpecialEventsBanner position="top" />
 		<Header currentPath={Astro.url.pathname} />
 		<div id="main-content">
 			<slot />

@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769527602147-2406d52e",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-27T15:26:42.147Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "yelp-integration",
+  "featureName": "Yelp Business Page Integration",
+  "error": "Feature completed in 516s - auto-verified",
+  "passes": true
+}

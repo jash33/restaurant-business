@@ -1,0 +1,12 @@
+{
+  "id": "cuisine-accent-colors",
+  "category": "Design System",
+  "title": "Cuisine-Specific Accent Color Variants",
+  "description": "Define accent color palettes for different cuisine types (Mexican: warm orange/red, BBQ: smoky red/brown, Asian: jade green, Italian: tomato red, Bakery: pastel pink). Configurable in site settings.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-26T01:50:42.108Z",
+  "updatedAt": "2026-01-26T01:50:42.108Z",
+  "descriptionHistory": []
+}

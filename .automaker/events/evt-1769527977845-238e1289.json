@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769527977845-238e1289",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-27T15:32:57.845Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "decorative-cuisine-elements",
+  "featureName": "Cuisine-Specific Decorative Elements",
+  "error": "Operation was cancelled",
+  "errorType": "cancellation"
+}
