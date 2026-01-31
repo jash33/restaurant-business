@@ -2,6 +2,12 @@
   "version": 1,
   "events": [
     {
+      "id": "evt-1769877178818-6fbbede6",
+      "trigger": "feature_created",
+      "timestamp": "2026-01-31T16:32:58.818Z",
+      "featureId": "feature-1769877178799-n3zs8jhmf"
+    },
+    {
       "id": "evt-1769572769009-f1717b80",
       "trigger": "feature_success",
       "timestamp": "2026-01-28T03:59:29.009Z",
@@ -6988,13 +6994,6 @@
       "id": "evt-1769448597703-5e04cd27",
       "trigger": "feature_error",
       "timestamp": "2026-01-26T17:29:57.703Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448590725-760d1f5f",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:29:50.725Z",
       "featureName": "Google Business Profile Integration",
       "featureId": "google-business-integration"
     }

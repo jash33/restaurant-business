@@ -1,0 +1,28 @@
+{
+  "category": "Uncategorized",
+  "description": "This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design buisness. This doesn't match the purpose of this repo - to serve as a starter template for me to build sits for small buisnesses - service/retail/restaurant.\n\nPlease identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.",
+  "title": "Remove outdated web design business content from starter template",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "full",
+  "requirePlanApproval": true,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "backlog",
+  "id": "feature-1769877178799-n3zs8jhmf",
+  "descriptionHistory": [
+    {
+      "description": "This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design buisness. This doesn't match the purpose of this repo - to serve as a starter template for me to build sits for small buisnesses - service/retail/restaurant.\n\nPlease identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.",
+      "timestamp": "2026-01-31T16:32:58.815Z",
+      "source": "initial"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "category": "Uncategorized",
+  "description": "This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design business. This doesn't match the purpose of this repo - to serve as a starter template for me to build sites for small restaurant businesses.\n\nPlease identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.\n\nI attatched a screenshot of the home page as an example - we wouldn't want that mini-website-mockup element for a restaurant site. we also wouldn't want the text \"Fast-loading, search-friendly websites that turn visitors into customers.\" - this is supposed to be an example/starter site for a resturant.",
+  "title": "",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1769877264027-9w9dov32c",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769877178799-n3zs8jhmf\\images\\pasted-image-2026-01-31T16-34-24-003Z-1769877264024.png",
+      "filename": "pasted-image-2026-01-31T16-34-24-003Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "full",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "custom",
+  "titleGenerating": false,
+  "status": "backlog",
+  "id": "feature-1769877178799-n3zs8jhmf",
+  "descriptionHistory": [
+    {
+      "description": "This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design buisness. This doesn't match the purpose of this repo - to serve as a starter template for me to build sits for small buisnesses - service/retail/restaurant.\n\nPlease identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.",
+      "timestamp": "2026-01-31T16:32:58.815Z",
+      "source": "initial"
+    },
+    {
+      "description": "This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design business. This doesn't match the purpose of this repo - to serve as a starter template for me to build sites for small restaurant businesses.\n\nPlease identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.\n\nI attatched a screenshot of the home page as an example - we wouldn't want that mini-website-mockup element for a restaurant site. we also wouldn't want the text \"Fast-loading, search-friendly websites that turn visitors into customers.\" - this is supposed to be an example/starter site for a resturant.",
+      "timestamp": "2026-01-31T16:35:31.190Z",
+      "source": "edit"
+    }
+  ]
+}
