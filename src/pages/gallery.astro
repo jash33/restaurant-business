@@ -133,10 +133,10 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
   .gallery-hero {
     background: linear-gradient(
       135deg,
-      var(--color-primary, #722f37) 0%,
-      var(--color-primary-dark, #4d1f25) 100%
+      var(--color-primary-50) 0%,
+      var(--color-background) 100%
     );
-    color: var(--color-text-inverse, #fffbeb);
+    color: var(--color-text-primary);
     padding: 5rem 0 4rem;
     text-align: center;
   }
@@ -146,11 +146,12 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
     margin-bottom: 1rem;
     font-weight: 700;
     line-height: 1.1;
+    color: var(--color-text-primary);
   }
 
   .hero-subtitle {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    opacity: 0.9;
+    color: var(--color-text-secondary);
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
@@ -160,7 +161,7 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
   .mobile-gallery-section {
     display: none;
     padding: 3rem 0;
-    background: var(--color-background, #fffbeb);
+    background: var(--color-background);
   }
 
   .section-heading {
@@ -168,13 +169,13 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
     font-weight: 700;
     text-align: center;
     margin-bottom: 0.5rem;
-    color: var(--color-text-primary, #2d3748);
+    color: var(--color-text-primary);
   }
 
   .section-subheading {
     font-size: 1rem;
     text-align: center;
-    color: var(--color-text-secondary, #4a5568);
+    color: var(--color-text-secondary);
     margin-bottom: 1.5rem;
   }
 
@@ -192,13 +193,13 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
   /* Gallery Section */
   .gallery-section {
     padding: 4rem 0;
-    background: var(--color-background, #fffbeb);
+    background: var(--color-background);
   }
 
   /* Info Section */
   .gallery-info {
     padding: 4rem 0;
-    background: var(--color-background-subtle, #fef7e0);
+    background: var(--color-background-subtle);
   }
 
   .info-grid {
@@ -208,17 +209,17 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
   }
 
   .info-card {
-    background: var(--color-background-elevated, #ffffff);
+    background: var(--color-background-elevated);
     border-radius: 16px;
     padding: 2rem;
     text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .info-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
   }
 
   .info-icon {
@@ -227,20 +228,20 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
     justify-content: center;
     width: 64px;
     height: 64px;
-    background: var(--color-primary-50, #fdf2f3);
+    background: var(--color-primary-50);
     border-radius: 50%;
-    color: var(--color-primary, #722f37);
+    color: var(--color-primary);
     margin-bottom: 1rem;
   }
 
   .info-card h3 {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: var(--color-text-primary, #2d3748);
+    color: var(--color-text-primary);
   }
 
   .info-card p {
-    color: var(--color-text-secondary, #4a5568);
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0;
@@ -250,23 +251,20 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
   .cta-section {
     padding: 5rem 0;
     text-align: center;
-    background: linear-gradient(
-      135deg,
-      var(--color-primary, #722f37) 0%,
-      var(--color-primary-dark, #4d1f25) 100%
-    );
-    color: var(--color-text-inverse, #fffbeb);
+    background: var(--gradient-primary);
+    color: var(--color-text-inverse);
   }
 
   .cta-section h2 {
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     margin-bottom: 0.75rem;
     font-weight: 700;
+    color: #ffffff;
   }
 
   .cta-section p {
     font-size: 1.125rem;
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 2rem;
   }
 
@@ -275,8 +273,8 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
     padding: 1rem 2.5rem;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--color-primary, #722f37);
-    background: var(--color-background-elevated, #ffffff);
+    color: var(--color-primary-700);
+    background: #ffffff;
     border-radius: 9999px;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -323,55 +321,107 @@ const featuredImages = GALLERY_CATEGORIES.map(category => {
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
-    .mobile-gallery-section {
-      background: var(--color-background-inverse, #2d3748);
+    .gallery-hero {
+      background: linear-gradient(
+        135deg,
+        var(--color-primary-900) 0%,
+        var(--color-background) 100%
+      );
+      color: var(--color-text-primary);
+    }
+
+    .gallery-hero h1 {
+      color: var(--color-text-primary);
+    }
+
+    .hero-subtitle {
+      color: var(--color-text-secondary);
+    }
+
+    .mobile-gallery-section,
+    .gallery-section {
+      background: var(--color-background);
     }
 
     .section-heading {
-      color: var(--color-text-inverse, #fffbeb);
+      color: var(--color-text-primary);
     }
 
     .section-subheading {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .gallery-section {
-      background: var(--color-background-inverse, #2d3748);
+      color: var(--color-text-secondary);
     }
 
     .gallery-info {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--color-background-subtle);
     }
 
     .info-card {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--color-text-inverse, #fffbeb);
+      background: var(--color-background-elevated);
     }
 
     .info-card h3 {
-      color: var(--color-text-inverse, #fffbeb);
+      color: var(--color-text-primary);
     }
 
     .info-card p {
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--color-text-secondary);
     }
 
     .info-icon {
       background: rgba(255, 255, 255, 0.1);
-      color: var(--color-primary-light, #f4a9b1);
+      color: var(--color-primary-light);
     }
   }
 
   /* Support for explicit dark theme */
-  html[data-theme="dark"] .mobile-gallery-section {
-    background: var(--color-background-inverse, #2d3748);
+  html[data-theme="dark"] .gallery-hero {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-900) 0%,
+      var(--color-background) 100%
+    );
+    color: var(--color-text-primary);
+  }
+
+  html[data-theme="dark"] .gallery-hero h1 {
+    color: var(--color-text-primary);
+  }
+
+  html[data-theme="dark"] .hero-subtitle {
+    color: var(--color-text-secondary);
+  }
+
+  html[data-theme="dark"] .mobile-gallery-section,
+  html[data-theme="dark"] .gallery-section {
+    background: var(--color-background);
   }
 
   html[data-theme="dark"] .section-heading {
-    color: var(--color-text-inverse, #fffbeb);
+    color: var(--color-text-primary);
   }
 
   html[data-theme="dark"] .section-subheading {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--color-text-secondary);
+  }
+
+  html[data-theme="dark"] .gallery-info {
+    background: var(--color-background-subtle);
+  }
+
+  html[data-theme="dark"] .info-card {
+    background: var(--color-background-elevated);
+  }
+
+  html[data-theme="dark"] .info-card h3 {
+    color: var(--color-text-primary);
+  }
+
+  html[data-theme="dark"] .info-card p {
+    color: var(--color-text-secondary);
+  }
+
+  html[data-theme="dark"] .info-icon {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-primary-light);
   }
 </style>

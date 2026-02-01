@@ -1,0 +1,38 @@
+{
+  "category": "Uncategorized",
+  "description": "The text on the gallery page is kind of unreadable, and the page's background colors don't match the other pages\n\n",
+  "title": "Fix gallery page text readability and background colors",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1769971681929-llqb7zc79",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769971714221-vno4t3kdu\\images\\pasted-image-2026-02-01T18-48-01-913Z-1769971681926.png",
+      "filename": "pasted-image-2026-02-01T18-48-01-913Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "lite",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "verified",
+  "id": "feature-1769971714221-vno4t3kdu",
+  "descriptionHistory": [
+    {
+      "description": "The text on the gallery page is kind of unreadable, and the page's background colors don't match the other pages\n\n",
+      "timestamp": "2026-02-01T18:48:34.235Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T18:48:34.253Z",
+  "updatedAt": "2026-02-01T18:52:38.550Z",
+  "justFinishedAt": "2026-02-01T18:52:38.550Z"
+}

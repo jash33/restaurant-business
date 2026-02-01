@@ -1,0 +1,107 @@
+{
+  "category": "Uncategorized",
+  "description": "Let's delete the private events route and all the pages/components that are exclusively used by that route. (don't delete stuff that's used elswhere)",
+  "title": "Remove private events route and unused components",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "full",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "verified",
+  "id": "feature-1769971615985-c3qcpx355",
+  "descriptionHistory": [
+    {
+      "description": "Let's delete the private events route and all the pages/components that are exclusively used by that route. (don't delete stuff that's used elswhere)",
+      "timestamp": "2026-02-01T18:46:55.998Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T18:47:04.091Z",
+  "updatedAt": "2026-02-01T18:59:11.925Z",
+  "planSpec": {
+    "status": "approved",
+    "version": 1,
+    "reviewedByUser": false,
+    "content": "I'll start by silently exploring the codebase to understand the routing structure and identify what needs to be removed.\n\n🔧 Tool: Task\nInput: {\n  \"description\": \"Explore private events route\",\n  \"prompt\": \"I need to find and map out everything related to a \\\"private events\\\" route in this codebase. Please:\\n\\n1. Search for any route definitions mentioning \\\"private-events\\\" or \\\"privateEvents\\\" or \\\"private_events\\\"\\n2. Find all pages/components in directories related to private events\\n3. Identify which components are exclusively used by the private events route vs shared with other routes\\n4. Look at the router configuration to understand how routes are structured\\n\\nBe very thorough - check routing files, page directories, component directories, navigation menus, sidebar links, etc. Give me:\\n- The exact route definition(s)\\n- All page components for this route\\n- All child/sub components used exclusively by those pages\\n- Any imports of private-events components from other parts of the app\\n- Navigation/menu entries that link to private events\\n\\nSearch broadly using multiple patterns and naming conventions.\",\n  \"subagent_type\": \"Explore\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\" -type f -name \\\"*.ts\\\" -o -name \\\"*.tsx\\\" -o -name \\\"*.js\\\" -o -name \\\"*.jsx\\\" -o -name \\\"*.astro\\\" -o -name \\\"*.json\\\" | head -100\",\n  \"description\": \"List file types in codebase\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"private-events|privateEvents|private_events|\\\"private events\\\"\",\n  \"glob\": \"**/*.{ts,tsx,js,jsx,astro,json}\",\n  \"output_mode\": \"files_with_matches\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/private*\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/*events*\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"src/pages/**/*\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\private-events.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\private-events.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\private-events.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\PrivateEventInquiryForm.astro\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"private.event|private-event\",\n  \"glob\": \"**/*.{ts,tsx,js,jsx,astro,json,md}\",\n  \"output_mode\": \"files_with_matches\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"PrivateEventInquiryForm|privateEvents|PRIVATE_EVENT\",\n  \"glob\": \"**/*.{ts,tsx,js,jsx,astro}\",\n  \"output_mode\": \"files_with_matches\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\special-events-banner.config.ts\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\" -name \\\"*router*\\\" -o -name \\\"*route*\\\" 2>/dev/null\",\n  \"description\": \"Search for router or route configuration files\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\astro.config.mjs\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\",\n  \"limit\": 100\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\index.ts\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"grep -r \\\"private.*event\\\" \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\" --include=\\\"*.astro\\\" --include=\\\"*.ts\\\" --include=\\\"*.tsx\\\" -i 2>/dev/null | head -50\",\n  \"description\": \"Search for private events references in source files\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"src/types/special-events-banner.ts\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\" -type f \\\\( -name \\\"*.css\\\" -o -name \\\"*.scss\\\" \\\\) 2>/dev/null | grep -i \\\"event\\\\|private\\\" | head -20\",\n  \"description\": \"Find CSS files related to private events\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\layouts\\\" 2>/dev/null\",\n  \"description\": \"List layout files\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\special-events-banner.ts\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\" -type f -name \\\"*PrivateEvent*\\\" -o -name \\\"*private*\\\" 2>/dev/null\",\n  \"description\": \"Find private event components\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\",\n  \"offset\": 60,\n  \"limit\": 80\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"grep -n \\\"private\\\" \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\\\" -i\",\n  \"description\": \"Find private events mentions in index page\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\private-events.astro\\\" 2>/dev/null && echo \\\"Route page exists\\\"\",\n  \"description\": \"Verify private events page exists\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"grep -n \\\"href.*private-events\\\\|'/private-events'\\\" \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\\\"\",\n  \"description\": \"Find navigation links to private events\"\n}\nNow let me verify a few key details about the types index re-export and the PricingCard usage:\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"PricingCard\",\n  \"output_mode\": \"files_with_matches\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"private-events\",\n  \"path\": \"src/types/index.ts\",\n  \"output_mode\": \"content\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"private.event|privateEvent|PrivateEvent\",\n  \"output_mode\": \"files_with_matches\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"/private-events\",\n  \"output_mode\": \"content\",\n  \"-n\": true\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\index.ts\",\n  \"offset\": 220,\n  \"limit\": 25\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"from.*private-events|from.*faq\",\n  \"path\": \"src/types/faq.ts\",\n  \"output_mode\": \"content\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\",\n  \"offset\": 60,\n  \"limit\": 25\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\",\n  \"offset\": 28,\n  \"limit\": 15\n}\nNow let me check the faq.ts to see if it references private events types, and check what else is in the types/index.ts:\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"PrivateEvent|private.event\",\n  \"path\": \"src/types/faq.ts\",\n  \"output_mode\": \"content\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\index.ts\",\n  \"offset\": 210,\n  \"limit\": 30\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"special-events-banner\",\n  \"path\": \"src/config/special-events-banner.config.ts\",\n  \"output_mode\": \"content\",\n  \"-n\": true,\n  \"-C\": 3\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\special-events-banner.config.ts\",\n  \"offset\": 85,\n  \"limit\": 20\n}\nNow let me check the faq.ts reference more closely and see what the line around 124 says:\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\faq.ts\",\n  \"offset\": 80,\n  \"limit\": 50\n}\nGood — the `faq.ts` just has a FAQ entry that mentions private events as general content, it doesn't import any private events types. Now I have everything I need for the specification.\n\n---\n\n# Specification: Delete Private Events Route & Exclusive Dependencies\n\n## 1. Problem Statement\n\nThe private events route (`/private-events`) and its supporting pages, components, config, and type definitions need to be removed from the codebase. References to the route in shared files (navigation, homepage, banner config) must be cleaned up without deleting those shared files.\n\n## 2. User Story\n\nAs a **developer**, I want **to remove the private events route and all files exclusively used by it**, so that **the codebase no longer contains unused pages/components and the site navigation is clean**.\n\n## 3. Acceptance Criteria\n\n- **Happy Path**: GIVEN the codebase has the `/private-events` route, WHEN all exclusive files are deleted and references removed, THEN the site builds successfully with no broken imports or dead links.\n- **Edge Case — Shared files**: GIVEN `PricingCard.astro`, `Button.astro`, `Layout.astro`, and `faq.ts` reference private events concepts, WHEN the route is deleted, THEN these shared files are NOT deleted (they are used elsewhere).\n- **Edge Case — Type re-exports**: GIVEN `src/types/index.ts` re-exports private event types, WHEN the type file is deleted, THEN the re-exports are also removed from `index.ts`.\n- **Edge Case — Navigation link**: GIVEN `Header.astro` has a nav link to `/private-events`, WHEN the route is deleted, THEN the nav link entry is removed.\n- **Edge Case — Homepage service card**: GIVEN `index.astro` has a \"Private Dining\" service card linking to `/private-events`, WHEN the route is deleted, THEN that service card entry is removed.\n- **Edge Case — Banner config**: GIVEN `special-events-banner.config.ts` has a \"Live Jazz\" entry linking to `/private-events`, WHEN the route is deleted, THEN that banner entry is updated (link changed or entry removed).\n- **Error Handling**: GIVEN all changes are made, WHEN `astro build` is run, THEN it completes with zero errors.\n\n## 4. Technical Context\n\n| Aspect | Value |\n|--------|-------|\n| Affected Files (DELETE) | `src/pages/private-events.astro`, `src/components/PrivateEventInquiryForm.astro`, `src/config/private-events.config.ts`, `src/types/private-events.ts` |\n| Affected Files (EDIT) | `src/types/index.ts`, `src/components/Header.astro`, `src/pages/index.astro`, `src/config/special-events-banner.config.ts` |\n| Dependencies | None (Astro file-based routing) |\n| Constraints | Must not delete shared components (`PricingCard`, `Button`, `Layout`); must not break build |\n| Patterns to Follow | Astro file-based routing; type barrel exports in `types/index.ts` |\n\n## 5. Non-Goals\n\n- Deleting shared components (`PricingCard.astro`, `Button.astro`, `Layout.astro`) — used elsewhere\n- Deleting `faq.ts` — it has a generic FAQ entry about private events but is independent content, not a type dependency\n- Modifying any `.automaker/` feature files\n- Adding redirects from `/private-events` to another page\n\n## 6. Implementation Tasks\n\n```tasks\n## Phase 1: Delete Exclusive Files\n- [ ] T001: Delete the private events page | File: src/pages/private-events.astro\n- [ ] T002: Delete the private event inquiry form component | File: src/components/PrivateEventInquiryForm.astro\n- [ ] T003: Delete the private events config | File: src/config/private-events.config.ts\n- [ ] T004: Delete the private events type definitions | File: src/types/private-events.ts\n\n## Phase 2: Clean Up References in Shared Files\n- [ ] T005: Remove private event type/const re-exports from types barrel | File: src/types/index.ts\n- [ ] T006: Remove Private Events nav link from header | File: src/components/Header.astro\n- [ ] T007: Remove Private Dining service card from homepage | File: src/pages/index.astro\n- [ ] T008: Update banner config entry that links to /private-events | File: src/config/special-events-banner.config.ts\n\n## Phase 3: Verification\n- [ ] T009: Run astro build to verify no broken imports or errors | File: N/A\n```\n\n## 7. Success Metrics\n\n- All 4 exclusive files are deleted\n- All references to `/private-events` removed from shared files\n- `astro build` completes with zero errors\n- No remaining imports of deleted files anywhere in `src/`\n\n## 8. Risks & Mitigations\n\n| Risk | Mitigation |\n|------|------------|\n| Accidentally deleting a shared component | Verified via grep that `PricingCard`, `Button`, `Layout` are used on other pages |\n| Missing a reference to the deleted files | Run full build + grep scan after deletion to catch any remaining imports |\n| Banner config entry removal breaks banner component | Only remove the specific entry, not the whole config file |",
+    "generatedAt": "2026-02-01T18:49:40.579Z",
+    "tasks": [
+      {
+        "id": "T001",
+        "description": "Delete the private events page",
+        "filePath": "src/pages/private-events.astro",
+        "phase": "Phase 1: Delete Exclusive Files",
+        "status": "pending"
+      },
+      {
+        "id": "T002",
+        "description": "Delete the private event inquiry form component",
+        "filePath": "src/components/PrivateEventInquiryForm.astro",
+        "phase": "Phase 1: Delete Exclusive Files",
+        "status": "pending"
+      },
+      {
+        "id": "T003",
+        "description": "Delete the private events config",
+        "filePath": "src/config/private-events.config.ts",
+        "phase": "Phase 1: Delete Exclusive Files",
+        "status": "pending"
+      },
+      {
+        "id": "T004",
+        "description": "Delete the private events type definitions",
+        "filePath": "src/types/private-events.ts",
+        "phase": "Phase 1: Delete Exclusive Files",
+        "status": "pending"
+      },
+      {
+        "id": "T005",
+        "description": "Remove private event type/const re-exports from types barrel",
+        "filePath": "src/types/index.ts",
+        "phase": "Phase 2: Clean Up References in Shared Files",
+        "status": "pending"
+      },
+      {
+        "id": "T006",
+        "description": "Remove Private Events nav link from header",
+        "filePath": "src/components/Header.astro",
+        "phase": "Phase 2: Clean Up References in Shared Files",
+        "status": "pending"
+      },
+      {
+        "id": "T007",
+        "description": "Remove Private Dining service card from homepage",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 2: Clean Up References in Shared Files",
+        "status": "pending"
+      },
+      {
+        "id": "T008",
+        "description": "Update banner config entry that links to /private-events",
+        "filePath": "src/config/special-events-banner.config.ts",
+        "phase": "Phase 2: Clean Up References in Shared Files",
+        "status": "pending"
+      },
+      {
+        "id": "T009",
+        "description": "Run astro build to verify no broken imports or errors",
+        "filePath": "N/A",
+        "phase": "Phase 3: Verification",
+        "status": "pending"
+      }
+    ],
+    "tasksTotal": 9,
+    "tasksCompleted": 9,
+    "approvedAt": "2026-02-01T18:49:40.583Z",
+    "currentTaskId": "T009"
+  },
+  "justFinishedAt": "2026-02-01T18:59:11.925Z"
+}

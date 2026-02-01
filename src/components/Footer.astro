@@ -17,6 +17,7 @@
  */
 
 import { seoConfig } from '../config/seo.config';
+import { restaurantSchema } from '../config/restaurant.config';
 
 // Define the social platform types
 type SocialPlatform = 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'youtube';
@@ -41,16 +42,31 @@ interface Props {
   serviceAreas?: string[];
 }
 
-// Default service areas based on the seo.config.ts
-const defaultServiceAreas = [
-  'Houston',
-  'Greater Houston Area',
-];
+// Derive default service areas from restaurant config
+const defaultServiceAreas: string[] = (() => {
+  // Prefer contactPoint.areaServed (simple string array)
+  const contactAreas = restaurantSchema.contactPoint?.areaServed;
+  if (Array.isArray(contactAreas) && contactAreas.length > 0) {
+    return contactAreas.filter((a): a is string => typeof a === 'string');
+  }
+  // Fallback: extract names from areaServed schema objects
+  const areaServed = restaurantSchema.areaServed;
+  if (Array.isArray(areaServed)) {
+    return areaServed
+      .map((a) => (typeof a === 'string' ? a : a.name))
+      .filter((name): name is string => !!name);
+  }
+  if (typeof areaServed === 'string') return [areaServed];
+  if (areaServed && typeof areaServed === 'object' && 'name' in areaServed) {
+    return areaServed.name ? [areaServed.name] : [];
+  }
+  return [];
+})();
 
 const {
   phone = seoConfig.organization?.contactPoint?.telephone,
   email = seoConfig.organization?.contactPoint?.email,
-  companyName = seoConfig.siteName,
+  companyName = restaurantSchema.name || seoConfig.siteName,
   socialLinks = [],
   serviceAreas = defaultServiceAreas,
 } = Astro.props;

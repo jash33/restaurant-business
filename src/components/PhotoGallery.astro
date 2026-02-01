@@ -294,29 +294,29 @@ const galleryId = `gallery-${Math.random().toString(36).substr(2, 9)}`;
     padding: 0.5rem 1.25rem;
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--color-text-secondary, #4a5568);
-    background: var(--color-background-elevated, #ffffff);
-    border: 1px solid var(--color-border, #e2e8f0);
+    color: var(--color-text-secondary);
+    background: var(--color-background-elevated);
+    border: 1px solid var(--color-border);
     border-radius: 9999px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .filter-button:hover {
-    color: var(--color-primary, #722f37);
-    border-color: var(--color-primary, #722f37);
-    background: var(--color-primary-50, #fdf2f3);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: var(--color-primary-50);
   }
 
   .filter-button:focus-visible {
-    outline: 2px solid var(--color-primary, #722f37);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
   .filter-button.active {
-    color: var(--color-text-inverse, #fffbeb);
-    background: var(--color-primary, #722f37);
-    border-color: var(--color-primary, #722f37);
+    color: #ffffff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
   }
 
   /* Gallery Container - Grid Layout */
@@ -342,14 +342,14 @@ const galleryId = `gallery-${Math.random().toString(36).substr(2, 9)}`;
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    background: var(--color-background-elevated, #ffffff);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: var(--color-background-elevated);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
   }
 
   .gallery-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-xl);
   }
 
   .gallery-item.hidden {
@@ -372,7 +372,7 @@ const galleryId = `gallery-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   .gallery-image-button:focus-visible {
-    outline: 3px solid var(--color-primary, #722f37);
+    outline: 3px solid var(--color-primary);
     outline-offset: 2px;
     border-radius: 12px;
   }
@@ -712,26 +712,49 @@ const galleryId = `gallery-${Math.random().toString(36).substr(2, 9)}`;
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .filter-button {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.8);
+      background: var(--color-background-elevated);
+      border-color: var(--color-border);
+      color: var(--color-text-secondary);
     }
 
     .filter-button:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--color-primary-light, #f4a9b1);
-      color: var(--color-primary-light, #f4a9b1);
+      background: var(--color-background-muted);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
     }
 
     .filter-button.active {
-      background: var(--color-primary, #722f37);
-      border-color: var(--color-primary, #722f37);
+      background: var(--color-primary);
+      border-color: var(--color-primary);
       color: white;
     }
 
     .gallery-item {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--color-background-elevated);
     }
+  }
+
+  /* Support for explicit dark theme */
+  html[data-theme="dark"] .filter-button {
+    background: var(--color-background-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  html[data-theme="dark"] .filter-button:hover {
+    background: var(--color-background-muted);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  html[data-theme="dark"] .filter-button.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+
+  html[data-theme="dark"] .gallery-item {
+    background: var(--color-background-elevated);
   }
 </style>
 

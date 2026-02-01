@@ -1,9 +1,9 @@
 ---
 /**
  * Contact CTA Section Component
- * A high-converting contact section positioned at the bottom of pages to capture leads
- * from users before they exit. Targets  Houston businesses with persuasive copy
- * and a clear call-to-action.
+ * A high-converting call-to-action section positioned at the bottom of pages to
+ * encourage reservations and engagement. Targets Houston diners with persuasive copy
+ * and clear calls-to-action.
  *
  * Features:
  * - Mobile-first responsive design
@@ -17,9 +17,9 @@
  * @example Basic usage
  * ```astro
  * <ContactCTA
- *   headline="Ready to Grow Your Business Online?"
- *   supportingText="Join dozens of successful  Houston businesses who trust us..."
- *   primaryCTA={{ text: "Get Your Free Quote", href: "/contact" }}
+ *   headline="Ready for an Unforgettable Dining Experience?"
+ *   supportingText="Reserve your table today and discover why Houston food lovers..."
+ *   primaryCTA={{ text: "Make a Reservation", href: "/reservations" }}
  * />
  * ```
  */
@@ -37,7 +37,7 @@ const {
   trustSignals = [],
   id = 'contact-cta',
   class: className = '',
-  ariaLabel = 'Contact us for a free consultation',
+  ariaLabel = 'Reserve your table or contact the restaurant',
   contrast = true,
 } = Astro.props;
 
@@ -48,22 +48,22 @@ const sectionClasses = [
   className,
 ].filter(Boolean).join(' ');
 
-// Default trust signals if none provided
+// Default trust signals if none provided - restaurant-specific social proof
 const defaultTrustSignals = [
   {
-    value: '50+',
-    label: 'Projects Completed',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`,
+    value: '4.8★',
+    label: '2,400+ Google Reviews',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
   },
   {
-    value: '10+',
-    label: 'Years Experience',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`,
+    value: 'Farm to Table',
+    label: 'Locally Sourced Ingredients',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.21 9l-4.38-6.56a.97.97 0 0 0-.83-.42c-.32 0-.64.14-.83.43L6.79 9C4.6 9 2.8 10.6 2.8 12.6c0 2 1.8 3.6 4 3.6h2.4L7 22h2l1.4-4h3.2l1.4 4h2l-2.2-5.8h2.4c2.2 0 4-1.6 4-3.6 0-2-1.8-3.6-4-3.6zM7.59 14.2c-1.1 0-2-.7-2-1.6 0-.9.9-1.6 2-1.6h.6l3.47-5.2L15.2 11h.6c1.1 0 2 .7 2 1.6 0 .9-.9 1.6-2 1.6H7.6z"/></svg>`,
   },
   {
-    value: ' Houston',
-    label: 'Proudly Serving',
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
+    value: 'Award Winning',
+    label: 'Houston\'s Best Bistro',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>`,
   },
 ];
 
@@ -91,7 +91,7 @@ const displayTrustSignals = trustSignals.length > 0 ? trustSignals : defaultTrus
 
       <!-- Trust Signals -->
       {displayTrustSignals.length > 0 && (
-        <div class="contact-cta__trust-signals" role="list" aria-label="Why businesses trust us">
+        <div class="contact-cta__trust-signals" role="list" aria-label="Why diners choose us">
           {displayTrustSignals.map((signal) => (
             <div class="contact-cta__trust-signal" role="listitem">
               {signal.icon && (

@@ -38,10 +38,10 @@
  * @example Basic usage
  * ```astro
  * <HeroSection
- *   headline="Grow Your Houston Area Small Business Online"
- *   valueProposition="Expert web solutions for local small businesses"
- *   subheadline="Custom websites, SEO, and digital marketing designed specifically for businesses in Houston."
- *   primaryCTA={{ text: "Get Your Free Consultation", href: "/contact" }}
+ *   headline="Where Houston Comes to Dine."
+ *   valueProposition="Award-winning contemporary American cuisine with locally-sourced ingredients."
+ *   subheadline="From signature steaks and fresh seafood to craft cocktails and weekend brunch."
+ *   primaryCTA={{ text: "Make a Reservation", href: "/reservations" }}
  * />
  * ```
  */
@@ -49,9 +49,7 @@
 import type { HeroSectionProps } from '../types/hero';
 import Button from './Button.astro';
 
-interface Props extends HeroSectionProps {
-  trustBadges?: Array<{ icon: 'experience' | 'projects' | 'tech'; text: string; }>;
-}
+interface Props extends HeroSectionProps {}
 
 const {
   headline,
@@ -61,20 +59,9 @@ const {
   secondaryCTA,
   id = 'hero',
   class: className = '',
-  trustBadges = [
-    { icon: 'experience', text: '10+ Years Experience' },
-    { icon: 'projects', text: '50+ Local Businesses Helped' },
-    { icon: 'tech', text: 'Fast & Search-Friendly Sites' },
-  ],
 } = Astro.props;
 
 const sectionClasses = ['hero', className].filter(Boolean).join(' ');
-
-const trustIcons: Record<string, string> = {
-  experience: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
-  projects: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>`,
-  tech: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
-};
 ---
 
 <section class={sectionClasses} id={id} aria-labelledby={`${id}-headline`}>
@@ -90,7 +77,7 @@ const trustIcons: Record<string, string> = {
         {subheadline && (
           <p class="hero__subheadline">
             <svg class="hero__subheadline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
-              <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+              <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>
             </svg>
             <span>{subheadline}</span>
           </p>
@@ -108,226 +95,64 @@ const trustIcons: Record<string, string> = {
                 <Button text={secondaryCTA.text} href={secondaryCTA.href} variant={secondaryCTA.variant || 'secondary'} size="large" class="hero__cta hero__cta--secondary" />
               )}
             </div>
-            {trustBadges && trustBadges.length > 0 && (
-              <div class="hero__trust-badges" aria-label="Credentials">
-                {trustBadges.map((badge) => (
-                  <div class="hero__trust-badge">
-                    <span class="hero__trust-badge-icon" set:html={trustIcons[badge.icon]} />
-                    <span class="hero__trust-badge-text">{badge.text}</span>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         )}
 
-        <div class="hero__location-cue">
-          <svg class="hero__location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-          <span class="hero__location-text">Serving the Greater Houston Area</span>
-          <span class="hero__coordinates">29.7604° N, 95.3698° W</span>
-        </div>
       </div>
 
-      <div class="hero__mockup" aria-hidden="true">
-        <div class="hero__browser">
-          <div class="hero__browser-chrome">
-            <div class="hero__browser-dots">
-              <span class="hero__browser-dot hero__browser-dot--red"></span>
-              <span class="hero__browser-dot hero__browser-dot--yellow"></span>
-              <span class="hero__browser-dot hero__browser-dot--green"></span>
-            </div>
-            <!-- Navigation arrows -->
-            <div class="hero__browser-nav">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-            </div>
-            <div class="hero__browser-url">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-              <span>yourbusiness.com</span>
-            </div>
-            <!-- Browser action buttons -->
-            <div class="hero__browser-actions">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            </div>
-          </div>
-          <div class="hero__browser-content">
-            <!-- Enhanced Header -->
-            <div class="hero__mock-header">
-              <div class="hero__mock-logo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                <span>Acme Co</span>
-              </div>
-              <div class="hero__mock-nav">
-                <span>Services</span>
-                <span>About</span>
-                <span>Work</span>
-                <span>Blog</span>
-              </div>
-              <div class="hero__mock-header-cta">Contact</div>
-            </div>
+      <!-- Restaurant Decorative Element -->
+      <div class="hero__decor" aria-hidden="true">
+        <div class="hero__decor-plate">
+          <!-- Decorative plate ring -->
+          <svg class="hero__decor-plate-svg" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="160" cy="160" r="155" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            <circle cx="160" cy="160" r="140" stroke="currentColor" stroke-width="0.75" opacity="0.15"/>
+            <circle cx="160" cy="160" r="125" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+            <!-- Decorative filigree notches -->
+            <circle cx="160" cy="8" r="2" fill="currentColor" opacity="0.25"/>
+            <circle cx="160" cy="312" r="2" fill="currentColor" opacity="0.25"/>
+            <circle cx="8" cy="160" r="2" fill="currentColor" opacity="0.25"/>
+            <circle cx="312" cy="160" r="2" fill="currentColor" opacity="0.25"/>
+          </svg>
 
-            <!-- Enhanced Hero Section -->
-            <div class="hero__mock-hero">
-              <div class="hero__mock-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="8" height="8"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <span>Trusted by 500+ clients</span>
-              </div>
-              <div class="hero__mock-headline">Build Something Amazing</div>
-              <div class="hero__mock-subheadline">We create beautiful digital experiences</div>
-              <div class="hero__mock-text">Professional web design & development for businesses</div>
-              <div class="hero__mock-hero-buttons">
-                <div class="hero__mock-cta">Get Started</div>
-                <div class="hero__mock-cta-secondary">Learn More</div>
-              </div>
-            </div>
-
-            <!-- Stats/Trust Section -->
-            <div class="hero__mock-stats">
-              <div class="hero__mock-stat">
-                <div class="hero__mock-stat-number">500+</div>
-                <div class="hero__mock-stat-label">Projects</div>
-              </div>
-              <div class="hero__mock-stat-divider"></div>
-              <div class="hero__mock-stat">
-                <div class="hero__mock-stat-number">98%</div>
-                <div class="hero__mock-stat-label">Satisfaction</div>
-              </div>
-              <div class="hero__mock-stat-divider"></div>
-              <div class="hero__mock-stat">
-                <div class="hero__mock-stat-number">24/7</div>
-                <div class="hero__mock-stat-label">Support</div>
-              </div>
-            </div>
-
-            <!-- Service Cards -->
-            <div class="hero__mock-cards">
-              <div class="hero__mock-card">
-                <div class="hero__mock-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                </div>
-                <div class="hero__mock-card-title">Web Design</div>
-                <div class="hero__mock-card-desc">Custom sites</div>
-              </div>
-              <div class="hero__mock-card">
-                <div class="hero__mock-card-icon hero__mock-card-icon--accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-                </div>
-                <div class="hero__mock-card-title">Development</div>
-                <div class="hero__mock-card-desc">Clean code</div>
-              </div>
-              <div class="hero__mock-card">
-                <div class="hero__mock-card-icon hero__mock-card-icon--alt">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-                </div>
-                <div class="hero__mock-card-title">SEO</div>
-                <div class="hero__mock-card-desc">Rank higher</div>
-              </div>
-            </div>
-
-            <!-- Featured Work Preview -->
-            <div class="hero__mock-featured">
-              <div class="hero__mock-section-header">
-                <span class="hero__mock-section-title">Featured Work</span>
-                <span class="hero__mock-section-link">View All →</span>
-              </div>
-              <div class="hero__mock-projects">
-                <div class="hero__mock-project">
-                  <div class="hero__mock-project-thumb hero__mock-project-thumb--1"></div>
-                  <span class="hero__mock-project-name">E-commerce</span>
-                </div>
-                <div class="hero__mock-project">
-                  <div class="hero__mock-project-thumb hero__mock-project-thumb--2"></div>
-                  <span class="hero__mock-project-name">SaaS App</span>
-                </div>
-                <div class="hero__mock-project">
-                  <div class="hero__mock-project-thumb hero__mock-project-thumb--3"></div>
-                  <span class="hero__mock-project-name">Portfolio</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Testimonial Preview -->
-            <div class="hero__mock-testimonial">
-              <div class="hero__mock-testimonial-stars">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="6" height="6"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="6" height="6"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="6" height="6"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="6" height="6"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="6" height="6"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-              </div>
-              <div class="hero__mock-testimonial-quote">"Excellent work! They delivered beyond expectations."</div>
-              <div class="hero__mock-testimonial-author">
-                <div class="hero__mock-avatar">JD</div>
-                <div class="hero__mock-author-info">
-                  <span class="hero__mock-author-name">John Davis</span>
-                  <span class="hero__mock-author-role">CEO, TechStart</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Newsletter Signup -->
-            <div class="hero__mock-newsletter">
-              <div class="hero__mock-newsletter-text">
-                <span class="hero__mock-newsletter-title">Stay Updated</span>
-                <span class="hero__mock-newsletter-desc">Get tips & insights</span>
-              </div>
-              <div class="hero__mock-newsletter-form">
-                <div class="hero__mock-newsletter-input">your@email.com</div>
-                <div class="hero__mock-newsletter-btn">→</div>
-              </div>
-            </div>
-
-            <!-- Footer Preview -->
-            <div class="hero__mock-footer">
-              <div class="hero__mock-footer-logo">Acme Co</div>
-              <div class="hero__mock-footer-links">
-                <span>Privacy</span>
-                <span>Terms</span>
-                <span>Contact</span>
-              </div>
-              <div class="hero__mock-social">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Scrollbar indicator -->
-          <div class="hero__browser-scrollbar">
-            <div class="hero__browser-scrollbar-thumb"></div>
+          <!-- Central utensils icon -->
+          <div class="hero__decor-utensils">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Fork -->
+              <path d="M24 8v18c0 4 2 7 6 8v38h4V34c4-1 6-4 6-8V8h-4v16h-2V8h-4v16h-2V8h-4z" fill="currentColor" opacity="0.7"/>
+              <!-- Knife -->
+              <path d="M52 8c-3 0-6 8-6 18 0 4 2 7 5 8v38h4V34c3-1 5-4 5-8V12c0-2-2-4-4-4h-4z" fill="currentColor" opacity="0.7"/>
+            </svg>
           </div>
         </div>
-        <div class="hero__mockup-glow"></div>
+        <div class="hero__decor-glow"></div>
 
-        <!-- Floating notification cards for depth -->
-        <div class="hero__mockup-float hero__mockup-float--1">
-          <div class="hero__float-icon hero__float-icon--success">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          </div>
-          <div class="hero__float-content">
-            <span class="hero__float-title">New Lead</span>
-            <span class="hero__float-text">Contact form submitted</span>
-          </div>
-        </div>
-        <div class="hero__mockup-float hero__mockup-float--2">
-          <div class="hero__float-icon hero__float-icon--chart">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-          </div>
-          <div class="hero__float-content">
-            <span class="hero__float-title">+47%</span>
-            <span class="hero__float-text">Traffic this week</span>
-          </div>
-        </div>
-        <div class="hero__mockup-float hero__mockup-float--3">
-          <div class="hero__float-icon hero__float-icon--star">
+        <!-- Floating restaurant info cards -->
+        <div class="hero__decor-float hero__decor-float--1">
+          <div class="hero__decor-float-icon hero__decor-float-icon--star">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           </div>
-          <div class="hero__float-content">
-            <span class="hero__float-title">5.0 Rating</span>
-            <span class="hero__float-text">12 new reviews</span>
+          <div class="hero__decor-float-content">
+            <span class="hero__decor-float-title">4.7 Stars</span>
+            <span class="hero__decor-float-text">800+ Google Reviews</span>
+          </div>
+        </div>
+        <div class="hero__decor-float hero__decor-float--2">
+          <div class="hero__decor-float-icon hero__decor-float-icon--hours">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          </div>
+          <div class="hero__decor-float-content">
+            <span class="hero__decor-float-title">Open Now</span>
+            <span class="hero__decor-float-text">Tue-Sun 11am-10pm</span>
+          </div>
+        </div>
+        <div class="hero__decor-float hero__decor-float--3">
+          <div class="hero__decor-float-icon hero__decor-float-icon--fresh">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9zM5.6 10.25c0 1.38 1.12 2.5 2.5 2.5.53 0 1.01-.16 1.42-.44l-.02.19c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5l-.02-.19c.4.28.89.44 1.42.44 1.38 0 2.5-1.12 2.5-2.5 0-1-.59-1.85-1.43-2.25.84-.4 1.43-1.25 1.43-2.25 0-1.38-1.12-2.5-2.5-2.5-.53 0-1.01.16-1.42.44l.02-.19C14.5 2.12 13.38 1 12 1S9.5 2.12 9.5 3.5l.02.19c-.4-.28-.89-.44-1.42-.44-1.38 0-2.5 1.12-2.5 2.5 0 1 .59 1.85 1.43 2.25-.84.4-1.43 1.25-1.43 2.25zM12 5.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5S9.5 9.38 9.5 8s1.12-2.5 2.5-2.5zM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9z"/></svg>
+          </div>
+          <div class="hero__decor-float-content">
+            <span class="hero__decor-float-title">Farm Fresh</span>
+            <span class="hero__decor-float-text">Locally sourced daily</span>
           </div>
         </div>
       </div>
@@ -633,663 +458,72 @@ const trustIcons: Record<string, string> = {
     transform: translateY(-2px);
   }
 
+
   /* =================================================================
-   * TRUST BADGES
+   * RESTAURANT DECORATIVE ELEMENT
    * =================================================================
    */
 
-  .hero__trust-badges {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-3);
-  }
-
-  .hero__trust-badge {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-    padding: var(--spacing-2) var(--spacing-3);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    color: var(--color-primary-100);
-    white-space: nowrap;
-  }
-
-  .hero__trust-badge-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-primary-300);
-  }
-
-  .hero__trust-badge-text {
-    font-weight: var(--font-weight-medium);
-  }
-
-  /* =================================================================
-   * LOCATION CUE
-   * =================================================================
-   */
-
-  .hero__location-cue {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-2);
-    padding: var(--spacing-3) var(--spacing-4);
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.06) 100%
-    );
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-lg);
-    margin-top: var(--spacing-4);
-  }
-
-  .hero__location-icon {
-    color: var(--color-primary-200);
-  }
-
-  .hero__location-text {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-inverse);
-  }
-
-  .hero__coordinates {
-    font-size: var(--font-size-xs);
-    font-family: var(--font-mono, monospace);
-    color: var(--color-primary-200);
-    padding: var(--spacing-1) var(--spacing-2);
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--radius-sm);
-  }
-
-  /* =================================================================
-   * BROWSER MOCKUP
-   * =================================================================
-   */
-
-  .hero__mockup {
+  .hero__decor {
     display: none;
     position: relative;
-    animation: mockupSlideIn 0.8s ease-out 0.3s backwards;
+    animation: decorSlideIn 0.8s ease-out 0.3s backwards;
   }
 
-  .hero__browser {
+  /* =================================================================
+   * DECORATIVE PLATE ELEMENT
+   * =================================================================
+   */
+  .hero__decor-plate {
     position: relative;
-    background: var(--color-background);
-    border-radius: var(--radius-xl);
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
-    transition: transform 0.5s ease;
-  }
-
-  .hero__browser:hover {
-    transform: perspective(1000px) rotateY(-2deg) rotateX(1deg);
-  }
-
-  .hero__browser-chrome {
     display: flex;
     align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-4);
-    background: var(--color-gray-100);
-    border-bottom: 1px solid var(--color-gray-200);
+    justify-content: center;
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    animation: plateRotate 30s linear infinite;
   }
 
-  .hero__browser-dots {
-    display: flex;
-    gap: var(--spacing-2);
-  }
-
-  .hero__browser-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-  }
-
-  .hero__browser-dot--red { background: #ff5f57; }
-  .hero__browser-dot--yellow { background: #febc2e; }
-  .hero__browser-dot--green { background: #28c840; }
-
-  .hero__browser-nav {
-    display: flex;
-    gap: var(--spacing-1);
-    color: var(--color-gray-400);
-  }
-
-  .hero__browser-nav svg {
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-  }
-
-  .hero__browser-nav svg:first-child {
-    opacity: 0.4;
-  }
-
-  .hero__browser-url {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-    padding: var(--spacing-2) var(--spacing-3);
-    background: var(--color-background);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-xs);
-    color: var(--color-gray-500);
-  }
-
-  .hero__browser-url svg { color: var(--color-success-600); }
-
-  .hero__browser-actions {
-    display: flex;
-    align-items: center;
-    color: var(--color-gray-400);
-  }
-
-  .hero__browser-content {
-    position: relative;
-    padding: var(--spacing-4);
-    min-height: 420px;
-    background: linear-gradient(180deg, var(--color-background) 0%, var(--color-gray-50) 100%);
-    overflow: hidden;
-  }
-
-  /* Scrollbar indicator */
-  .hero__browser-scrollbar {
+  .hero__decor-plate-svg {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 6px;
-    background: var(--color-gray-100);
-    border-radius: 3px;
-  }
-
-  .hero__browser-scrollbar-thumb {
+    inset: 0;
     width: 100%;
-    height: 60px;
-    background: var(--color-gray-300);
-    border-radius: 3px;
-    animation: scrollThumb 4s ease-in-out infinite;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  @keyframes scrollThumb {
-    0%, 100% { transform: translateY(8px); }
-    50% { transform: translateY(40px); }
-  }
-
-  /* =================================================================
-   * MOCK HEADER
-   * =================================================================
-   */
-  .hero__mock-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-4);
-    padding-bottom: var(--spacing-3);
-    border-bottom: 1px solid var(--color-gray-100);
-  }
-
-  .hero__mock-logo {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 8px;
-    font-weight: 700;
-    color: var(--color-primary-600);
-  }
-
-  .hero__mock-logo svg {
-    color: var(--color-primary-500);
-  }
-
-  .hero__mock-nav {
-    display: flex;
-    gap: var(--spacing-2);
-  }
-
-  .hero__mock-nav span {
-    font-size: 6px;
-    color: var(--color-gray-500);
-    font-weight: 500;
-  }
-
-  .hero__mock-header-cta {
-    padding: 3px 8px;
-    font-size: 6px;
-    font-weight: 600;
-    color: var(--color-background);
-    background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-500));
-    border-radius: var(--radius-sm);
-  }
-
-  /* =================================================================
-   * MOCK HERO SECTION
-   * =================================================================
-   */
-  .hero__mock-hero {
-    text-align: center;
-    margin-bottom: var(--spacing-4);
-    padding: var(--spacing-3) 0;
-  }
-
-  .hero__mock-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    padding: 2px 8px;
-    margin-bottom: var(--spacing-2);
-    font-size: 5px;
-    font-weight: 500;
-    color: var(--color-accent-alt);
-    background: linear-gradient(90deg, var(--color-accent-subtle), var(--color-accent-alt-subtle));
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-accent-alt);
-  }
-
-  .hero__mock-badge svg {
-    color: var(--color-accent);
-  }
-
-  .hero__mock-headline {
-    margin: 0 auto var(--spacing-1);
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--color-gray-800);
-    line-height: 1.2;
-  }
-
-  .hero__mock-subheadline {
-    margin: 0 auto var(--spacing-1);
-    font-size: 7px;
-    font-weight: 500;
-    color: var(--color-gray-600);
-  }
-
-  .hero__mock-text {
-    margin: 0 auto var(--spacing-2);
-    font-size: 5px;
-    color: var(--color-gray-400);
-  }
-
-  .hero__mock-hero-buttons {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-2);
-  }
-
-  .hero__mock-cta {
-    padding: 4px 10px;
-    font-size: 6px;
-    font-weight: 600;
-    color: var(--color-background);
-    background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-500));
-    border-radius: var(--radius-md);
-    box-shadow: 0 2px 4px rgba(54, 83, 149, 0.3);
-  }
-
-  .hero__mock-cta-secondary {
-    padding: 4px 10px;
-    font-size: 6px;
-    font-weight: 500;
-    color: var(--color-gray-600);
-    background: var(--color-background);
-    border: 1px solid var(--color-gray-300);
-    border-radius: var(--radius-md);
-  }
-
-  /* =================================================================
-   * MOCK STATS SECTION
-   * =================================================================
-   */
-  .hero__mock-stats {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-3);
-    margin-bottom: var(--spacing-4);
-    padding: var(--spacing-2) var(--spacing-3);
-    background: var(--color-gray-50);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-gray-100);
-  }
-
-  .hero__mock-stat {
-    text-align: center;
-    flex: 1;
-  }
-
-  .hero__mock-stat-number {
-    font-size: 9px;
-    font-weight: 700;
-    color: var(--color-primary-600);
-    line-height: 1.2;
-  }
-
-  .hero__mock-stat-label {
-    font-size: 5px;
-    color: var(--color-gray-400);
-  }
-
-  .hero__mock-stat-divider {
-    width: 1px;
-    height: 24px;
-    background: var(--color-gray-200);
-  }
-
-  /* =================================================================
-   * MOCK SERVICE CARDS
-   * =================================================================
-   */
-  .hero__mock-cards {
-    display: flex;
-    gap: var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-  }
-
-  .hero__mock-card {
-    flex: 1;
-    padding: var(--spacing-2);
-    background: var(--color-background);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .hero__mock-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .hero__mock-card-icon {
+  .hero__decor-utensils {
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
-    margin-bottom: var(--spacing-1);
-    background: var(--color-primary-100);
-    border-radius: var(--radius-md);
-    color: var(--color-primary-600);
+    width: 80px;
+    height: 80px;
+    color: rgba(255, 255, 255, 0.5);
+    animation: plateRotateReverse 30s linear infinite;
   }
 
-  .hero__mock-card-icon--accent {
-    background: var(--color-accent-subtle);
-    color: var(--color-accent);
+  .hero__decor-utensils svg {
+    width: 100%;
+    height: 100%;
   }
 
-  .hero__mock-card-icon--alt {
-    background: var(--color-accent-alt-subtle);
-    color: var(--color-accent-alt);
+  @keyframes plateRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
-  .hero__mock-card-title {
-    font-size: 6px;
-    font-weight: 600;
-    color: var(--color-gray-700);
-    margin-bottom: 2px;
-  }
-
-  .hero__mock-card-desc {
-    font-size: 5px;
-    color: var(--color-gray-400);
+  @keyframes plateRotateReverse {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
   }
 
   /* =================================================================
-   * MOCK TESTIMONIAL
+   * DECOR GLOW & FLOATING ELEMENTS
    * =================================================================
    */
-  .hero__mock-testimonial {
-    padding: var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-background) 100%);
-    border-radius: var(--radius-md);
-    border-left: 3px solid var(--color-primary-400);
-  }
-
-  .hero__mock-testimonial-quote {
-    font-size: 5px;
-    font-style: italic;
-    color: var(--color-gray-600);
-    margin-bottom: var(--spacing-2);
-    line-height: 1.4;
-  }
-
-  .hero__mock-testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-  }
-
-  .hero__mock-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    font-size: 6px;
-    font-weight: 600;
-    color: var(--color-background);
-    background: linear-gradient(135deg, var(--color-primary-400), var(--color-accent));
-    border-radius: 50%;
-  }
-
-  .hero__mock-author-info {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .hero__mock-author-name {
-    font-size: 5px;
-    font-weight: 600;
-    color: var(--color-gray-700);
-  }
-
-  .hero__mock-author-role {
-    font-size: 4px;
-    color: var(--color-gray-400);
-  }
-
-  /* =================================================================
-   * MOCK FEATURED WORK
-   * =================================================================
-   */
-  .hero__mock-featured {
-    margin-bottom: var(--spacing-3);
-  }
-
-  .hero__mock-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-2);
-  }
-
-  .hero__mock-section-title {
-    font-size: 6px;
-    font-weight: 700;
-    color: var(--color-gray-700);
-  }
-
-  .hero__mock-section-link {
-    font-size: 5px;
-    color: var(--color-primary-500);
-    font-weight: 500;
-  }
-
-  .hero__mock-projects {
-    display: flex;
-    gap: var(--spacing-2);
-  }
-
-  .hero__mock-project {
-    flex: 1;
-    text-align: center;
-  }
-
-  .hero__mock-project-thumb {
-    height: 28px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 3px;
-    background-size: cover;
-    background-position: center;
-    border: 1px solid var(--color-gray-200);
-  }
-
-  .hero__mock-project-thumb--1 {
-    background: linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-primary-200) 100%);
-    background-image:
-      linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-primary-200) 100%),
-      repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 3px,
-        rgba(255, 255, 255, 0.3) 3px,
-        rgba(255, 255, 255, 0.3) 6px
-      );
-  }
-
-  .hero__mock-project-thumb--2 {
-    background: linear-gradient(135deg, var(--color-accent-subtle) 0%, var(--color-accent) 100%);
-    opacity: 0.7;
-  }
-
-  .hero__mock-project-thumb--3 {
-    background: linear-gradient(135deg, var(--color-accent-alt-subtle) 0%, var(--color-accent-alt) 100%);
-    opacity: 0.7;
-  }
-
-  .hero__mock-project-name {
-    font-size: 4px;
-    color: var(--color-gray-500);
-    font-weight: 500;
-  }
-
-  /* =================================================================
-   * MOCK TESTIMONIAL STARS
-   * =================================================================
-   */
-  .hero__mock-testimonial-stars {
-    display: flex;
-    gap: 1px;
-    margin-bottom: 4px;
-    color: var(--color-accent);
-  }
-
-  /* =================================================================
-   * MOCK NEWSLETTER
-   * =================================================================
-   */
-  .hero__mock-newsletter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-    background: var(--color-gray-50);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-gray-100);
-  }
-
-  .hero__mock-newsletter-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .hero__mock-newsletter-title {
-    font-size: 5px;
-    font-weight: 600;
-    color: var(--color-gray-700);
-  }
-
-  .hero__mock-newsletter-desc {
-    font-size: 4px;
-    color: var(--color-gray-400);
-  }
-
-  .hero__mock-newsletter-form {
-    display: flex;
-    gap: 3px;
-  }
-
-  .hero__mock-newsletter-input {
-    padding: 3px 6px;
-    font-size: 4px;
-    color: var(--color-gray-400);
-    background: var(--color-background);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-sm);
-  }
-
-  .hero__mock-newsletter-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    font-size: 8px;
-    color: var(--color-background);
-    background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-500));
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-  }
-
-  /* =================================================================
-   * MOCK FOOTER
-   * =================================================================
-   */
-  .hero__mock-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-2) 0;
-    border-top: 1px solid var(--color-gray-100);
-  }
-
-  .hero__mock-footer-logo {
-    font-size: 6px;
-    font-weight: 600;
-    color: var(--color-gray-400);
-  }
-
-  .hero__mock-footer-links {
-    display: flex;
-    gap: var(--spacing-2);
-  }
-
-  .hero__mock-footer-links span {
-    font-size: 4px;
-    color: var(--color-gray-400);
-  }
-
-  .hero__mock-social {
-    display: flex;
-    gap: 4px;
-  }
-
-  .hero__mock-social svg {
-    color: var(--color-gray-400);
-  }
-
-  /* =================================================================
-   * MOCKUP GLOW & FLOATING ELEMENTS
-   * =================================================================
-   */
-  .hero__mockup-glow {
+  .hero__decor-glow {
     position: absolute;
     inset: -20%;
     background: radial-gradient(ellipse at center, rgba(54, 83, 149, 0.3) 0%, transparent 60%);
@@ -1297,95 +531,96 @@ const trustIcons: Record<string, string> = {
     filter: blur(40px);
   }
 
-  .hero__mockup-float {
+  .hero__decor-float {
     position: absolute;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 8px;
+    padding: 8px 12px;
     border-radius: var(--radius-md);
-    background: var(--color-background);
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: var(--shadow-lg);
     z-index: 10;
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
   }
 
-  .hero__mockup-float--1 {
-    top: 20%;
-    right: -30px;
-    transform: rotate(3deg);
-    animation: float1 6s ease-in-out infinite;
-  }
-
-  .hero__mockup-float--2 {
-    bottom: 18%;
-    left: -25px;
-    transform: rotate(-3deg);
-    animation: float2 5s ease-in-out infinite;
-  }
-
-  .hero__mockup-float--3 {
-    top: 55%;
+  .hero__decor-float--1 {
+    top: 10%;
     right: -20px;
-    transform: rotate(-2deg);
-    animation: float3 7s ease-in-out infinite;
+    transform: rotate(3deg);
+    animation: decorFloat1 6s ease-in-out infinite;
   }
 
-  .hero__float-icon {
+  .hero__decor-float--2 {
+    bottom: 12%;
+    left: -15px;
+    transform: rotate(-3deg);
+    animation: decorFloat2 5s ease-in-out infinite;
+  }
+
+  .hero__decor-float--3 {
+    top: 60%;
+    right: -10px;
+    transform: rotate(-2deg);
+    animation: decorFloat3 7s ease-in-out infinite;
+  }
+
+  .hero__decor-float-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
-  .hero__float-icon--success {
-    background: var(--color-success-100, #dcfce7);
-    color: var(--color-success, #22c55e);
-  }
-
-  .hero__float-icon--chart {
-    background: var(--color-accent-subtle);
-    color: var(--color-accent);
-  }
-
-  .hero__float-icon--star {
+  .hero__decor-float-icon--star {
     background: var(--color-accent-alt-subtle);
     color: var(--color-accent-alt);
   }
 
-  .hero__float-content {
+  .hero__decor-float-icon--hours {
+    background: var(--color-success-100, #dcfce7);
+    color: var(--color-success, #22c55e);
+  }
+
+  .hero__decor-float-icon--fresh {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+  }
+
+  .hero__decor-float-content {
     display: flex;
     flex-direction: column;
     gap: 1px;
   }
 
-  .hero__float-title {
-    font-size: 6px;
+  .hero__decor-float-title {
+    font-size: 8px;
     font-weight: 700;
     color: var(--color-gray-800);
     white-space: nowrap;
   }
 
-  .hero__float-text {
-    font-size: 4px;
+  .hero__decor-float-text {
+    font-size: 6px;
     color: var(--color-gray-500);
     white-space: nowrap;
   }
 
-  @keyframes float1 {
+  @keyframes decorFloat1 {
     0%, 100% { transform: rotate(3deg) translateY(0); }
     50% { transform: rotate(3deg) translateY(-8px); }
   }
 
-  @keyframes float2 {
+  @keyframes decorFloat2 {
     0%, 100% { transform: rotate(-3deg) translateY(0); }
     50% { transform: rotate(-3deg) translateY(-6px); }
   }
 
-  @keyframes float3 {
+  @keyframes decorFloat3 {
     0%, 100% { transform: rotate(-2deg) translateY(0); }
     50% { transform: rotate(-2deg) translateY(-5px); }
   }
@@ -1933,15 +1168,6 @@ const trustIcons: Record<string, string> = {
       width: auto;
     }
 
-    .hero__trust-badges {
-      gap: var(--spacing-4);
-    }
-
-    .hero__trust-badge {
-      font-size: var(--font-size-sm);
-      padding: var(--spacing-2) var(--spacing-4);
-    }
-
     /* Floating Orbs - Tablet Enhancements */
     .hero__orb {
       filter: blur(70px);
@@ -2006,15 +1232,7 @@ const trustIcons: Record<string, string> = {
       gap: var(--spacing-4);
     }
 
-    .hero__trust-badges {
-      justify-content: flex-start;
-    }
-
-    .hero__location-cue {
-      justify-content: flex-start;
-    }
-
-    .hero__mockup {
+    .hero__decor {
       display: block;
     }
 
@@ -2077,8 +1295,9 @@ const trustIcons: Record<string, string> = {
       font-size: var(--font-size-xl);
     }
 
-    .hero__browser-content {
-      min-height: 450px;
+    .hero__decor-plate {
+      width: 340px;
+      height: 340px;
     }
 
     .hero__skyline {
@@ -2127,14 +1346,14 @@ const trustIcons: Record<string, string> = {
     50% { opacity: 0.7; }
   }
 
-  @keyframes mockupSlideIn {
+  @keyframes decorSlideIn {
     from {
       opacity: 0;
-      transform: translateX(40px) perspective(1000px) rotateY(-5deg) rotateX(2deg);
+      transform: translateX(40px) scale(0.9);
     }
     to {
       opacity: 1;
-      transform: translateX(0) perspective(1000px) rotateY(-5deg) rotateX(2deg);
+      transform: translateX(0) scale(1);
     }
   }
 
@@ -2232,13 +1451,6 @@ const trustIcons: Record<string, string> = {
     animation: heroFadeIn 0.6s ease-out 0.4s backwards;
   }
 
-  .hero__location-cue {
-    animation: heroFadeIn 0.6s ease-out 0.5s backwards;
-  }
-
-  .hero__trust-badges {
-    animation: heroFadeIn 0.6s ease-out 0.5s backwards;
-  }
 
   @keyframes heroFadeIn {
     from {
@@ -2271,9 +1483,7 @@ const trustIcons: Record<string, string> = {
     .hero__value-prop,
     .hero__subheadline,
     .hero__cta-wrapper,
-    .hero__location-cue,
-    .hero__trust-badges,
-    .hero__mockup {
+    .hero__decor {
       animation: none;
     }
 
@@ -2298,25 +1508,17 @@ const trustIcons: Record<string, string> = {
       transform: none;
     }
 
-    .hero__browser {
-      transform: none;
-    }
-
-    .hero__browser:hover {
-      transform: none;
-    }
-
-    /* Disable mockup floating elements and scrollbar animations */
-    .hero__mockup-float,
-    .hero__browser-scrollbar-thumb {
+    .hero__decor-plate {
       animation: none;
     }
 
-    /* Disable shimmer effects */
-    .hero__mock-headline::after,
-    .hero__mock-cta::after {
+    .hero__decor-utensils {
       animation: none;
-      display: none;
+    }
+
+    /* Disable decorative floating elements */
+    .hero__decor-float {
+      animation: none;
     }
   }
 
@@ -2338,15 +1540,12 @@ const trustIcons: Record<string, string> = {
 
     .hero__headline,
     .hero__value-prop,
-    .hero__subheadline,
-    .hero__location-text {
+    .hero__subheadline {
       color: CanvasText;
     }
 
     .hero__value-prop,
-    .hero__subheadline,
-    .hero__location-cue,
-    .hero__trust-badge {
+    .hero__subheadline {
       border: 1px solid CanvasText;
       background: transparent;
     }
@@ -2354,8 +1553,8 @@ const trustIcons: Record<string, string> = {
     .hero__background,
     .hero__skyline,
     .hero__accent-shape,
-    .hero__mockup-glow,
-    .hero__mockup-float,
+    .hero__decor-glow,
+    .hero__decor-float,
     .hero__orbs,
     .hero__grid-bg {
       display: none;
@@ -2382,8 +1581,7 @@ const trustIcons: Record<string, string> = {
 
     .hero__headline,
     .hero__value-prop,
-    .hero__subheadline,
-    .hero__location-text {
+    .hero__subheadline {
       color: var(--color-text-primary);
       animation: none;
     }

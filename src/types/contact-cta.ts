@@ -34,7 +34,7 @@ export interface ContactCTAProps {
   /** Main headline text - should create urgency or highlight value */
   headline: string;
 
-  /** Supporting text that mentions west Houston businesses and addresses their needs */
+  /** Supporting text that highlights the dining experience and encourages reservations */
   supportingText: string;
 
   /** Primary CTA button configuration */

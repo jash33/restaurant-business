@@ -1,0 +1,31 @@
+{
+  "category": "Uncategorized",
+  "description": "the \"signature experiences\" section on the homepage needs to go",
+  "title": "Remove signature experiences section from homepage",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "verified",
+  "id": "feature-1769972450477-qim5d7urs",
+  "descriptionHistory": [
+    {
+      "description": "the \"signature experiences\" section on the homepage needs to go",
+      "timestamp": "2026-02-01T19:00:50.487Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T19:00:50.504Z",
+  "updatedAt": "2026-02-01T19:02:09.115Z",
+  "justFinishedAt": "2026-02-01T19:02:09.115Z"
+}

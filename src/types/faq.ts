@@ -21,10 +21,10 @@ export interface FAQItem {
  * FAQ category options for organizing questions
  */
 export type FAQCategory =
-  | 'pricing'
-  | 'timeline'
-  | 'services'
-  | 'process'
+  | 'dining'
+  | 'menu'
+  | 'reservations'
+  | 'events'
   | 'general';
 
 /**
@@ -60,68 +60,68 @@ export interface FAQAccordionItemState {
 }
 
 /**
- * Default FAQ items for Houston Web Services
- * Covering pricing, timelines, services, and process
+ * Default FAQ items for the restaurant
+ * Covering dining experience, menu, reservations, events, and general questions
  */
 export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
   {
-    id: 'faq-pricing-structure',
-    question: 'How much does a professional website cost?',
-    answer: `Our website packages start at $899 for a basic 5-page business website. Custom designs and online store setups range from $1,800 to $6,000+ depending on what your business needs. We provide detailed quotes after understanding your specific goals during our free consultation. Every project includes a mobile-friendly design, help getting found on Google, and 30 days of support after launch.`,
-    category: 'pricing',
+    id: 'faq-reservations',
+    question: 'Do I need a reservation, or do you accept walk-ins?',
+    answer: `We welcome both reservations and walk-ins! However, we highly recommend making a reservation, especially for dinner service on Fridays and Saturdays, as we tend to fill up quickly. You can easily reserve a table through our website, by calling us directly, or through OpenTable. Walk-in guests are always welcome and will be seated on a first-come, first-served basis depending on availability.`,
+    category: 'reservations',
   },
   {
-    id: 'faq-project-timeline',
-    question: 'How long does it take to build a website?',
-    answer: `A typical business website takes 3-6 weeks from kickoff to launch. Simple one-page sites can be completed in 1-2 weeks, while online stores or more complex projects may take 8-12 weeks. We'll provide a detailed timeline during our initial meeting, and we keep you updated throughout the entire process with regular check-ins and milestone reviews.`,
-    category: 'timeline',
-  },
-  {
-    id: 'faq-services-offered',
-    question: 'What services do you offer beyond web design?',
-    answer: `In addition to custom website design, we offer everything you need to succeed online: ongoing website care and security updates, reliable website hosting with 99.9% uptime, training so you can easily update your own content, logo and brand design, and Google Business Profile setup to attract local Houston customers. Plus, SEO best practices are included with every website we build—so you get help being found on Google without paying for a separate service.`,
-    category: 'services',
-  },
-  {
-    id: 'faq-design-process',
-    question: 'What does your design process look like?',
-    answer: `Our process has five clear phases: <strong>Discovery</strong> - We learn about your business, goals, and the customers you want to reach. <strong>Design</strong> - We create visual mockups for your approval so you can see exactly what your site will look like. <strong>Build</strong> - We create your website with speed and search visibility in mind. <strong>Testing</strong> - We make sure everything works perfectly on phones, tablets, and computers. <strong>Launch</strong> - We put your site live and show you how to make updates yourself.`,
-    category: 'process',
-  },
-  {
-    id: 'faq-revisions',
-    question: 'How many revisions are included?',
-    answer: `All our packages include unlimited revisions during the design phase - we want you to be 100% satisfied with the look and feel before we start building. During the build phase, we include 2 rounds of revisions to fine-tune everything. Additional revisions beyond this are billed at our hourly rate, but this is rarely needed when we nail the design phase.`,
-    category: 'process',
-  },
-  {
-    id: 'faq-maintenance',
-    question: 'Do I need ongoing maintenance for my website?',
-    answer: `We strongly recommend ongoing maintenance to keep your website secure, fast, and up-to-date. Our maintenance plans start at $49/month and include security protection, regular backups, speed monitoring, and minor content updates. Without maintenance, websites can become vulnerable to hackers and may eventually stop working properly as internet standards change.`,
-    category: 'services',
-  },
-  {
-    id: 'faq-ownership',
-    question: 'Will I own my website after it\'s completed?',
-    answer: `Absolutely! Once your final payment is received, you own 100% of your website including all custom design work and content. We'll provide all login information and access to your hosting account. If you ever decide to move to a different provider, we'll assist with the transition at no additional charge.`,
+    id: 'faq-hours',
+    question: 'What are your hours of operation?',
+    answer: `We are open <strong>Tuesday through Thursday</strong> from 11:00 AM to 9:00 PM, <strong>Friday and Saturday</strong> from 11:00 AM to 10:00 PM, and <strong>Sunday</strong> from 10:00 AM to 3:00 PM for brunch service. We are closed on Mondays. Our kitchen accepts last orders 30 minutes before closing. Holiday hours may vary, so please check our website or give us a call to confirm.`,
     category: 'general',
   },
   {
-    id: 'faq-local-focus',
-    question: 'Do you only work with Houston-area businesses?',
-    answer: `While we specialize in serving small businesses in Houston, we work with clients throughout Texas and beyond. Our local focus means we understand the Houston market deeply, but we can work with you remotely just as effectively. We're happy to meet in person locally or connect via video call.`,
+    id: 'faq-dietary-accommodations',
+    question: 'Can you accommodate dietary restrictions or food allergies?',
+    answer: `Absolutely! We take dietary needs and food allergies very seriously. Our menu features clearly marked options for <strong>vegetarian</strong>, <strong>vegan</strong>, and <strong>gluten-free</strong> dishes. Our kitchen staff is trained to handle common allergens, and our chefs are happy to modify many dishes to suit your needs. Please inform your server of any allergies or dietary restrictions when you order, and we'll do our best to ensure a safe and delicious dining experience.`,
+    category: 'menu',
+  },
+  {
+    id: 'faq-private-events',
+    question: 'Do you host private events or parties?',
+    answer: `Yes! We love hosting special occasions. We offer a private dining room that seats up to 40 guests, perfect for birthdays, anniversaries, corporate dinners, rehearsal dinners, and holiday gatherings. We provide customizable prix fixe menus, beverage packages, and dedicated event coordination to make your celebration memorable. Contact us at least two weeks in advance to discuss availability and planning details.`,
+    category: 'events',
+  },
+  {
+    id: 'faq-parking',
+    question: 'Is there parking available?',
+    answer: `We offer a complimentary parking lot directly behind the restaurant with spaces for approximately 30 vehicles. Additional street parking is available on surrounding blocks at no charge after 6:00 PM and all day on weekends. For larger parties or events, we recommend rideshare services. We are also conveniently located near several public transit stops for easy access.`,
     category: 'general',
   },
   {
-    id: 'faq-existing-website',
-    question: 'Can you help with my existing website?',
-    answer: `Absolutely! We work with existing websites all the time, even if we didn't build them originally. We can help with <strong>website redesigns</strong> to give your site a fresh, modern look, <strong>updates and improvements</strong> to add new features or fix issues, <strong>ongoing maintenance</strong> to keep your site secure and running smoothly, and <strong>performance optimization</strong> to make your site faster. During a free consultation, we'll review your current site and recommend the best path forward—whether that's a full redesign, targeted improvements, or simply better maintenance.`,
-    category: 'services',
+    id: 'faq-catering',
+    question: 'Do you offer catering services?',
+    answer: `Yes, we offer full-service catering for events of all sizes, from intimate gatherings of 10 to large celebrations of 200+ guests. Our catering menu features many of our most popular restaurant dishes, along with exclusive catering-only options. We provide <strong>delivery and setup</strong>, <strong>buffet-style service</strong>, <strong>plated dinner service</strong>, and <strong>custom menu creation</strong> tailored to your event. Contact our catering team for a personalized quote and menu consultation.`,
+    category: 'events',
   },
   {
-    id: 'faq-business-automation',
-    question: 'Can you help automate my business processes?',
-    answer: `Yes! We specialize in helping small businesses save time and reduce errors through smart automation. Common solutions we implement include <strong>automated appointment scheduling</strong> that syncs with your calendar and sends reminders, <strong>contact form integrations</strong> that automatically add leads to your CRM or email list, <strong>invoice and payment automation</strong> to streamline billing, and <strong>custom workflow solutions</strong> that connect your favorite tools. During our consultation, we'll identify repetitive tasks in your business and show you how automation can free up your time to focus on what matters most—growing your business.`,
-    category: 'services',
+    id: 'faq-dress-code',
+    question: 'Is there a dress code?',
+    answer: `Our dress code is smart casual. We want you to feel comfortable while dining with us, so think of it as a step above everyday wear. Collared shirts, blouses, nice jeans, slacks, and closed-toe shoes are all perfectly appropriate. For our weekend brunch service, we're a bit more relaxed. We kindly ask that guests avoid athletic wear, flip-flops, and overly casual beachwear during dinner service.`,
+    category: 'dining',
+  },
+  {
+    id: 'faq-menu-changes',
+    question: 'How often does the menu change?',
+    answer: `Our menu evolves with the seasons to showcase the freshest locally sourced ingredients available. We update our seasonal specials roughly every 6–8 weeks, while our core menu of signature dishes remains available year-round. Our chef also features weekly specials that highlight unique ingredients and creative preparations. Follow us on social media or sign up for our newsletter to stay updated on new dishes and seasonal offerings.`,
+    category: 'menu',
+  },
+  {
+    id: 'faq-kids-menu',
+    question: 'Do you have a kids menu?',
+    answer: `Yes! We offer a dedicated kids menu for children 12 and under, featuring kid-friendly favorites prepared with the same quality ingredients we use throughout our kitchen. Options include smaller portions of select entrées, house-made chicken tenders, pasta, and a mini burger, all served with a choice of side and a drink. We also have high chairs and booster seats available to make dining with little ones as comfortable as possible.`,
+    category: 'menu',
+  },
+  {
+    id: 'faq-gift-cards',
+    question: 'Do you sell gift cards?',
+    answer: `Yes, we offer gift cards in any denomination starting at $25. They make a perfect gift for food lovers and are available for purchase <strong>in-restaurant</strong> at the host stand or <strong>online</strong> through our website for convenient digital delivery. Gift cards never expire and can be used for dine-in, takeout, catering services, or private event bookings. During the holiday season, we often run special promotions—buy a $100 gift card and receive a bonus $20 card on us!`,
+    category: 'general',
   },
 ];

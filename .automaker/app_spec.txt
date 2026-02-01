@@ -349,6 +349,42 @@
       <name>Reservation Platform Links</name>
       <description>Add prominent CTAs and links to reservation platforms (OpenTable, Resy, Yelp Reservations) with proper tracking. Includes availability status if API integration is configured.</description>
     </feature>
+    <feature>
+      <name>Feature: feature-1769877178799-n3zs8jhmf</name>
+      <description>This whole repo was forked. The original repo had a different purpose - it was for a web design small business. There is still a lot of leftover content present (especially text and site sections) that have to do with a web design business. This doesn&apos;t match the purpose of this repo - to serve as a starter template for me to build sites for small restaurant businesses.
+
+Please identify these vestigal elements and either remove them, or update them to make them fit the real purpose of this repo, whichever is easier.
+
+I attatched a screenshot of the home page as an example - we wouldn&apos;t want that mini-website-mockup element for a restaurant site. we also wouldn&apos;t want the text &quot;Fast-loading, search-friendly websites that turn visitors into customers.&quot; - this is supposed to be an example/starter site for a resturant.</description>
+    </feature>
+    <feature>
+      <name>Remove services route and related pages</name>
+      <description>the whole &quot;services&quot; route can be removed, along with any pages/components that are exclusive to that route.</description>
+    </feature>
+    <feature>
+      <name>Fix gallery page text readability and background colors</name>
+      <description>The text on the gallery page is kind of unreadable, and the page&apos;s background colors don&apos;t match the other pages</description>
+    </feature>
+    <feature>
+      <name>Remove private events route and unused components</name>
+      <description>Let&apos;s delete the private events route and all the pages/components that are exclusively used by that route. (don&apos;t delete stuff that&apos;s used elswhere)</description>
+    </feature>
+    <feature>
+      <name>Redesign homepage with restaurant-themed layout</name>
+      <description>The homepage has a design that isn&apos;t suited to a restaurant website. It has a &quot;techy&quot; theme with the animated grid background. The &quot;Restaurant Showcases&quot; section isn&apos;t a very normal section to see on a resturaunt website either.</description>
+    </feature>
+    <feature>
+      <name>Remove team section from about page</name>
+      <description>The &quot;meet our team&quot; section of the about page is too much. let&apos;s remove that.</description>
+    </feature>
+    <feature>
+      <name>Fix homepage text readability issues</name>
+      <description>Some homepage visual issues, see screenshot. text is kind of unreadable:</description>
+    </feature>
+    <feature>
+      <name>Remove signature experiences section from homepage</name>
+      <description>the &quot;signature experiences&quot; section on the homepage needs to go</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

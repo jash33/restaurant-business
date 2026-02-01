@@ -1,0 +1,92 @@
+{
+  "category": "Uncategorized",
+  "description": "The homepage has a design that isn't suited to a restaurant website. It has a \"techy\" theme with the animated grid background. The \"Restaurant Showcases\" section isn't a very normal section to see on a resturaunt website either.",
+  "title": "Redesign homepage with restaurant-themed layout",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "full",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1769971556899-x6md8r9ta",
+  "descriptionHistory": [
+    {
+      "description": "The homepage has a design that isn't suited to a restaurant website. It has a \"techy\" theme with the animated grid background. The \"Restaurant Showcases\" section isn't a very normal section to see on a resturaunt website either.",
+      "timestamp": "2026-02-01T18:45:56.914Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T18:45:56.930Z",
+  "updatedAt": "2026-02-01T18:59:18.884Z",
+  "planSpec": {
+    "status": "approved",
+    "version": 1,
+    "reviewedByUser": false,
+    "content": "I'll analyze the codebase first to understand the existing structure before generating the specification.\n\n🔧 Tool: Task\nInput: {\n  \"description\": \"Explore codebase structure\",\n  \"prompt\": \"Explore the codebase thoroughly to understand:\\n1. The overall project structure (framework, key directories)\\n2. The homepage component and its current design\\n3. Any animated grid background components\\n4. The \\\"Restaurant Showcases\\\" section\\n5. Existing styling patterns (CSS modules, Tailwind, styled-components, etc.)\\n6. Any existing restaurant-themed components or assets\\n7. The layout/navigation structure\\n\\nRead the main homepage file, any layout files, and key component files. Return all the details including file paths, component names, and current implementation details.\",\n  \"subagent_type\": \"Explore\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\"\",\n  \"description\": \"List top-level directory contents\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\package.json\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/*.json\",\n  \"path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\" -type f -name \\\"*.astro\\\" -o -name \\\"*.ts\\\" -o -name \\\"*.tsx\\\" -o -name \\\"*.css\\\" | head -50\",\n  \"description\": \"Find source files in src directory\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\astro.config.mjs\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\"\",\n  \"description\": \"List src directory contents\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\"\",\n  \"description\": \"List pages directory\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\layouts\\\"\",\n  \"description\": \"List layouts directory\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\layouts\\\\Layout.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\styles\\\"\",\n  \"description\": \"List styles directory\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\FeaturedProjectsPreview.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\portfolio.astro\",\n  \"limit\": 100\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\featured-projects.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\styles\\\\globals.css\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\styles\\\\variables.css\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\",\n  \"limit\": 100\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\ProjectCard.astro\",\n  \"limit\": 100\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\"\",\n  \"description\": \"List types directory\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\"\",\n  \"description\": \"List config directory\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\portfolio.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\index.ts\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\" -type f -name \\\"*.astro\\\" | wc -l\",\n  \"description\": \"Count Astro component files\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -lh \\\"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\public\\\\portfolio\\\" 2>/dev/null | head -20\",\n  \"description\": \"List portfolio assets\"\n}\nNow let me read a few key files to finalize the spec:\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"limit\": 100\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\featured-projects.config.ts\"\n}\nNow let me check the full HeroSection to understand the animated grid background and the RestaurantHeroSection alternative:\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"offset\": 100,\n  \"limit\": 200\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\RestaurantHeroSection.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\FeaturedProjectsPreview.astro\"\n}\nNow I have a complete understanding of the codebase. Here is the specification:\n\n---\n\n# Specification: Restaurant-Appropriate Homepage Redesign\n\n## 1. Problem Statement\n\nThe homepage currently uses a tech-themed animated grid background with floating gradient orbs in the hero section, giving it a \"techy\" startup aesthetic rather than an upscale restaurant feel. Additionally, the \"Restaurant Showcases\" section uses a portfolio/project-card pattern (with \"technologies\" tags and project-style layouts) that feels like a tech portfolio rather than a restaurant website. The homepage needs to feel warm, inviting, and food-focused.\n\n## 2. User Story\n\nAs a **restaurant website visitor**, I want **the homepage to have a warm, elegant design with food-focused imagery and restaurant-appropriate sections**, so that **I immediately feel the atmosphere and quality of the dining experience and am motivated to make a reservation or view the menu**.\n\n## 3. Acceptance Criteria\n\n### Happy Path\n- **GIVEN** a visitor lands on the homepage, **WHEN** the hero section loads, **THEN** they see a warm, food-photography-based hero (using RestaurantHeroSection) with elegant overlays instead of an animated grid with floating orbs\n- **GIVEN** a visitor scrolls past the hero, **WHEN** they reach the formerly \"Restaurant Showcases\" section, **THEN** they see a \"Signature Experiences\" section with warm, restaurant-appropriate card styling (no \"technologies\" tags)\n- **GIVEN** the page loads on mobile, **WHEN** the hero renders, **THEN** it displays a responsive food photography hero with proper text contrast and readable CTAs\n\n### Edge Cases\n- **GIVEN** a visitor has `prefers-reduced-motion` enabled, **WHEN** the hero loads, **THEN** all animations are disabled gracefully (RestaurantHeroSection already handles this)\n- **GIVEN** a visitor uses Windows High Contrast mode, **WHEN** viewing the page, **THEN** all content remains accessible (RestaurantHeroSection already handles this)\n- **GIVEN** the hero background image fails to load, **WHEN** the hero renders, **THEN** a solid dark background with warm tones provides adequate text contrast\n\n### Error Handling\n- **GIVEN** no featured projects data exists, **WHEN** the section renders, **THEN** the empty state is displayed with restaurant-appropriate messaging (existing behavior preserved)\n\n## 4. Technical Context\n\n| Aspect | Value |\n|--------|-------|\n| Affected Files | `src/pages/index.astro`, `src/config/featured-projects.config.ts`, `src/components/FeaturedProjectsPreview.astro` |\n| Dependencies | Existing `RestaurantHeroSection.astro` component (already built), existing `Button.astro` component |\n| Constraints | No external dependencies; CSS custom properties only; must maintain WCAG 2.1 AA; no Tailwind |\n| Patterns to Follow | BEM naming, CSS custom properties from `variables.css`, mobile-first responsive, `prefers-reduced-motion` support |\n\n## 5. Non-Goals\n\n- **NOT** redesigning the RestaurantHeroSection component (it already exists and is restaurant-appropriate)\n- **NOT** changing other homepage sections (OriginStory, Services, Differentiators, MenuPreview, etc. are already restaurant-themed)\n- **NOT** creating new image assets (will use placeholder path for hero background image)\n- **NOT** modifying the navigation, footer, or layout structure\n- **NOT** changing the ProjectCard component itself (it's shared with other pages)\n\n## 6. Implementation Tasks\n\n```tasks\n## Phase 1: Hero Section Swap\n- [ ] T001: Replace HeroSection with RestaurantHeroSection in homepage | File: src/pages/index.astro\n- [ ] T002: Remove HeroSection import and add RestaurantHeroSection import with appropriate props (restaurant name, tagline, background image, CTAs, hours badge) | File: src/pages/index.astro\n\n## Phase 2: Replace \"Restaurant Showcases\" Section\n- [ ] T003: Update featured-projects config heading from \"Restaurant Showcases\" to \"Signature Experiences\" and update subheading to be more restaurant-appropriate | File: src/config/featured-projects.config.ts\n- [ ] T004: Restyle FeaturedProjectsPreview to use warm restaurant color palette (warm backgrounds, elegant typography, remove tech-portfolio feel from card grid area) | File: src/components/FeaturedProjectsPreview.astro\n- [ ] T005: Update FeaturedProjectsPreview default heading/subheading to match restaurant theme | File: src/components/FeaturedProjectsPreview.astro\n\n## Phase 3: Cleanup & Polish\n- [ ] T006: Remove unused HeroSection-specific trust badge icons and coordinates from homepage data | File: src/pages/index.astro\n- [ ] T007: Verify build succeeds with no errors | File: src/pages/index.astro\n```\n\n## 7. Success Metrics\n\n- ✅ Homepage hero uses food photography with warm overlays instead of animated grid/orbs\n- ✅ No animated grid lines, floating gradient orbs, or tech-aesthetic backgrounds visible on homepage\n- ✅ \"Restaurant Showcases\" heading replaced with \"Signature Experiences\"\n- ✅ Featured section uses warm, restaurant-appropriate styling\n- ✅ All existing accessibility features maintained (reduced motion, high contrast, print)\n- ✅ Responsive design works on mobile, tablet, and desktop\n- ✅ `astro build` completes without errors\n\n## 8. Risks & Mitigations\n\n| Risk | Mitigation |\n|------|------------|\n| No real food photography available for hero background | Use a placeholder image path `/images/hero-dining.jpg` that the developer can replace; RestaurantHeroSection gracefully falls back to solid dark background |\n| RestaurantHeroSection may have missing CSS variables | The component already exists and is fully styled with all needed variables in `variables.css` |\n| Changing FeaturedProjectsPreview styles may affect portfolio page | Scope style changes carefully using section-level classes; the component is config-driven so text changes are isolated to config |\n| Removing HeroSection may leave orphaned code | Only removing the import from index.astro; HeroSection component remains available for other uses |\n\n---",
+    "generatedAt": "2026-02-01T18:48:19.539Z",
+    "tasks": [
+      {
+        "id": "T001",
+        "description": "Replace HeroSection with RestaurantHeroSection in homepage",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 1: Hero Section Swap",
+        "status": "pending"
+      },
+      {
+        "id": "T002",
+        "description": "Remove HeroSection import and add RestaurantHeroSection import with appropriate props (restaurant name, tagline, background image, CTAs, hours badge)",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 1: Hero Section Swap",
+        "status": "pending"
+      },
+      {
+        "id": "T003",
+        "description": "Update featured-projects config heading from \"Restaurant Showcases\" to \"Signature Experiences\" and update subheading to be more restaurant-appropriate",
+        "filePath": "src/config/featured-projects.config.ts",
+        "phase": "Phase 2: Replace \"Restaurant Showcases\" Section",
+        "status": "pending"
+      },
+      {
+        "id": "T004",
+        "description": "Restyle FeaturedProjectsPreview to use warm restaurant color palette (warm backgrounds, elegant typography, remove tech-portfolio feel from card grid area)",
+        "filePath": "src/components/FeaturedProjectsPreview.astro",
+        "phase": "Phase 2: Replace \"Restaurant Showcases\" Section",
+        "status": "pending"
+      },
+      {
+        "id": "T005",
+        "description": "Update FeaturedProjectsPreview default heading/subheading to match restaurant theme",
+        "filePath": "src/components/FeaturedProjectsPreview.astro",
+        "phase": "Phase 2: Replace \"Restaurant Showcases\" Section",
+        "status": "pending"
+      },
+      {
+        "id": "T006",
+        "description": "Remove unused HeroSection-specific trust badge icons and coordinates from homepage data",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 3: Cleanup & Polish",
+        "status": "pending"
+      },
+      {
+        "id": "T007",
+        "description": "Verify build succeeds with no errors",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 3: Cleanup & Polish",
+        "status": "pending"
+      }
+    ],
+    "tasksTotal": 7,
+    "tasksCompleted": 7,
+    "approvedAt": "2026-02-01T18:48:19.543Z",
+    "currentTaskId": "T007"
+  }
+}

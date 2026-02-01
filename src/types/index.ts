@@ -103,17 +103,6 @@ export type {
   ConsentBannerConfig,
   GA4Config,
   GA4ConsentMode,
-  GA4StandardEvent,
-  CustomEventName,
-  AnalyticsEvent,
-  BaseEventParams,
-  PageViewParams,
-  ClickEventParams,
-  FormEventParams,
-  ScrollEventParams,
-  CTAEventParams,
-  LeadEventParams,
-  EventParams,
   UserProperties,
   AnalyticsService,
   WebVitals,
@@ -214,22 +203,3 @@ export type {
   ParkingTransitInfoDisplayConfig,
 } from './parking-transit-info';
 
-export type {
-  PrivateEventType,
-  VenueSpace,
-  EventPackage,
-  SampleMenuItem,
-  SampleMenuCategory,
-  SampleMenu,
-  PrivateEventFAQ,
-  PrivateEventsHero,
-  PrivateEventsConfig,
-  PrivateEventInquiryData,
-  PrivateEventTypeOption,
-  PrivateEventValidationConfig,
-} from './private-events';
-
-export {
-  PRIVATE_EVENT_TYPE_OPTIONS,
-  DEFAULT_PRIVATE_EVENT_VALIDATION_CONFIG,
-} from './private-events';

@@ -2,76 +2,49 @@
  * SEO Configuration
  * Default values for SEO metadata across the site
  * Override these values per-page as needed
+ *
+ * Sources restaurant business identity from restaurant.config.ts
  */
 
 import type { SEOConfig, LocalBusinessSchema } from '../types/seo';
+import { restaurantSchema } from './restaurant.config';
 
 /**
- * Comprehensive LocalBusiness Schema Configuration
- * Enhanced structured data for Google local search results and rich snippets
+ * LocalBusiness Schema derived from the Restaurant configuration
+ * Maps restaurant schema properties to the LocalBusinessSchema interface
+ * for use in SEO structured data and site-wide defaults.
  */
 export const localBusinessSchema: LocalBusinessSchema = {
-  type: 'ProfessionalService',
-  name: 'Houston Web Services',
-  legalName: 'Houston Web Services',
-  description: 'Professional web design and development services for small businesses in Houston. We specialize in custom websites, SEO optimization, and digital solutions for Houston businesses.',
-  slogan: 'Building Digital Success for Houston Businesses',
-  url: 'https://houstonwebservices.com',
-  telephone: '+1-832-XXX-XXXX', // TODO: Update with actual phone
-  email: 'info@houstonwebservices.com', // TODO: Update with actual email
-  address: {
-    streetAddress: '1234 Main Street', // TODO: Update with actual address
-    addressLocality: 'Houston',
-    addressRegion: 'TX',
-    postalCode: '77077',
-    addressCountry: 'US',
-  },
-  geo: {
-    latitude: 29.7752, // TODO: Update with actual coordinates
-    longitude: -95.6091,
-  },
-  areaServed: [
-    { type: 'City', name: 'Houston', addressLocality: 'Houston', addressRegion: 'TX', addressCountry: 'US' },
-  ],
-  openingHoursSpecification: [
-    { dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '17:00' },
-  ],
-  openingHours: ['Mo-Fr 09:00-17:00'],
-  logo: 'https://houstonwebservices.com/images/logo.png',
-  image: ['https://houstonwebservices.com/images/storefront.jpg'],
-  priceRange: '$$',
-  currenciesAccepted: 'USD',
-  paymentAccepted: ['Cash', 'Credit Card', 'Debit Card', 'Check', 'Invoice', 'Bank Transfer'],
-  sameAs: [],
-  contactPoint: {
-    telephone: '+1-832-XXX-XXXX', // TODO: Update
-    email: 'info@houstonwebservices.com', // TODO: Update
-    contactType: 'customer service',
-    availableLanguage: ['English', 'Spanish'],
-    areaServed: ['Houston'],
-  },
-  makesOffer: [
-    'Custom Website Design',
-    'Web Development',
-    'Website Maintenance',
-    'Web Hosting',
-    'SEO Optimization',
-    'E-commerce Website Development',
-    'Logo Design',
-    'Content Writing',
-  ],
-  knowsAbout: [
-    'Web Design',
-    'Web Development',
-    'Search Engine Optimization',
-    'User Experience Design',
-    'Responsive Design',
-    'Website Security',
-    'Website Performance Optimization',
-    'Small Business Websites',
-    'Houston Web Services',
-  ],
-  knowsLanguage: ['English', 'Spanish'],
+  type: restaurantSchema.type,
+  name: restaurantSchema.name,
+  legalName: restaurantSchema.legalName,
+  alternateName: restaurantSchema.alternateName,
+  description: restaurantSchema.description,
+  slogan: restaurantSchema.slogan,
+  url: restaurantSchema.url,
+  telephone: restaurantSchema.telephone,
+  email: restaurantSchema.email,
+  address: restaurantSchema.address,
+  geo: restaurantSchema.geo,
+  areaServed: restaurantSchema.areaServed,
+  openingHoursSpecification: restaurantSchema.openingHoursSpecification,
+  openingHours: restaurantSchema.openingHours,
+  logo: restaurantSchema.logo,
+  image: restaurantSchema.image,
+  priceRange: restaurantSchema.priceRange,
+  currenciesAccepted: restaurantSchema.currenciesAccepted,
+  paymentAccepted: restaurantSchema.paymentAccepted,
+  aggregateRating: restaurantSchema.aggregateRating,
+  sameAs: restaurantSchema.sameAs,
+  contactPoint: restaurantSchema.contactPoint,
+  foundingDate: restaurantSchema.foundingDate,
+  numberOfEmployees: restaurantSchema.numberOfEmployees,
+  hasMenu: restaurantSchema.hasMenu,
+  acceptsReservations: restaurantSchema.acceptsReservations,
+  hasDriveThroughService: restaurantSchema.hasDriveThroughService,
+  makesOffer: restaurantSchema.makesOffer,
+  knowsAbout: restaurantSchema.knowsAbout,
+  knowsLanguage: restaurantSchema.knowsLanguage,
 };
 
 /**
@@ -80,21 +53,20 @@ export const localBusinessSchema: LocalBusinessSchema = {
  */
 export const seoConfig: SEOConfig = {
   // Site Identity
-  siteName: 'Houston Web Services',
-  siteUrl: 'https://houstonwebservices.com', // Update with actual domain
+  siteName: restaurantSchema.name,
+  siteUrl: restaurantSchema.url,
 
   // Title Configuration
-  titleTemplate: '%s | Houston Web Services',
+  titleTemplate: `%s | ${restaurantSchema.name}`,
 
   // Default Meta Content
-  defaultDescription:
-    'Professional web design and development services for small businesses in West Houston. Custom websites, SEO optimization, and digital solutions.',
+  defaultDescription: restaurantSchema.description,
   defaultLang: 'en',
   defaultLocale: 'en_US',
 
   // Default Social Sharing Image
   defaultImage: '/images/og-default.jpg', // Create this image (1200x630 recommended)
-  defaultImageAlt: 'Houston Web Services - Professional Web Design',
+  defaultImageAlt: `${restaurantSchema.name} - ${restaurantSchema.slogan}`,
 
   // Twitter Configuration
   twitterSite: undefined, // Add @username when available
@@ -107,7 +79,7 @@ export const seoConfig: SEOConfig = {
   defaultRobots: 'index, follow',
 
   // Theme
-  themeColor: '#1a365d', // Navy blue - update to match brand
+  themeColor: '#2d1810', // Warm dark brown - matches bistro brand
 
   // LocalBusiness Schema (comprehensive, for JSON-LD)
   localBusiness: localBusinessSchema,

@@ -1,8 +1,8 @@
 ---
 /**
  * FeaturedProjectsPreview Component
- * A homepage section showcasing 2-3 featured portfolio projects to give visitors
- * an immediate sense of the quality and style of work.
+ * A homepage section showcasing 2-3 featured restaurant experiences to give visitors
+ * an immediate sense of our signature dishes, events, and seasonal offerings.
  *
  * Features:
  * - Displays 2-3 featured projects in a responsive grid layout
@@ -18,15 +18,15 @@
  * @example Basic usage with projects data
  * ```astro
  * <FeaturedProjectsPreview
- *   heading="Featured Work"
- *   subheading="Check out some of our recent projects"
- *   projects={featuredProjects}
+ *   heading="Signature Experiences"
+ *   subheading="Explore our chef-crafted dishes and seasonal creations"
+ *   projects={featuredShowcases}
  * />
  * ```
  *
- * @example Minimal usage
+ * @example Minimal usage (uses restaurant-themed defaults)
  * ```astro
- * <FeaturedProjectsPreview projects={featuredProjects} />
+ * <FeaturedProjectsPreview projects={featuredShowcases} />
  * ```
  */
 
@@ -52,13 +52,13 @@ interface Props {
 }
 
 const {
-  heading = 'Featured Work',
-  subheading = 'Explore some of our recent projects that showcase our expertise in web design and development.',
+  heading = 'Signature Experiences',
+  subheading = 'Explore our chef-crafted dishes, curated events, and seasonal creations — each one designed to deliver an unforgettable dining experience.',
   projects = [],
-  id = 'featured-projects',
+  id = 'featured-showcases',
   class: className = '',
-  viewAllText = 'View All Projects',
-  viewAllHref = '/portfolio',
+  viewAllText = 'Explore Our Menu',
+  viewAllHref = '/menu',
 } = Astro.props;
 
 // Build CSS classes
@@ -115,7 +115,7 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
             <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <p class="featured-projects__empty-text">Featured projects coming soon.</p>
+        <p class="featured-projects__empty-text">Featured dining experiences coming soon.</p>
       </div>
     )}
 
@@ -128,7 +128,7 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
           variant="secondary"
           size="large"
           iconPosition="trailing"
-          ariaLabel="View all portfolio projects"
+          ariaLabel="Explore our full menu"
         >
           <Fragment slot="icon" set:html={arrowIcon} />
         </Button>
@@ -141,22 +141,42 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
   /* =================================================================
    * FEATURED PROJECTS PREVIEW COMPONENT STYLES
    * =================================================================
+   * Warm restaurant color palette with elegant typography.
    * Uses design system variables from variables.css
    * Follows BEM naming convention for maintainability
    */
 
   .featured-projects {
     padding: var(--spacing-16) var(--spacing-4);
-    background-color: var(--color-background);
+    background-color: var(--color-warm-cream, rgba(255, 251, 235, 1));
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle warm gradient overlay for depth */
+  .featured-projects::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(196, 167, 125, 0.06) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(114, 47, 55, 0.04) 100%
+    );
+    pointer-events: none;
   }
 
   .featured-projects__container {
     max-width: var(--container-7xl);
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
   }
 
   /* =================================================================
-   * SECTION HEADER
+   * SECTION HEADER - Elegant restaurant typography
    * ================================================================= */
   .featured-projects__header {
     text-align: center;
@@ -167,15 +187,16 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
     font-family: var(--font-heading);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+    color: var(--color-warm-charcoal, rgba(26, 20, 18, 1));
     margin: 0 0 var(--spacing-4);
     line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight, -0.01em);
   }
 
   .featured-projects__subheading {
     font-family: var(--font-body);
     font-size: var(--font-size-lg);
-    color: var(--color-text-secondary);
+    color: var(--color-warm-brown, rgba(60, 36, 21, 0.75));
     margin: 0;
     max-width: 40rem;
     margin-left: auto;
@@ -184,7 +205,7 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
   }
 
   /* =================================================================
-   * PROJECTS GRID
+   * PROJECTS GRID - Warm, inviting card layout
    * ================================================================= */
   .featured-projects__grid {
     display: grid;
@@ -193,7 +214,94 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
   }
 
   .featured-projects__item {
-    /* Animation handled by staggered appearance below */
+    /* Warm card styling overrides for the grid area */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(196, 167, 125, 0.25);
+    --card-shadow: 0 2px 12px rgba(60, 36, 21, 0.06);
+    --card-hover-shadow: 0 8px 30px rgba(60, 36, 21, 0.1), 0 2px 8px rgba(114, 47, 55, 0.06);
+  }
+
+  /* Override ProjectCard styles within this warm context */
+  .featured-projects__item :global(.project-card) {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: var(--radius-lg, 0.75rem);
+  }
+
+  .featured-projects__item :global(.project-card:hover) {
+    box-shadow: var(--card-hover-shadow);
+    border-color: var(--color-warm-gold, rgba(196, 167, 125, 0.5));
+    transform: translateY(-4px);
+  }
+
+  /* Warm-toned overlay for card images on hover */
+  .featured-projects__item :global(.project-card__overlay) {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(60, 36, 21, 0.7) 0%,
+      rgba(114, 47, 55, 0.85) 100%
+    );
+  }
+
+  /* Warm-toned overlay text styling */
+  .featured-projects__item :global(.project-card__overlay-text) {
+    background:
+      linear-gradient(rgba(60, 36, 21, 0.7), rgba(60, 36, 21, 0.7)) padding-box,
+      linear-gradient(
+        135deg,
+        var(--color-warm-gold, rgba(196, 167, 125, 1)) 0%,
+        var(--color-warm-amber, rgba(180, 120, 60, 1)) 50%,
+        var(--color-warm-terracotta, rgba(186, 99, 67, 1)) 100%
+      ) border-box;
+    box-shadow: 0 0 20px rgba(196, 167, 125, 0.3);
+  }
+
+  .featured-projects__item :global(.project-card:hover .project-card__overlay-text) {
+    box-shadow: 0 0 30px rgba(196, 167, 125, 0.5), 0 0 60px rgba(180, 120, 60, 0.2);
+  }
+
+  /* Warm-toned overlay corners */
+  .featured-projects__item :global(.project-card__overlay::before),
+  .featured-projects__item :global(.project-card__overlay::after) {
+    border-color: var(--color-warm-gold, rgba(196, 167, 125, 1));
+  }
+
+  /* Warm-toned technology tags */
+  .featured-projects__item :global(.project-card__tag) {
+    background-color: rgba(196, 167, 125, 0.12);
+    color: var(--color-warm-brown, rgba(60, 36, 21, 0.85));
+    border-color: rgba(196, 167, 125, 0.25);
+  }
+
+  .featured-projects__item :global(.project-card:hover .project-card__tag) {
+    background-color: rgba(196, 167, 125, 0.2);
+    border-color: rgba(196, 167, 125, 0.4);
+  }
+
+  /* Warm-toned featured badge */
+  .featured-projects__item :global(.project-card__badge) {
+    background-color: var(--color-warm-burgundy, rgba(114, 47, 55, 1));
+  }
+
+  /* Warm shine sweep on card hover */
+  .featured-projects__item :global(.project-card::after) {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(196, 167, 125, 0.08) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Warm hover border color for featured cards */
+  .featured-projects__item :global(.project-card--featured) {
+    border-color: var(--color-warm-gold, rgba(196, 167, 125, 0.4));
+  }
+
+  .featured-projects__item :global(.project-card--featured:hover) {
+    border-color: var(--color-warm-gold, rgba(196, 167, 125, 0.7));
+    box-shadow: var(--card-hover-shadow), 0 0 0 1px rgba(196, 167, 125, 0.15);
   }
 
   /* =================================================================
@@ -206,15 +314,15 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
     justify-content: center;
     gap: var(--spacing-4);
     padding: var(--spacing-16) var(--spacing-8);
-    background-color: var(--color-background-muted);
+    background-color: rgba(255, 255, 255, 0.6);
     border-radius: var(--radius-xl);
-    border: 2px dashed var(--color-border);
+    border: 2px dashed rgba(196, 167, 125, 0.35);
   }
 
   .featured-projects__empty-icon {
     width: var(--spacing-16);
     height: var(--spacing-16);
-    color: var(--color-text-tertiary);
+    color: var(--color-warm-gold, rgba(196, 167, 125, 0.5));
   }
 
   .featured-projects__empty-icon svg {
@@ -225,7 +333,7 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
   .featured-projects__empty-text {
     font-family: var(--font-body);
     font-size: var(--font-size-lg);
-    color: var(--color-text-tertiary);
+    color: var(--color-warm-brown, rgba(60, 36, 21, 0.6));
     margin: 0;
     text-align: center;
   }
@@ -343,6 +451,10 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
     .featured-projects {
       padding: var(--spacing-8) 0;
       background-color: transparent;
+    }
+
+    .featured-projects::before {
+      display: none;
     }
 
     .featured-projects__grid {

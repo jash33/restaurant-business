@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769972358920-30573171",
+  "trigger": "feature_success",
+  "timestamp": "2026-02-01T18:59:18.920Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "feature-1769971556899-x6md8r9ta",
+  "featureName": "",
+  "error": "Feature completed in 802s",
+  "passes": true
+}

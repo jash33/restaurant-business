@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769972351945-92d04949",
+  "trigger": "feature_success",
+  "timestamp": "2026-02-01T18:59:11.945Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "feature-1769971615985-c3qcpx355",
+  "featureName": "Remove private events route and unused components",
+  "error": "Feature completed in 728s",
+  "passes": true
+}

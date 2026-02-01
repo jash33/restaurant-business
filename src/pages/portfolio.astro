@@ -1,7 +1,7 @@
 ---
 /**
- * Portfolio Page - Houston Web Services
- * Showcases completed projects with filtering capabilities.
+ * Gallery Page - Restaurant Showcases
+ * Showcases our dishes, events, and interiors with filtering capabilities.
  */
 
 import Layout from '../layouts/Layout.astro';
@@ -11,303 +11,302 @@ import Button from '../components/Button.astro';
 import type { Project } from '../types/portfolio';
 
 /**
- * Sample portfolio projects
- * These showcase different project types, technologies, and categories
+ * Restaurant showcase items
+ * These highlight our dishes, events, interiors, and dining experiences
  */
 const projects: Project[] = [
   {
-    id: 'houston-energy-consulting',
-    title: 'Houston Energy Consulting',
-    description: 'A professional website for a Houston-based energy consulting firm featuring a modern design, custom CMS integration, and lead generation forms that increased client inquiries by 150%.',
+    id: 'wagyu-tomahawk-steak',
+    title: 'Wagyu Tomahawk Steak',
+    description: 'Our showstopping 32oz bone-in wagyu tomahawk, dry-aged for 45 days and finished with herb-compound butter. Served tableside with roasted bone marrow, charred broccolini, and truffle pommes puree.',
     thumbnail: {
-      src: '/portfolio/energy-consulting.svg',
-      alt: 'Houston Energy Consulting website homepage showing professional dark blue design with energy industry imagery',
+      src: '/portfolio/wagyu-tomahawk.svg',
+      alt: 'Perfectly seared wagyu tomahawk steak with golden crust, herb butter, and elegant plating on a dark slate board',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'Astro', category: 'frontend' },
-      { name: 'TypeScript', category: 'frontend' },
-      { name: 'Tailwind CSS', category: 'frontend' },
-      { name: 'Netlify CMS', category: 'cms' },
+      { name: 'Dry-Aged 45 Days', category: 'technique' },
+      { name: 'Wagyu A5', category: 'ingredient' },
+      { name: 'Wood-Fired', category: 'technique' },
+      { name: 'House Signature', category: 'cuisine' },
     ],
-    category: 'website',
+    category: 'dishes',
     featured: true,
+    completedDate: '2025-01-15',
+    links: [
+      { text: 'View Full Menu', href: '/menu', type: 'live-site' },
+    ],
+  },
+  {
+    id: 'grand-ballroom-gala',
+    title: 'Grand Ballroom Gala',
+    description: 'A 300-guest black-tie corporate gala featuring a five-course tasting menu, champagne reception, and live jazz ensemble. Our events team transformed the space with crystal centerpieces, ambient uplighting, and curated floral arrangements.',
+    thumbnail: {
+      src: '/portfolio/grand-ballroom.svg',
+      alt: 'Elegant ballroom setup with crystal chandeliers, round tables with white linens, and dramatic uplighting',
+      width: 600,
+      height: 400,
+    },
+    technologies: [
+      { name: 'Corporate Gala', category: 'service' },
+      { name: '300 Guests', category: 'experience' },
+      { name: 'Five-Course Menu', category: 'cuisine' },
+      { name: 'Full Service', category: 'service' },
+    ],
+    category: 'events',
+    featured: true,
+    completedDate: '2025-01-10',
+    links: [
+      { text: 'Plan Your Event', href: '/catering', type: 'live-site' },
+      { text: 'View Gallery', href: '/gallery', type: 'case-study' },
+    ],
+  },
+  {
+    id: 'main-dining-room',
+    title: 'The Main Dining Room',
+    description: 'Our flagship dining space seats 120 guests beneath a restored 19th-century coffered ceiling. Warm walnut paneling, custom leather banquettes, and soft Edison lighting create an atmosphere of refined elegance perfect for memorable dining experiences.',
+    thumbnail: {
+      src: '/portfolio/main-dining-room.svg',
+      alt: 'Spacious main dining room with warm wood paneling, leather banquettes, Edison bulb lighting, and elegant table settings',
+      width: 600,
+      height: 400,
+    },
+    technologies: [
+      { name: 'Fine Dining', category: 'experience' },
+      { name: 'Seats 120', category: 'service' },
+      { name: 'Historic Architecture', category: 'ambiance' },
+      { name: 'Custom Design', category: 'ambiance' },
+    ],
+    category: 'interiors',
+    featured: true,
+    completedDate: '2025-01-05',
+    links: [
+      { text: 'Make a Reservation', href: '/reservations', type: 'live-site' },
+    ],
+  },
+  {
+    id: 'handmade-pasta-collection',
+    title: 'Handmade Pasta Collection',
+    description: 'Our pasta is made fresh daily using imported Italian semolina and cage-free eggs. From silky pappardelle with braised lamb ragu to delicate lobster-filled agnolotti in saffron cream, each dish celebrates authentic Italian craftsmanship.',
+    thumbnail: {
+      src: '/portfolio/handmade-pasta.svg',
+      alt: 'Fresh handmade pasta varieties including pappardelle, agnolotti, and tagliatelle with colorful sauces',
+      width: 600,
+      height: 400,
+    },
+    technologies: [
+      { name: 'Made Fresh Daily', category: 'technique' },
+      { name: 'Italian Semolina', category: 'ingredient' },
+      { name: 'Authentic Recipes', category: 'cuisine' },
+      { name: 'Artisan Crafted', category: 'technique' },
+    ],
+    category: 'dishes',
+    featured: false,
+    completedDate: '2024-12-20',
+    links: [
+      { text: 'View Pasta Menu', href: '/menu#pasta', type: 'live-site' },
+    ],
+  },
+  {
+    id: 'rooftop-terrace',
+    title: 'The Rooftop Terrace',
+    description: 'Perched above the Houston skyline, our rooftop terrace offers al fresco dining with breathtaking city views. Lush vertical gardens, twinkling string lights, and a retractable glass canopy make it a year-round destination for cocktails and cuisine.',
+    thumbnail: {
+      src: '/portfolio/rooftop-terrace.svg',
+      alt: 'Stunning rooftop terrace with city skyline views, string lights, vertical gardens, and intimate table settings',
+      width: 600,
+      height: 400,
+    },
+    technologies: [
+      { name: 'Skyline Views', category: 'ambiance' },
+      { name: 'Al Fresco', category: 'experience' },
+      { name: 'Retractable Canopy', category: 'ambiance' },
+      { name: 'Seats 60', category: 'service' },
+    ],
+    category: 'interiors',
+    featured: false,
     completedDate: '2024-11-15',
     links: [
-      { text: 'View Live Site', href: 'https://example-energy.com', type: 'live-site', openInNewTab: true },
+      { text: 'Reserve Terrace', href: '/reservations?area=terrace', type: 'live-site' },
     ],
   },
   {
-    id: 'houston-dental-care',
-    title: 'Houston Family Dental Care',
-    description: 'Complete website redesign for a dental practice in Houston, TX. Includes online appointment booking, patient portal integration, and HIPAA-compliant contact forms.',
+    id: 'garden-wedding-reception',
+    title: 'Garden Wedding Reception',
+    description: 'A magical garden wedding reception for 200 guests featuring a farm-to-table four-course dinner, artisan cocktail bar, and custom wedding cake. Our chef worked directly with the couple to design a menu reflecting their heritage and love story.',
     thumbnail: {
-      src: '/portfolio/dental-care.svg',
-      alt: 'Houston Family Dental Care website with bright, welcoming design and appointment booking interface',
+      src: '/portfolio/garden-wedding.svg',
+      alt: 'Romantic garden wedding reception with floral arches, candlelit tables, and an elegant multi-tiered cake',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'React', category: 'frontend' },
-      { name: 'Next.js', category: 'fullstack' },
-      { name: 'PostgreSQL', category: 'backend' },
-      { name: 'Stripe', category: 'ecommerce' },
+      { name: 'Wedding Reception', category: 'service' },
+      { name: '200 Guests', category: 'experience' },
+      { name: 'Custom Menu', category: 'cuisine' },
+      { name: 'Artisan Cocktails', category: 'experience' },
     ],
-    category: 'web-app',
-    featured: true,
-    completedDate: '2024-10-20',
-    links: [
-      { text: 'View Live Site', href: 'https://example-dental.com', type: 'live-site', openInNewTab: true },
-      { text: 'Case Study', href: '/case-studies/dental-care', type: 'case-study' },
-    ],
-  },
-  {
-    id: 'houston-florist',
-    title: 'Houston Florist & Gifts',
-    description: 'E-commerce platform for a local florist shop with same-day delivery options, seasonal collections, and subscription flower services. Built for high-volume traffic during holidays.',
-    thumbnail: {
-      src: '/portfolio/florist-shop.svg',
-      alt: 'Houston Florist online store showcasing beautiful floral arrangements with shopping cart functionality',
-      width: 600,
-      height: 400,
-    },
-    technologies: [
-      { name: 'Shopify', category: 'ecommerce' },
-      { name: 'Liquid', category: 'frontend' },
-      { name: 'JavaScript', category: 'frontend' },
-      { name: 'Custom Theme', category: 'design' },
-    ],
-    category: 'ecommerce',
+    category: 'events',
     featured: false,
-    completedDate: '2024-09-08',
+    completedDate: '2024-10-28',
     links: [
-      { text: 'View Store', href: 'https://example-florist.com', type: 'live-site', openInNewTab: true },
+      { text: 'Plan Your Wedding', href: '/catering#weddings', type: 'live-site' },
+      { text: 'View Gallery', href: '/gallery#weddings', type: 'case-study' },
     ],
   },
   {
-    id: '-houston-fitness',
-    title: ' Houston Fitness Center',
-    description: 'Dynamic website with class schedules, membership management, and trainer booking system. Features real-time class availability and automated reminder notifications.',
+    id: 'gulf-coast-seafood-tower',
+    title: 'Gulf Coast Seafood Tower',
+    description: 'Our grand seafood tower is a celebration of the Texas Gulf Coast. Three tiers of freshly shucked oysters, chilled jumbo shrimp, Alaskan king crab legs, tuna tartare, and smoked salmon, all presented over crushed ice with house-made mignonette and cocktail sauce.',
     thumbnail: {
-      src: '/portfolio/fitness-center.svg',
-      alt: ' Houston Fitness Center website with bold imagery and class schedule interface',
+      src: '/portfolio/seafood-tower.svg',
+      alt: 'Impressive three-tiered seafood tower with oysters, shrimp, crab, and garnishes on crushed ice',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'Vue.js', category: 'frontend' },
-      { name: 'Node.js', category: 'backend' },
-      { name: 'MongoDB', category: 'backend' },
-      { name: 'Twilio', category: 'backend' },
+      { name: 'Gulf Coast Fresh', category: 'ingredient' },
+      { name: 'Sustainably Sourced', category: 'ingredient' },
+      { name: 'Tableside Service', category: 'service' },
+      { name: 'Shareable', category: 'experience' },
     ],
-    category: 'web-app',
+    category: 'dishes',
     featured: false,
-    completedDate: '2024-08-25',
+    completedDate: '2024-09-15',
     links: [
-      { text: 'View Live Site', href: 'https://example-fitness.com', type: 'live-site', openInNewTab: true },
+      { text: 'View Seafood Menu', href: '/menu#seafood', type: 'live-site' },
     ],
   },
   {
-    id: 'houston-law-group',
-    title: 'Houston Law Group',
-    description: 'Professional legal services website with practice area pages, attorney profiles, and secure client intake forms. Optimized for local SEO to attract Houston-area clients.',
+    id: 'craft-cocktail-lounge',
+    title: 'The Speakeasy Lounge',
+    description: 'Our intimate speakeasy-inspired lounge seats 40 guests amid exposed brick, velvet seating, and a handcrafted mahogany bar. The cocktail program features house-infused spirits, barrel-aged classics, and seasonal creations by our award-winning mixologist.',
     thumbnail: {
-      src: '/portfolio/law-firm.svg',
-      alt: 'Houston Law Group website with sophisticated dark design and attorney profile cards',
+      src: '/portfolio/speakeasy-lounge.svg',
+      alt: 'Moody speakeasy lounge with exposed brick, velvet booths, mahogany bar, and artful cocktail display',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'WordPress', category: 'cms' },
-      { name: 'PHP', category: 'backend' },
-      { name: 'ACF Pro', category: 'cms' },
-      { name: 'Custom Theme', category: 'design' },
+      { name: 'House-Infused Spirits', category: 'technique' },
+      { name: 'Barrel-Aged Cocktails', category: 'technique' },
+      { name: 'Intimate Setting', category: 'ambiance' },
+      { name: 'Award-Winning', category: 'experience' },
     ],
-    category: 'website',
+    category: 'bar-lounge',
     featured: false,
-    completedDate: '2024-07-30',
+    completedDate: '2024-08-20',
     links: [
-      { text: 'View Live Site', href: 'https://example-law.com', type: 'live-site', openInNewTab: true },
+      { text: 'View Cocktail Menu', href: '/menu#cocktails', type: 'live-site' },
     ],
   },
   {
-    id: 'sweet-treats-bakery',
-    title: 'Sweet Treats Bakery',
-    description: 'Online ordering system for a local bakery with custom cake builder, pickup scheduling, and wholesale ordering portal. Includes inventory management backend.',
+    id: 'spring-tasting-menu',
+    title: 'Spring Tasting Menu 2025',
+    description: 'Our seven-course spring tasting menu celebrates the season with dishes like pea shoot veloute with crème fraîche, pan-seared halibut with morel mushrooms, and a strawberry-rhubarb pavlova. Optional wine pairing curated by our sommelier.',
     thumbnail: {
-      src: '/portfolio/bakery-shop.svg',
-      alt: 'Sweet Treats Bakery website with appetizing product photography and custom cake builder',
+      src: '/portfolio/spring-tasting.svg',
+      alt: 'Elegant spring tasting menu courses artfully plated with edible flowers, microgreens, and vibrant seasonal colors',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'React', category: 'frontend' },
-      { name: 'Firebase', category: 'backend' },
-      { name: 'Stripe', category: 'ecommerce' },
-      { name: 'Figma', category: 'design' },
+      { name: 'Seven Courses', category: 'cuisine' },
+      { name: 'Wine Pairing', category: 'experience' },
+      { name: 'Seasonal Produce', category: 'ingredient' },
+      { name: 'Farm-to-Table', category: 'ingredient' },
     ],
-    category: 'ecommerce',
+    category: 'seasonal',
     featured: false,
-    completedDate: '2024-06-15',
+    completedDate: '2024-07-10',
     links: [
-      { text: 'View Store', href: 'https://example-bakery.com', type: 'live-site', openInNewTab: true },
-      { text: 'GitHub', href: 'https://github.com/example/bakery', type: 'github', openInNewTab: true },
+      { text: 'View Seasonal Menu', href: '/menu#specials', type: 'live-site' },
     ],
   },
   {
-    id: 'texas-realty-partners',
-    title: 'Texas Realty Partners',
-    description: 'Real estate listing platform with MLS integration, property search filters, virtual tour support, and agent dashboard. Built for mobile-first browsing experience.',
+    id: 'private-wine-cellar',
+    title: 'The Wine Cellar',
+    description: 'Our temperature-controlled wine cellar doubles as an exclusive private dining room for up to 16 guests. Surrounded by our curated collection of 500+ wines, guests enjoy a bespoke multi-course dinner with sommelier-selected pairings in an unforgettable setting.',
     thumbnail: {
-      src: '/portfolio/real-estate.svg',
-      alt: 'Texas Realty Partners website with property listings and advanced search functionality',
+      src: '/portfolio/wine-cellar.svg',
+      alt: 'Intimate wine cellar dining room with stone walls, wine racks, rustic chandelier, and a long wooden dining table',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'Next.js', category: 'fullstack' },
-      { name: 'GraphQL', category: 'backend' },
-      { name: 'PostgreSQL', category: 'backend' },
-      { name: 'AWS', category: 'backend' },
+      { name: '500+ Wines', category: 'experience' },
+      { name: 'Private Dining', category: 'service' },
+      { name: 'Sommelier Curated', category: 'service' },
+      { name: 'Stone & Oak', category: 'ambiance' },
     ],
-    category: 'web-app',
-    featured: true,
-    completedDate: '2024-05-20',
-    links: [
-      { text: 'View Live Site', href: 'https://example-realty.com', type: 'live-site', openInNewTab: true },
-    ],
-  },
-  {
-    id: 'spring-branch-restaurant',
-    title: 'Spring Branch Cantina',
-    description: 'Restaurant website with online ordering, reservation system, and loyalty program integration. Features mouth-watering food photography and menu management.',
-    thumbnail: {
-      src: '/portfolio/restaurant.svg',
-      alt: 'Spring Branch Cantina website with vibrant Mexican food imagery and online ordering interface',
-      width: 600,
-      height: 400,
-    },
-    technologies: [
-      { name: 'Squarespace', category: 'cms' },
-      { name: 'Square POS', category: 'ecommerce' },
-      { name: 'JavaScript', category: 'frontend' },
-      { name: 'Custom CSS', category: 'design' },
-    ],
-    category: 'website',
+    category: 'interiors',
     featured: false,
-    completedDate: '2024-04-10',
+    completedDate: '2024-06-05',
     links: [
-      { text: 'View Live Site', href: 'https://example-cantina.com', type: 'live-site', openInNewTab: true },
+      { text: 'Book Private Dining', href: '/reservations?area=wine-cellar', type: 'live-site' },
     ],
   },
   {
-    id: 'startup-launch-page',
-    title: 'TechStart Landing Page',
-    description: 'High-converting landing page for a tech startup launch. Features animated hero section, testimonial carousel, and email capture with 40% conversion rate.',
+    id: 'holiday-catering-spread',
+    title: 'Holiday Catering Collection',
+    description: 'Our holiday catering packages bring festive elegance to any celebration. Choose from curated menus featuring glazed heritage ham, herb-crusted prime rib, seasonal sides, and artisan dessert platters — all prepared fresh and delivered to your venue.',
     thumbnail: {
-      src: '/portfolio/startup-landing.svg',
-      alt: 'TechStart modern landing page with bold gradient design and clear call-to-action buttons',
+      src: '/portfolio/holiday-catering.svg',
+      alt: 'Luxurious holiday catering spread with carved prime rib, glazed ham, seasonal sides, and festive desserts',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'HTML/CSS', category: 'frontend' },
-      { name: 'GSAP', category: 'frontend' },
-      { name: 'Mailchimp', category: 'backend' },
-      { name: 'A/B Testing', category: 'design' },
+      { name: 'Holiday Packages', category: 'service' },
+      { name: 'Delivery Available', category: 'service' },
+      { name: 'Heritage Meats', category: 'ingredient' },
+      { name: 'Custom Menus', category: 'cuisine' },
     ],
-    category: 'landing-page',
+    category: 'catering',
     featured: false,
-    completedDate: '2024-03-28',
+    completedDate: '2024-05-01',
     links: [
-      { text: 'View Page', href: 'https://example-startup.com', type: 'live-site', openInNewTab: true },
+      { text: 'View Catering Menus', href: '/catering#holiday', type: 'live-site' },
+      { text: 'Request Quote', href: '/contact?subject=catering', type: 'case-study' },
     ],
   },
   {
-    id: 'nonprofit-redesign',
-    title: 'Houston Hope Foundation',
-    description: 'Complete website redesign for a local nonprofit organization. Improved donation flow, volunteer registration, and event management resulting in 200% increase in online donations.',
+    id: 'dessert-artistry',
+    title: 'Artisan Dessert Collection',
+    description: 'Our pastry chef creates edible works of art, from the signature dark chocolate lava cake with espresso gelato to the deconstructed lemon tart with Italian meringue. Each dessert balances visual drama with extraordinary flavor.',
     thumbnail: {
-      src: '/portfolio/nonprofit.svg',
-      alt: 'Houston Hope Foundation website with warm, inviting design and prominent donation buttons',
+      src: '/portfolio/dessert-artistry.svg',
+      alt: 'Stunning dessert collection featuring chocolate lava cake, deconstructed lemon tart, and artistic plating',
       width: 600,
       height: 400,
     },
     technologies: [
-      { name: 'Astro', category: 'frontend' },
-      { name: 'React', category: 'frontend' },
-      { name: 'Stripe', category: 'ecommerce' },
-      { name: 'Sanity CMS', category: 'cms' },
+      { name: 'Pastry Chef', category: 'technique' },
+      { name: 'House-Made', category: 'technique' },
+      { name: 'Artisan Chocolate', category: 'ingredient' },
+      { name: 'Visual Artistry', category: 'cuisine' },
     ],
-    category: 'redesign',
+    category: 'dishes',
     featured: false,
-    completedDate: '2024-02-14',
+    completedDate: '2024-04-15',
     links: [
-      { text: 'View Live Site', href: 'https://example-nonprofit.com', type: 'live-site', openInNewTab: true },
-      { text: 'Case Study', href: '/case-studies/nonprofit', type: 'case-study' },
-    ],
-  },
-  {
-    id: 'custom-crm-dashboard',
-    title: 'SalesFlow CRM Dashboard',
-    description: 'Custom CRM dashboard application for a Houston sales team. Features pipeline visualization, automated reporting, and integration with existing business tools.',
-    thumbnail: {
-      src: '/portfolio/crm-dashboard.svg',
-      alt: 'SalesFlow CRM dashboard with colorful charts, pipeline view, and team performance metrics',
-      width: 600,
-      height: 400,
-    },
-    technologies: [
-      { name: 'React', category: 'frontend' },
-      { name: 'TypeScript', category: 'frontend' },
-      { name: 'Node.js', category: 'backend' },
-      { name: 'D3.js', category: 'frontend' },
-    ],
-    category: 'custom-development',
-    featured: false,
-    completedDate: '2024-01-25',
-    links: [
-      { text: 'Request Demo', href: '/contact?project=crm-demo', type: 'live-site' },
-      { text: 'GitHub', href: 'https://github.com/example/salesflow', type: 'github', openInNewTab: true },
-    ],
-  },
-  {
-    id: 'product-launch-campaign',
-    title: 'EcoBottle Product Launch',
-    description: 'Multi-page marketing campaign for sustainable product launch. Includes product showcase, pre-order system, and social proof integration.',
-    thumbnail: {
-      src: '/portfolio/product-launch.svg',
-      alt: 'EcoBottle product launch page with stunning product photography and pre-order countdown timer',
-      width: 600,
-      height: 400,
-    },
-    technologies: [
-      { name: 'Webflow', category: 'cms' },
-      { name: 'JavaScript', category: 'frontend' },
-      { name: 'Zapier', category: 'backend' },
-      { name: 'Klaviyo', category: 'backend' },
-    ],
-    category: 'landing-page',
-    featured: false,
-    completedDate: '2023-12-01',
-    links: [
-      { text: 'View Campaign', href: 'https://example-ecobottle.com', type: 'live-site', openInNewTab: true },
+      { text: 'View Dessert Menu', href: '/menu#desserts', type: 'live-site' },
     ],
   },
 ];
 ---
 
 <Layout
-  title="Portfolio"
-  description="Browse our portfolio of web design and development projects for Houston businesses. See examples of our custom websites, e-commerce stores, and web applications."
+  title="Gallery"
+  description="Explore our restaurant gallery featuring signature dishes, stunning interiors, and unforgettable events. See why Houston diners choose us for fine dining, catering, and celebrations."
   openGraph={{
     type: 'website',
   }}
   jsonLd={{
     type: 'CollectionPage',
-    name: 'Houston Web Services Portfolio',
-    description: 'Portfolio of web design and development projects for Houston businesses.',
+    name: 'Restaurant Gallery & Showcases',
+    description: 'Gallery of signature dishes, dining spaces, catering events, and seasonal menus at our Houston restaurant.',
     url: 'https://houstonwebservices.com/portfolio',
   }}
 >
@@ -320,44 +319,44 @@ const projects: Project[] = [
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
-            <span>Real Results • Local Businesses</span>
+            <span>Award-Winning • Houston Dining</span>
           </div>
           <h1 id="portfolio-hero-heading" class="portfolio-hero__title">
-            Our Work<br/>
-            <span class="portfolio-hero__title-highlight">Speaks for Itself</span>
+            A Feast for<br/>
+            <span class="portfolio-hero__title-highlight">The Eyes & Palate</span>
           </h1>
           <p class="portfolio-hero__description">
-            Explore our portfolio of custom web solutions. From small business websites to complex web applications,
-            we've helped Houston businesses establish their online presence and grow their digital footprint.
+            Explore our gallery of signature dishes, stunning dining spaces, and unforgettable events.
+            Every detail — from plating to ambiance — is crafted to deliver an extraordinary dining experience.
           </p>
           <div class="portfolio-hero__cta-group">
             <Button
-              text="Start Your Project"
-              href="/contact"
+              text="Make a Reservation"
+              href="/reservations"
               variant="primary"
               size="large"
             />
             <Button
-              text="View Services"
-              href="/services"
+              text="View Our Menu"
+              href="/menu"
               variant="secondary"
               size="large"
             />
           </div>
           <div class="portfolio-hero__stats">
             <div class="portfolio-hero__stat">
-              <span class="portfolio-hero__stat-value">50+</span>
-              <span class="portfolio-hero__stat-label">Projects Completed</span>
+              <span class="portfolio-hero__stat-value">200+</span>
+              <span class="portfolio-hero__stat-label">Dishes Crafted</span>
             </div>
             <div class="portfolio-hero__stat-divider"></div>
             <div class="portfolio-hero__stat">
-              <span class="portfolio-hero__stat-value">100%</span>
-              <span class="portfolio-hero__stat-label">Client Satisfaction</span>
+              <span class="portfolio-hero__stat-value">500+</span>
+              <span class="portfolio-hero__stat-label">Events Hosted</span>
             </div>
             <div class="portfolio-hero__stat-divider"></div>
             <div class="portfolio-hero__stat">
-              <span class="portfolio-hero__stat-value">Houston</span>
-              <span class="portfolio-hero__stat-label">Locally Based</span>
+              <span class="portfolio-hero__stat-value">4.9★</span>
+              <span class="portfolio-hero__stat-label">Guest Rating</span>
             </div>
           </div>
         </div>
@@ -366,29 +365,29 @@ const projects: Project[] = [
             <div class="portfolio-hero__preview-card portfolio-hero__preview-card--1">
               <div class="portfolio-hero__preview-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                  <path d="M4 4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h16v9H4V6zm0 11h16v1H4v-1z"/>
+                  <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.20-1.10-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"/>
                 </svg>
               </div>
-              <span class="portfolio-hero__preview-label">Business Websites</span>
-              <span class="portfolio-hero__preview-price">20+ Built</span>
+              <span class="portfolio-hero__preview-label">Signature Dishes</span>
+              <span class="portfolio-hero__preview-price">200+ Crafted</span>
             </div>
             <div class="portfolio-hero__preview-card portfolio-hero__preview-card--2">
               <div class="portfolio-hero__preview-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
                 </svg>
               </div>
-              <span class="portfolio-hero__preview-label">E-commerce Stores</span>
-              <span class="portfolio-hero__preview-price">15+ Launched</span>
+              <span class="portfolio-hero__preview-label">Events Hosted</span>
+              <span class="portfolio-hero__preview-price">500+ Served</span>
             </div>
             <div class="portfolio-hero__preview-card portfolio-hero__preview-card--3">
               <div class="portfolio-hero__preview-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                  <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                  <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm0 2.84L18 12h-1v8h-2v-6H9v6H7v-8H6l6-6.16z"/>
                 </svg>
               </div>
-              <span class="portfolio-hero__preview-label">Web Applications</span>
-              <span class="portfolio-hero__preview-price">10+ Deployed</span>
+              <span class="portfolio-hero__preview-label">Dining Spaces</span>
+              <span class="portfolio-hero__preview-price">5 Unique</span>
             </div>
           </div>
         </div>
@@ -398,8 +397,8 @@ const projects: Project[] = [
 
     <!-- Portfolio Grid Section -->
     <PortfolioSection
-      heading="Featured Projects"
-      subheading="Browse through our recent work to see the quality and diversity of our web development projects."
+      heading="Our Showcases"
+      subheading="From chef-crafted dishes to elegant interiors and unforgettable events, explore the experiences that define our restaurant."
       projects={projects}
       columns={3}
       enableFiltering={true}
@@ -408,15 +407,15 @@ const projects: Project[] = [
 
     <!-- Contact CTA Section -->
     <ContactCTA
-      headline="Ready to Start Your Project?"
-      supportingText="Whether you need a simple website or a complex web application, we have the expertise to bring your vision to life.  Houston businesses trust us to deliver results that exceed expectations."
+      headline="Ready to Experience It In Person?"
+      supportingText="Whether you're planning an intimate dinner, a grand celebration, or simply craving an unforgettable meal, we're ready to welcome you. Reserve your table or plan your next event with us today."
       primaryCTA={{
-        text: "Start Your Project",
-        href: "/contact",
+        text: "Make a Reservation",
+        href: "/reservations",
       }}
       secondaryCTA={{
-        text: "View Services & Pricing",
-        href: "/services",
+        text: "Plan an Event",
+        href: "/catering",
       }}
     />
   </main>

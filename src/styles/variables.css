@@ -178,6 +178,19 @@
   --color-cuisine-bakery-accent: #8b4513;     /* Cocoa brown */
 
   /* -----------------------------------------------------------------
+   * Restaurant Brand Colors
+   * Warm, elegant palette for restaurant-specific sections
+   * (hero overlays, menu pages, and branded elements)
+   * ----------------------------------------------------------------- */
+  --color-cream: rgba(255, 251, 235, 1);          /* Warm white for text on dark backgrounds */
+  --color-cream-light: rgba(255, 251, 235, 0.8);  /* Muted cream for secondary text */
+  --color-burgundy: #722f37;                       /* Rich wine red for CTAs */
+  --color-burgundy-light: #8b3a44;                 /* Lighter burgundy for hover states */
+  --color-charcoal: #1a1412;                       /* Dark warm black for backgrounds */
+  --color-terracotta: #ba6343;                     /* Earthy terracotta accent */
+  --color-gold: #c4a77d;                           /* Warm gold accent */
+
+  /* -----------------------------------------------------------------
    * Semantic Colors - UI Feedback States
    * Each with base, light (backgrounds), and dark (text) variants
    * ----------------------------------------------------------------- */
@@ -878,6 +891,15 @@ html[data-theme="dark"] {
   --color-cuisine-bakery-primary: #f0c8cc;
   --color-cuisine-bakery-secondary: #fff0e0;
   --color-cuisine-bakery-accent: #a0623a;
+
+  /* Restaurant Brand Colors - Dark mode (same values, hero is always dark bg) */
+  --color-cream: rgba(255, 251, 235, 1);
+  --color-cream-light: rgba(255, 251, 235, 0.8);
+  --color-burgundy: #8b3a44;
+  --color-burgundy-light: #a04450;
+  --color-charcoal: #1a1412;
+  --color-terracotta: #d07555;
+  --color-gold: #d4b78d;
 }
 
 /* Selection styling for dark mode */

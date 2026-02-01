@@ -27,16 +27,14 @@ const searchParams = Astro.url.searchParams;
 // Navigation links for quick access
 const quickLinks = [
   { href: '/', label: 'Homepage', description: 'Return to our main page' },
-  { href: '/services', label: 'Services', description: 'Explore our web solutions' },
-  { href: '/portfolio', label: 'Portfolio', description: 'View our recent projects' },
+  { href: '/menu', label: 'Menu', description: 'View our menu' },
   { href: '/contact', label: 'Contact Us', description: 'Get in touch with our team' },
   { href: '/about', label: 'About Us', description: 'Learn more about our company' },
 ];
 
 // Popular/suggested pages
 const popularPages = [
-  { href: '/services', label: 'Web Design Services' },
-  { href: '/services', label: 'SEO Optimization' },
+  { href: '/menu', label: 'Our Menu' },
   { href: '/portfolio', label: 'Our Work' },
   { href: '/contact', label: 'Request a Quote' },
 ];
@@ -48,8 +46,8 @@ function getContextualSuggestion(path: string): { message: string; suggestedLink
   // Check for common URL patterns and provide helpful suggestions
   if (pathLower.includes('service') || pathLower.includes('pricing') || pathLower.includes('plan')) {
     return {
-      message: 'Looking for our services?',
-      suggestedLink: { href: '/services', label: 'View Our Services' }
+      message: 'Looking for our menu?',
+      suggestedLink: { href: '/menu', label: 'View Our Menu' }
     };
   }
 

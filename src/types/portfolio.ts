@@ -4,26 +4,26 @@
  */
 
 /**
- * Technology category for filtering projects
+ * Tag category for filtering showcase items
  */
 export type TechnologyCategory =
-  | 'frontend'
-  | 'backend'
-  | 'fullstack'
-  | 'design'
-  | 'ecommerce'
-  | 'cms';
+  | 'cuisine'
+  | 'technique'
+  | 'ingredient'
+  | 'experience'
+  | 'service'
+  | 'ambiance';
 
 /**
- * Project type/category
+ * Showcase type/category
  */
 export type ProjectCategory =
-  | 'website'
-  | 'web-app'
-  | 'ecommerce'
-  | 'landing-page'
-  | 'redesign'
-  | 'custom-development';
+  | 'dishes'
+  | 'events'
+  | 'interiors'
+  | 'seasonal'
+  | 'catering'
+  | 'bar-lounge';
 
 /**
  * Link configuration for project CTAs
@@ -141,24 +141,24 @@ export interface PortfolioSectionProps {
  * Available project categories with labels
  */
 export const PROJECT_CATEGORIES: FilterOption[] = [
-  { label: 'All Projects', value: 'all' },
-  { label: 'Websites', value: 'website' },
-  { label: 'Web Applications', value: 'web-app' },
-  { label: 'E-Commerce', value: 'ecommerce' },
-  { label: 'Landing Pages', value: 'landing-page' },
-  { label: 'Redesigns', value: 'redesign' },
-  { label: 'Custom Development', value: 'custom-development' },
+  { label: 'All Showcases', value: 'all' },
+  { label: 'Signature Dishes', value: 'dishes' },
+  { label: 'Events', value: 'events' },
+  { label: 'Interiors', value: 'interiors' },
+  { label: 'Seasonal Specials', value: 'seasonal' },
+  { label: 'Catering', value: 'catering' },
+  { label: 'Bar & Lounge', value: 'bar-lounge' },
 ];
 
 /**
- * Available technology categories with labels
+ * Available tag categories with labels
  */
 export const TECHNOLOGY_CATEGORIES: FilterOption[] = [
-  { label: 'All Technologies', value: 'all' },
-  { label: 'Frontend', value: 'frontend' },
-  { label: 'Backend', value: 'backend' },
-  { label: 'Full Stack', value: 'fullstack' },
-  { label: 'Design', value: 'design' },
-  { label: 'E-Commerce', value: 'ecommerce' },
-  { label: 'CMS', value: 'cms' },
+  { label: 'All Tags', value: 'all' },
+  { label: 'Cuisine', value: 'cuisine' },
+  { label: 'Technique', value: 'technique' },
+  { label: 'Ingredient', value: 'ingredient' },
+  { label: 'Experience', value: 'experience' },
+  { label: 'Service', value: 'service' },
+  { label: 'Ambiance', value: 'ambiance' },
 ];

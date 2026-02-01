@@ -29,9 +29,8 @@ const { currentPath = '/' } = Astro.props;
 // Navigation links configuration
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/private-events', label: 'Private Events' },
-  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/gallery', label: 'Gallery' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -40,8 +39,8 @@ const navLinks = [
 <header class="header" role="banner">
   <div class="header__container">
     <!-- Logo/Brand -->
-    <a href="/" class="header__logo" aria-label="Houston Web Services - Go to homepage">
-      <span class="header__logo-text">HWS</span>
+    <a href="/" class="header__logo" aria-label="The Main Street Bistro - Go to homepage">
+      <span class="header__logo-text">Main Street Bistro</span>
     </a>
 
     <!-- Desktop Navigation -->
@@ -184,6 +183,7 @@ const navLinks = [
   .header__logo-text {
     display: block;
     position: relative;
+    white-space: nowrap;
   }
 
   /* Gradient text effect on hover */

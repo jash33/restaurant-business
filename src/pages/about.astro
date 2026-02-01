@@ -1,13 +1,12 @@
 ---
 /**
  * About Page - The Main Street Bistro
- * A narrative-driven page showcasing the restaurant's story, team,
+ * A narrative-driven page showcasing the restaurant's story,
  * sourcing philosophy, partnerships, and history.
  *
  * Features:
  * - Hero section with restaurant branding
  * - Founders story with personal narrative
- * - Team bios with photos
  * - Sourcing philosophy with principles
  * - Ingredient partnership showcase
  * - Restaurant history timeline
@@ -17,7 +16,6 @@
 
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import TeamBios from '../components/TeamBios.astro';
 import SourcingPhilosophy from '../components/SourcingPhilosophy.astro';
 import PartnershipShowcase from '../components/PartnershipShowcase.astro';
 import RestaurantTimeline from '../components/RestaurantTimeline.astro';
@@ -26,7 +24,6 @@ import YelpReviews from '../components/YelpReviews.astro';
 import {
   ABOUT_PAGE_CONFIG,
   FOUNDERS_STORY,
-  TEAM_MEMBERS,
   SOURCING_PRINCIPLES,
   INGREDIENT_PARTNERSHIPS,
   RESTAURANT_TIMELINE,
@@ -45,14 +42,14 @@ const achievements = [
 
 <Layout
   title="About Us"
-  description="Discover the story behind The Main Street Bistro. Meet our passionate team, learn about our farm-to-table philosophy, and explore our journey from a small dream to Houston's beloved neighborhood bistro."
+  description="Discover the story behind The Main Street Bistro. Learn about our farm-to-table philosophy and explore our journey from a small dream to Houston's beloved neighborhood bistro."
   openGraph={{
     type: 'profile',
   }}
   jsonLd={{
     type: 'AboutPage',
     name: 'About The Main Street Bistro',
-    description: 'Learn about the founders, team, sourcing philosophy, and history of The Main Street Bistro - Houston\'s farm-to-table destination since 2015.',
+    description: 'Learn about the founders, sourcing philosophy, and history of The Main Street Bistro - Houston\'s farm-to-table destination since 2015.',
   }}
 >
   <main>
@@ -153,14 +150,6 @@ const achievements = [
         </div>
       </div>
     </section>
-
-    <!-- Team Bios Section -->
-    <TeamBios
-      members={TEAM_MEMBERS}
-      heading="Meet Our Team"
-      subheading="The passionate individuals who bring our vision to life every day."
-      foundersFirst={true}
-    />
 
     <!-- Yelp Reviews Section -->
     <YelpReviews

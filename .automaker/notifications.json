@@ -516,6 +516,94 @@
       "dismissed": false,
       "featureId": "feature-1769572734213-yst2oszgj",
       "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "1a5c1256-e4a0-4fb9-ac82-f488526fdbe9",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769877178799-n3zs8jhmf\" is ready for your review and approval.",
+      "createdAt": "2026-01-31T17:28:48.623Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769877178799-n3zs8jhmf",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "d3dd46b1-93a6-419c-895b-202dec06f9d1",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769884999253-jvnns6nxg\" is ready for your review and approval.",
+      "createdAt": "2026-01-31T20:16:09.919Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769884999253-jvnns6nxg",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "3995e1a0-a140-4c6a-8b13-14cb1ceeed61",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769971748486-3wgupj0sr\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T18:50:06.549Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769971748486-3wgupj0sr",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "fb1298fc-27a9-482c-b513-b874371b91c8",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769971714221-vno4t3kdu\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T18:52:38.554Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769971714221-vno4t3kdu",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "80936465-42d2-4089-81a6-6a8eb0ebb1d4",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769971615985-c3qcpx355\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T18:59:11.930Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769971615985-c3qcpx355",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "e75b1339-8347-49f0-b35d-2686953b6b7c",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769971556899-x6md8r9ta\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T18:59:18.903Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769971556899-x6md8r9ta",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "f6c7a54d-508d-42a1-8f24-8c9d6757ffc8",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769972450477-qim5d7urs\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T19:02:09.120Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769972450477-qim5d7urs",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
+    },
+    {
+      "id": "9d380274-55c6-472e-bc54-0f852ee4b3df",
+      "type": "feature_waiting_approval",
+      "title": "Feature Ready for Review",
+      "message": "\"feature-1769972411669-dkamjgqmj\" is ready for your review and approval.",
+      "createdAt": "2026-02-01T19:04:43.490Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "feature-1769972411669-dkamjgqmj",
+      "projectPath": "C:\\Users\\James\\Repos\\restaurant-business"
     }
   ]
 }

@@ -1,0 +1,29 @@
+{
+  "category": "Uncategorized",
+  "description": "the whole \"services\" route can be removed, along with any pages/components that are exclusive to that route.",
+  "title": "Remove services route and related pages",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "lite",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1769884999253-jvnns6nxg",
+  "descriptionHistory": [
+    {
+      "description": "the whole \"services\" route can be removed, along with any pages/components that are exclusive to that route.",
+      "timestamp": "2026-01-31T18:43:19.263Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-31T20:12:48.967Z"
+}

@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HeroSection from '../components/HeroSection.astro';
+import RestaurantHeroSection from '../components/RestaurantHeroSection.astro';
 import OriginStorySection from '../components/OriginStorySection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import DifferentiatorsSection from '../components/DifferentiatorsSection.astro';
-import FeaturedProjectsPreview from '../components/FeaturedProjectsPreview.astro';
 import MenuPreviewSection from '../components/MenuPreviewSection.astro';
 import DeliveryPlatformLinks from '../components/DeliveryPlatformLinks.astro';
 import InstagramFeed from '../components/InstagramFeed.astro';
@@ -16,117 +15,105 @@ import type { Service } from '../types/service';
 import type { Differentiator } from '../types/differentiator';
 import { DEFAULT_FAQ_ITEMS } from '../types/faq';
 import { restaurantSchema } from '../config/restaurant.config';
-import { FEATURED_PROJECTS, FEATURED_PROJECTS_CONFIG } from '../config/featured-projects.config';
 import { awards, AWARDS_CONFIG } from '../config/awards.config';
 
 /**
- * Homepage - Houston Web Services
- * Main landing page showcasing services and value proposition.
+ * Homepage - The Main Street Bistro
+ * Main landing page showcasing dining experiences, services, and our story.
  */
 
 // SVG Icons for services (optimized inline SVGs)
 const icons = {
-	webDesign: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h16v9H4V6zm0 11h16v1H4v-1z"/><path d="M6 8h3v3H6V8zm5 0h7v1h-7V8zm0 2h5v1h-5v-1z"/></svg>`,
-	maintenance: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>`,
-	hosting: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 5a2 2 0 012-2h16a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm18 0H4v4h16V5zM2 15a2 2 0 012-2h16a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4zm18 0H4v4h16v-4z"/><circle cx="6" cy="7" r="1"/><circle cx="6" cy="17" r="1"/></svg>`,
-	existingWebsite: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>`,
-	automation: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>`,
+	dineIn: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>`,
+	catering: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 19h20v2H2v-2zm1-1h18c0-3.53-3.47-6-9-6s-9 2.47-9 6zm8.31-4.39c-.78.37-1.61.69-2.44.94-.09.03-.17.06-.26.09h8.78c-.09-.03-.17-.06-.26-.09-.83-.25-1.66-.57-2.44-.94-1.17-.55-2.21-1.27-3.07-2.11-.86.84-1.9 1.56-3.07 2.11zM12 2C9.24 2 7 4.24 7 7c0 2.76 2.24 5 5 5s5-2.24 5-5c0-2.76-2.24-5-5-5z"/></svg>`,
+	brunch: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4v-2z"/></svg>`,
+	craftCocktails: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 5V3H3v2l8 9v5H6v2h12v-2h-5v-5l8-9zM7.43 7L5.66 5h12.69l-1.78 2H7.43z"/></svg>`,
 };
 
 // SVG Icons for differentiators (optimized inline SVGs)
 const differentiatorIcons = {
-	localExpertise: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-	transparentPricing: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>`,
-	fastTurnaround: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`,
-	personalizedService: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
+	farmToTable: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9zM5.6 10.25c0 1.38 1.12 2.5 2.5 2.5.53 0 1.01-.16 1.42-.44l-.02.19c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5l-.02-.19c.4.28.89.44 1.42.44 1.38 0 2.5-1.12 2.5-2.5 0-1-.59-1.85-1.43-2.25.84-.4 1.43-1.25 1.43-2.25 0-1.38-1.12-2.5-2.5-2.5-.53 0-1.01.16-1.42.44l.02-.19C14.5 2.12 13.38 1 12 1S9.5 2.12 9.5 3.5l.02.19c-.4-.28-.89-.44-1.42-.44-1.38 0-2.5 1.12-2.5 2.5 0 1 .59 1.85 1.43 2.25-.84.4-1.43 1.25-1.43 2.25zM12 5.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5S9.5 9.38 9.5 8s1.12-2.5 2.5-2.5zM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9z"/></svg>`,
+	awardWinning: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7.13l.97 2.29.47 1.11 1.2.1 2.47.21-1.88 1.63-.91.79.27 1.18.56 2.41-2.12-1.28L12 14.6l-1.03.62-2.12 1.28.56-2.41.27-1.18-.91-.79-1.88-1.63 2.47-.21 1.2-.1.47-1.11L12 7.13M12 2l-2.85 6.69L2 9.49l5.27 4.58L5.82 21 12 17.27 18.18 21l-1.45-6.93L22 9.49l-7.15-.8L12 2z"/></svg>`,
+	warmHospitality: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
+	locallySourced: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
 };
 
-// Service offerings for the homepage
+// Dining services for the homepage
 const services: Service[] = [
 	{
-		id: 'website-design',
-		title: 'Website Design',
-		description: 'Custom, responsive websites that capture your brand identity and engage your visitors. We create modern designs optimized for all devices and screen sizes.',
-		icon: icons.webDesign,
+		id: 'dine-in',
+		title: 'Dine-In Experience',
+		description: 'Enjoy our award-winning contemporary American cuisine in an elegant yet relaxed atmosphere. From signature steaks to fresh seafood, every dish is crafted with locally-sourced ingredients.',
+		icon: icons.dineIn,
 		cta: {
-			text: 'Learn More',
-			href: '/services/website-design',
+			text: 'View Menu',
+			href: '/menu',
 		},
 	},
 	{
-		id: 'maintenance',
-		title: 'Website Maintenance',
-		description: 'Keep your website running smoothly with regular updates, security patches, and performance optimization. Focus on your business while we handle the tech.',
-		icon: icons.maintenance,
+		id: 'catering',
+		title: 'Catering Services',
+		description: 'Bring the Main Street Bistro experience to your next event. Our catering team crafts custom menus for corporate gatherings, weddings, and celebrations of every size.',
+		icon: icons.catering,
 		cta: {
-			text: 'Learn More',
-			href: '/services/maintenance',
+			text: 'Plan Your Event',
+			href: '/catering',
 		},
 	},
 	{
-		id: 'hosting',
-		title: 'Web Hosting',
-		description: 'Fast, secure, and reliable hosting solutions tailored for small businesses. Enjoy peace of mind with 99.9% uptime and dedicated support.',
-		icon: icons.hosting,
+		id: 'brunch',
+		title: 'Weekend Brunch',
+		description: 'Join us every Saturday and Sunday for Houston\'s favorite brunch. Enjoy house-made pastries, signature egg dishes, and bottomless mimosas in a sun-filled setting.',
+		icon: icons.brunch,
 		cta: {
-			text: 'Learn More',
-			href: '/services/hosting',
+			text: 'Brunch Menu',
+			href: '/menu#brunch',
 		},
 	},
 	{
-		id: 'existing-website-support',
-		title: 'Existing Website Support',
-		description: 'Already have a website built on WordPress, Wix, Squarespace, or another platform? I can help with updates, fixes, and improvements—no matter who built it.',
-		icon: icons.existingWebsite,
+		id: 'craft-cocktails',
+		title: 'Craft Cocktails & Wine',
+		description: 'Our full bar features handcrafted cocktails, an extensive wine list with curated pairings, and a rotating selection of local craft beers on tap.',
+		icon: icons.craftCocktails,
 		cta: {
-			text: 'Learn More',
-			href: '/services/existing-website-support',
-		},
-	},
-	{
-		id: 'business-process-automation',
-		title: 'Business Process Automation',
-		description: 'Streamline your operations with custom automation solutions. From automated workflows and data syncing to AI-powered tools, we help you save time and reduce manual tasks.',
-		icon: icons.automation,
-		cta: {
-			text: 'Learn More',
-			href: '/services/business-process-automation',
+			text: 'Drinks Menu',
+			href: '/menu#drinks',
 		},
 	},
 ];
 
-// Differentiators - unique selling points with first-person messaging
+// Differentiators - unique selling points that set us apart
 const differentiators: Differentiator[] = [
 	{
-		id: 'local-expertise',
-		title: 'Local Expertise',
-		description: 'I live and work right here in  Houston, so I understand our community and what local businesses need to succeed online.',
-		icon: differentiatorIcons.localExpertise,
+		id: 'farm-to-table',
+		title: 'Farm-to-Table Fresh',
+		description: 'We partner with local Texas farms and ranchers to bring you the freshest seasonal ingredients. Every dish celebrates the best our region has to offer.',
+		icon: differentiatorIcons.farmToTable,
 	},
 	{
-		id: 'transparent-pricing',
-		title: 'Transparent Pricing',
-		description: "I provide clear, upfront quotes with no hidden fees. You'll know exactly what you're paying for before we start.",
-		icon: differentiatorIcons.transparentPricing,
+		id: 'award-winning',
+		title: 'Award-Winning Cuisine',
+		description: 'Recognized by Houston\'s top food critics and honored with multiple culinary awards, our kitchen delivers excellence on every plate.',
+		icon: differentiatorIcons.awardWinning,
 	},
 	{
-		id: 'fast-turnaround',
-		title: 'Fast Turnaround',
-		description: 'Most projects are completed within 2-4 weeks. I respect your time and deliver quality work on schedule.',
-		icon: differentiatorIcons.fastTurnaround,
+		id: 'warm-hospitality',
+		title: 'Warm Hospitality',
+		description: 'From the moment you walk in, you\'re family. Our team is dedicated to creating a welcoming experience that keeps guests coming back.',
+		icon: differentiatorIcons.warmHospitality,
 	},
 	{
-		id: 'personalized-service',
-		title: 'Personalized Service',
-		description: 'You work directly with me—no account managers or middlemen. I tailor every solution to your specific business goals.',
-		icon: differentiatorIcons.personalizedService,
+		id: 'locally-sourced',
+		title: 'Rooted in Houston',
+		description: 'Born and raised in the heart of Houston, we\'re proud to be part of this community. We support local purveyors and give back to our neighborhood.',
+		icon: differentiatorIcons.locallySourced,
 	},
 ];
 ---
 
 <Layout
-	title="Houston Web Services"
-	description="Houston web design, hosting, maintenance, and business automation services for small businesses. Custom websites, ongoing support, and solutions to help your local business grow online."
+	title="The Main Street Bistro | Award-Winning Houston Restaurant"
+	description="Award-winning American bistro in downtown Houston serving contemporary cuisine with locally-sourced ingredients. Signature steaks, fresh seafood, craft cocktails, private dining, and catering services."
 	noTitleTemplate
 	openGraph={{
 		type: 'website',
@@ -135,23 +122,31 @@ const differentiators: Differentiator[] = [
 >
 	<main>
 		<!-- Hero Section -->
-		<HeroSection
-			headline="Websites That Grow Houston Service Businesses."
-			valueProposition="Fast-loading, search-friendly websites that turn visitors into customers."
-			subheadline="Built by a local expert, not a faceless agency. Custom websites designed to help your Houston business get found online and win more customers."
+		<RestaurantHeroSection
+			restaurantName="The Main Street Bistro"
+			tagline="Where Houston Comes to Dine"
+			backgroundImage={{
+				src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80",
+				alt: "Beautifully plated contemporary American cuisine at The Main Street Bistro",
+				position: "center 40%"
+			}}
 			primaryCTA={{
-				text: "Get Your Free Consultation",
-				href: "/contact",
+				text: "Make a Reservation",
+				href: "/reservations",
 			}}
 			secondaryCTA={{
-				text: "See How It Works",
-				href: "#services",
+				text: "Explore Our Menu",
+				href: "/menu",
 			}}
-			trustBadges={[
-				{ icon: 'experience', text: '10+ Years Experience' },
-				{ icon: 'projects', text: '50+ Local Businesses Helped' },
-				{ icon: 'tech', text: 'Fast & Search-Friendly Sites' },
-			]}
+			hoursBadge={{
+				show: true,
+				statusText: "Open Now",
+				hoursText: "11am - 10pm",
+				isOpen: true
+			}}
+			warmGradient={true}
+			moodyLighting={true}
+			overlayOpacity={0.6}
 		/>
 
 		<!-- Origin Story Section -->
@@ -170,28 +165,18 @@ const differentiators: Differentiator[] = [
 		<!-- Services Section -->
 		<ServicesSection
 			id="services"
-			heading="Our Services"
-			subheading="Comprehensive web solutions to help your Houston business thrive online. From design to maintenance, we've got you covered."
+			heading="Dining & Experiences"
+			subheading="From intimate dinners to grand celebrations, discover everything The Main Street Bistro has to offer."
 			services={services}
-			columns={5}
+			columns={4}
 		/>
 
 		<!-- Why Choose Us / Differentiators Section -->
 		<DifferentiatorsSection
 			id="why-choose-us"
-			heading="Why Choose Us"
-			subheading="Here's what sets us apart from other web service providers in the Houston area."
+			heading="Why Dine With Us"
+			subheading="Here's what makes The Main Street Bistro a Houston dining destination."
 			differentiators={differentiators}
-		/>
-
-		<!-- Featured Projects Preview Section -->
-		<FeaturedProjectsPreview
-			id={FEATURED_PROJECTS_CONFIG.id}
-			heading={FEATURED_PROJECTS_CONFIG.heading}
-			subheading={FEATURED_PROJECTS_CONFIG.subheading}
-			projects={FEATURED_PROJECTS}
-			viewAllText={FEATURED_PROJECTS_CONFIG.viewAllText}
-			viewAllHref={FEATURED_PROJECTS_CONFIG.viewAllHref}
 		/>
 
 		<!-- Menu Preview Section -->
@@ -246,22 +231,22 @@ const differentiators: Differentiator[] = [
 		<FAQAccordion
 			items={DEFAULT_FAQ_ITEMS}
 			heading="Frequently Asked Questions"
-			subheading="Find answers to common questions about our web design services, pricing, and process."
+			subheading="Find answers to common questions about reservations, our menu, private dining, and catering services."
 			allowMultiple={false}
 			initialExpanded={null}
 		/>
 
 		<!-- Contact CTA Section -->
 		<ContactCTA
-			headline="Ready to Grow Your Business Online?"
-			supportingText="Join dozens of successful Houston businesses who trust us to build their digital presence. We've helped local companies throughout Houston increase their online visibility and attract more customers. Let's discuss how we can help your business thrive."
+			headline="Ready for an Unforgettable Dining Experience?"
+			supportingText="Whether it's a romantic dinner for two, a family celebration, or a corporate event, The Main Street Bistro is the perfect setting. Reserve your table today and discover why Houston food lovers have made us their favorite neighborhood bistro."
 			primaryCTA={{
-				text: "Get Your Free Quote",
-				href: "/contact",
+				text: "Make a Reservation",
+				href: "/reservations",
 			}}
 			secondaryCTA={{
-				text: "Call Us Today",
-				href: "tel:+1-832-555-0123",
+				text: "Call Us: (713) 555-0123",
+				href: "tel:+1-713-555-0123",
 			}}
 		/>
 	</main>

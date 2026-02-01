@@ -23,7 +23,7 @@
   "dependencies": [],
   "workMode": "custom",
   "titleGenerating": false,
-  "status": "backlog",
+  "status": "verified",
   "id": "feature-1769877178799-n3zs8jhmf",
   "descriptionHistory": [
     {
@@ -36,5 +36,105 @@
       "timestamp": "2026-01-31T16:35:31.190Z",
       "source": "edit"
     }
-  ]
+  ],
+  "startedAt": "2026-01-31T16:36:06.068Z",
+  "updatedAt": "2026-01-31T17:28:48.618Z",
+  "planSpec": {
+    "status": "approved",
+    "version": 1,
+    "reviewedByUser": false,
+    "content": "I need to explore the codebase first to understand the full scope of vestigial web design content before generating the specification.\n\n🔧 Tool: Task\nInput: {\n  \"description\": \"Explore codebase structure\",\n  \"prompt\": \"Thoroughly explore this codebase at C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business to understand its structure. I need:\\n\\n1. Full directory tree (all files)\\n2. The content of ALL component/page files - read every .astro, .tsx, .jsx, .ts, .js file in src/\\n3. Any config files (astro.config, tailwind.config, package.json, etc.)\\n4. Content in any data files or content directories\\n\\nThe goal is to identify ALL text/content that relates to a \\\"web design business\\\" that needs to be changed to fit a \\\"restaurant business starter template\\\". Look for:\\n- Text about websites, web design, SEO, digital services\\n- References to \\\"HWS\\\" or similar web design branding\\n- Service descriptions related to web/digital work\\n- Portfolio items about websites\\n- Testimonials about web design work\\n- CTAs like \\\"Get Your Free Consultation\\\"\\n- Stats like \\\"50+ Local Businesses Helped\\\"\\n- Any browser mockup / website preview components\\n- About page content about a web design person/agency\\n\\nReport back ALL files and the specific content that needs changing, organized by file.\",\n  \"subagent_type\": \"Explore\",\n  \"model\": \"sonnet\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business -type f -name \\\"*.json\\\" -o -name \\\"*.config.*\\\" -o -name \\\"*.astro\\\" -o -name \\\"*.tsx\\\" -o -name \\\"*.jsx\\\" -o -name \\\"*.ts\\\" -o -name \\\"*.js\\\" | head -100\",\n  \"description\": \"Find all relevant files in the codebase\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\",\n  \"description\": \"List root directory contents\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"pwd\",\n  \"description\": \"Get current working directory\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find . -type f \\\\( -name \\\"*.astro\\\" -o -name \\\"*.tsx\\\" -o -name \\\"*.jsx\\\" -o -name \\\"*.ts\\\" -o -name \\\"*.js\\\" -o -name \\\"*.json\\\" -o -name \\\"*.config.*\\\" \\\\) | grep -v node_modules | sort\",\n  \"description\": \"Find all relevant source files\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"ls -la\",\n  \"description\": \"List root directory\"\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find src -type f 2>/dev/null | sort\",\n  \"description\": \"List all files in src directory\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/package.json\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/astro.config.mjs\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/README.md\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/src/pages/index.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/src/pages/about.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/src/pages/services.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/src/pages/portfolio.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"/c/Users/James/Repos/restaurant-business/src/pages/contact.astro\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/*.json\",\n  \"path\": \"/c/Users/James/Repos/restaurant-business\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"*.astro\",\n  \"path\": \"/c/Users/James/Repos/restaurant-business/src/pages\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"*.config.*\",\n  \"path\": \"/c/Users/James/Repos/restaurant-business\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\package.json\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\README.md\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\about.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\portfolio.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\contact.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\website-design.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\seo.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\hosting.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\maintenance.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\seo.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\featured-projects.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\FeaturedProjectsPreview.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\PortfolioSection.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\ContactCTA.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\TestimonialsSection.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\testimonials.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\faq.ts\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"Houston|HWS|web design|website|SEO|digital|consultation|Get Your Free\",\n  \"path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\",\n  \"output_mode\": \"files_with_matches\",\n  \"-i\": true\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\about.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\portfolio.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Footer.astro\",\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"offset\": 0,\n  \"limit\": 200\n}\n\n🔧 Tool: Bash\nInput: {\n  \"command\": \"find /c/Users/James/Repos/restaurant-business -name \\\"*.md\\\" -o -name \\\"README*\\\" | head -20\",\n  \"description\": \"Find documentation files\"\n}\n\n🔧 Tool: Task\nInput: {\n  \"description\": \"Read key files for details\",\n  \"prompt\": \"Read these files in the repo at C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business and report their FULL contents back to me:\\n\\n1. /src/components/HeroSection.astro (especially the browser mockup section around lines 130-283)\\n2. /src/pages/services.astro\\n3. /src/config/seo.config.ts\\n4. /src/types/faq.ts\\n5. /src/pages/index.astro\\n6. /src/components/Header.astro\\n7. /src/components/ContactCTA.astro\\n8. /src/config/featured-projects.config.ts\\n9. /src/pages/portfolio.astro\\n10. /src/components/FeaturedProjectsPreview.astro\\n11. /src/components/Footer.astro\\n12. /src/pages/services/website-design.astro (and any other files in services/ directory)\\n\\nReport all contents so I can plan exact edits.\",\n  \"subagent_type\": \"Explore\",\n  \"model\": \"sonnet\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\seo.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\types\\\\faq.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\index.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Header.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\ContactCTA.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\featured-projects.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\portfolio.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\FeaturedProjectsPreview.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\Footer.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\website-design.astro\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/*.astro\",\n  \"path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"offset\": 1,\n  \"limit\": 150\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"offset\": 130,\n  \"limit\": 153\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\HeroSection.astro\",\n  \"offset\": 280,\n  \"limit\": 50\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\maintenance.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\hosting.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\services\\\\seo.astro\"\n}\nNow I have a complete picture. Here's the specification:\n\n---\n\n# Specification: Remove Vestigial Web Design Content & Replace with Restaurant Business Content\n\n## 1. Problem Statement\n\nThis repository was forked from a web design business site but is intended to serve as a starter template for small restaurant businesses. Significant leftover content—hero text, a browser mockup graphic, service descriptions, pricing tiers, portfolio items, FAQs, and branding—still references web design/development services. This creates a confusing, off-brand experience and requires a comprehensive content overhaul to align with the restaurant use case.\n\n## 2. User Story\n\nAs a **developer using this starter template**, I want **all web design business content replaced with restaurant-appropriate content**, so that **I can use this repo as a clean starting point for building restaurant websites without having to manually find and fix vestigial content**.\n\n## 3. Acceptance Criteria\n\n- **Happy Path**: GIVEN the site is loaded, WHEN a visitor views the homepage, THEN they see a restaurant-themed hero with headline, description, and CTAs relevant to dining (e.g., \"View Our Menu\", \"Make a Reservation\") with no browser mockup graphic.\n- **Happy Path**: GIVEN the services page exists, WHEN a visitor navigates to /services, THEN they see restaurant services (Dine-In, Catering, Private Events, Online Ordering, Meal Prep) with relevant pricing and process steps.\n- **Happy Path**: GIVEN the portfolio page exists, WHEN a visitor views /portfolio, THEN they see restaurant-themed showcases (signature dishes, events, seasonal menus) instead of web design client projects.\n- **Happy Path**: GIVEN the FAQ section exists, WHEN a visitor expands FAQ items, THEN they see restaurant-relevant questions (hours, reservations, dietary accommodations, etc.).\n- **Edge Case**: GIVEN a search engine has indexed old web design service URLs (/services/website-design, etc.), WHEN those URLs are visited, THEN they redirect to appropriate new anchors on the services page.\n- **Happy Path**: GIVEN the site header is displayed, WHEN a visitor sees the logo, THEN it shows restaurant branding instead of \"HWS\".\n- **Happy Path**: GIVEN the SEO config is loaded, WHEN search engines crawl the site, THEN structured data reflects a Restaurant business type with appropriate service descriptions.\n\n## 4. Technical Context\n\n| Aspect | Value |\n|--------|-------|\n| Affected Files | `src/config/seo.config.ts`, `src/pages/index.astro`, `src/pages/services.astro`, `src/pages/portfolio.astro`, `src/types/faq.ts`, `src/config/featured-projects.config.ts`, `src/components/HeroSection.astro`, `src/components/Header.astro`, `src/components/ContactCTA.astro`, `src/components/Footer.astro`, `src/components/FeaturedProjectsPreview.astro`, `src/pages/services/*.astro` (4 redirect stubs) |\n| Dependencies | None new—Astro, Tailwind already in place |\n| Constraints | Must preserve component prop interfaces & existing CSS/animation systems; some pages (about, contact, testimonials) are already converted |\n| Patterns to Follow | Existing Astro component prop patterns, BEM-style classes, icon system (Lucide/custom SVGs) |\n\n## 5. Non-Goals\n\n- Redesigning the visual layout, color scheme, or component architecture\n- Adding new components or pages\n- Changing already-converted pages (about, contact, testimonials)\n- Modifying JavaScript functionality (mobile menu, analytics, animations)\n- Adding real restaurant imagery or photography assets\n- Changing the build/deployment configuration\n\n## 6. Implementation Tasks\n\n```tasks\n## Phase 1: Core Config & Data Files\n- [ ] T001: Replace SEO config with restaurant business schema, name, and descriptions | File: src/config/seo.config.ts\n- [ ] T002: Replace all 10 web design FAQs with restaurant-relevant FAQs | File: src/types/faq.ts\n- [ ] T003: Replace 3 featured projects with restaurant showcases (signature dishes, catering events, seasonal menus) | File: src/config/featured-projects.config.ts\n\n## Phase 2: Page Content Overhaul\n- [ ] T004: Replace homepage hero content, services array, differentiators, and CTAs with restaurant content | File: src/pages/index.astro\n- [ ] T005: Replace all services, pricing tiers, add-ons, and process timeline with restaurant services | File: src/pages/services.astro\n- [ ] T006: Replace all portfolio projects with restaurant showcases (dishes, events, interiors) | File: src/pages/portfolio.astro\n\n## Phase 3: Component Updates\n- [ ] T007: Replace browser mockup in HeroSection with restaurant-themed decorative element and update default props | File: src/components/HeroSection.astro\n- [ ] T008: Change Header logo from \"HWS\" to restaurant branding and update nav if needed | File: src/components/Header.astro\n- [ ] T009: Update ContactCTA default trust signals and messaging for restaurant context | File: src/components/ContactCTA.astro\n- [ ] T010: Update Footer default service areas and company references | File: src/components/Footer.astro\n- [ ] T011: Update FeaturedProjectsPreview default heading/subheading text | File: src/components/FeaturedProjectsPreview.astro\n\n## Phase 4: Cleanup\n- [ ] T012: Update or remove web design service redirect stubs (website-design, seo, hosting, maintenance) | File: src/pages/services/\n```\n\n## 7. Success Metrics\n\n- Zero references to \"web design\", \"website\", \"SEO\", \"hosting\", \"maintenance\" (in a web-services context), \"HWS\", or \"Houston Web Services\" remain in any source file\n- All visible text on every page is contextually appropriate for a restaurant business\n- The browser mockup element on the hero is replaced with a restaurant-appropriate visual\n- The site builds successfully with `npm run build` (no broken imports or missing references)\n- Service redirect stubs point to valid anchors on the updated services page\n\n## 8. Risks & Mitigations\n\n| Risk | Mitigation |\n|------|------------|\n| Breaking component prop interfaces by changing data shapes | Keep all existing TypeScript interfaces unchanged; only modify content values |\n| Missing a vestigial reference in an obscure file | Do a final grep for \"web design\", \"website\", \"HWS\", \"SEO\" across entire src/ after all changes |\n| Service redirect stubs pointing to nonexistent anchors | Update anchor IDs in redirect stubs to match new service section IDs |\n| Overly generic placeholder content that doesn't feel authentic | Use specific, realistic restaurant content (menu items, prices, event types) |\n\n---",
+    "generatedAt": "2026-01-31T16:41:35.024Z",
+    "tasks": [
+      {
+        "id": "T001",
+        "description": "Replace SEO config with restaurant business schema, name, and descriptions",
+        "filePath": "src/config/seo.config.ts",
+        "phase": "Phase 1: Core Config & Data Files",
+        "status": "pending"
+      },
+      {
+        "id": "T002",
+        "description": "Replace all 10 web design FAQs with restaurant-relevant FAQs",
+        "filePath": "src/types/faq.ts",
+        "phase": "Phase 1: Core Config & Data Files",
+        "status": "pending"
+      },
+      {
+        "id": "T003",
+        "description": "Replace 3 featured projects with restaurant showcases (signature dishes, catering events, seasonal menus)",
+        "filePath": "src/config/featured-projects.config.ts",
+        "phase": "Phase 1: Core Config & Data Files",
+        "status": "pending"
+      },
+      {
+        "id": "T004",
+        "description": "Replace homepage hero content, services array, differentiators, and CTAs with restaurant content",
+        "filePath": "src/pages/index.astro",
+        "phase": "Phase 2: Page Content Overhaul",
+        "status": "pending"
+      },
+      {
+        "id": "T005",
+        "description": "Replace all services, pricing tiers, add-ons, and process timeline with restaurant services",
+        "filePath": "src/pages/services.astro",
+        "phase": "Phase 2: Page Content Overhaul",
+        "status": "pending"
+      },
+      {
+        "id": "T006",
+        "description": "Replace all portfolio projects with restaurant showcases (dishes, events, interiors)",
+        "filePath": "src/pages/portfolio.astro",
+        "phase": "Phase 2: Page Content Overhaul",
+        "status": "pending"
+      },
+      {
+        "id": "T007",
+        "description": "Replace browser mockup in HeroSection with restaurant-themed decorative element and update default props",
+        "filePath": "src/components/HeroSection.astro",
+        "phase": "Phase 3: Component Updates",
+        "status": "pending"
+      },
+      {
+        "id": "T008",
+        "description": "Change Header logo from \"HWS\" to restaurant branding and update nav if needed",
+        "filePath": "src/components/Header.astro",
+        "phase": "Phase 3: Component Updates",
+        "status": "pending"
+      },
+      {
+        "id": "T009",
+        "description": "Update ContactCTA default trust signals and messaging for restaurant context",
+        "filePath": "src/components/ContactCTA.astro",
+        "phase": "Phase 3: Component Updates",
+        "status": "pending"
+      },
+      {
+        "id": "T010",
+        "description": "Update Footer default service areas and company references",
+        "filePath": "src/components/Footer.astro",
+        "phase": "Phase 3: Component Updates",
+        "status": "pending"
+      },
+      {
+        "id": "T011",
+        "description": "Update FeaturedProjectsPreview default heading/subheading text",
+        "filePath": "src/components/FeaturedProjectsPreview.astro",
+        "phase": "Phase 3: Component Updates",
+        "status": "pending"
+      },
+      {
+        "id": "T012",
+        "description": "Update or remove web design service redirect stubs (website-design, seo, hosting, maintenance)",
+        "filePath": "src/pages/services/",
+        "phase": "Phase 4: Cleanup",
+        "status": "pending"
+      }
+    ],
+    "tasksTotal": 12,
+    "tasksCompleted": 12,
+    "approvedAt": "2026-01-31T16:41:35.031Z",
+    "currentTaskId": "T012"
+  },
+  "justFinishedAt": "2026-01-31T17:28:48.618Z"
 }

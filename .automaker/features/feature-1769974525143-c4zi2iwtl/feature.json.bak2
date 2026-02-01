@@ -1,0 +1,61 @@
+{
+  "category": "Uncategorized",
+  "description": "I'd like you to review the whole site, taking screenshots if possible/needed, and make the site more like a clean, sharp, well-made restaurant website. I'd like you to be practical and efficient in terms of the choices about content, imagery, and sections displayed. I'd like the most focus to be given to elements that meet the businesses' bottom line - I want this site to help restaurant owners make money above all else, directly or indirectly. I'll include a couple screenshots of the existing appearance of the site as of now.\n \nThis may be a context-intensive task, so please spin up subagents or do whatever you need to do to prevent the context window filling up too much.\n",
+  "title": "Transform restaurant website into professional revenue-focused design",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1769974427917-rukmf8zi9",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-33-47-714Z-1769974427908.png",
+      "filename": "pasted-image-2026-02-01T19-33-47-714Z.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "img-1769974440299-dq2ks7mrl",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-00-262Z-1769974440294.png",
+      "filename": "pasted-image-2026-02-01T19-34-00-262Z.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "img-1769974463207-zk05w1tl6",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-23-162Z-1769974463200.png",
+      "filename": "pasted-image-2026-02-01T19-34-23-162Z.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "img-1769974485300-c4xk8ggft",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-45-256Z-1769974485296.png",
+      "filename": "pasted-image-2026-02-01T19-34-45-256Z.png",
+      "mimeType": "image/png"
+    },
+    {
+      "id": "img-1769974495775-kpxhzqww2",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-55-724Z-1769974495771.png",
+      "filename": "pasted-image-2026-02-01T19-34-55-724Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1769974525143-c4zi2iwtl",
+  "descriptionHistory": [
+    {
+      "description": "I'd like you to review the whole site, taking screenshots if possible/needed, and make the site more like a clean, sharp, well-made restaurant website. I'd like you to be practical and efficient in terms of the choices about content, imagery, and sections displayed. I'd like the most focus to be given to elements that meet the businesses' bottom line - I want this site to help restaurant owners make money above all else, directly or indirectly. I'll include a couple screenshots of the existing appearance of the site as of now.\n \nThis may be a context-intensive task, so please spin up subagents or do whatever you need to do to prevent the context window filling up too much.\n",
+      "timestamp": "2026-02-01T19:35:25.170Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T19:37:33.172Z",
+  "updatedAt": "2026-02-01T19:35:35.318Z"
+}

@@ -1,0 +1,37 @@
+{
+  "category": "Uncategorized",
+  "description": "Some homepage visual issues, see screenshot. text is kind of unreadable:\n\n",
+  "title": "",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1769972409085-r9y2trejr",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769972411669-dkamjgqmj\\images\\pasted-image-2026-02-01T19-00-09-048Z-1769972409082.png",
+      "filename": "pasted-image-2026-02-01T19-00-09-048Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": "Some homepage visual issues, see screenshot. text is kind of unreadable:",
+  "status": "in_progress",
+  "id": "feature-1769972411669-dkamjgqmj",
+  "descriptionHistory": [
+    {
+      "description": "Some homepage visual issues, see screenshot. text is kind of unreadable:\n\n",
+      "timestamp": "2026-02-01T19:00:11.683Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T19:00:11.702Z",
+  "updatedAt": "2026-02-01T19:00:12.043Z"
+}

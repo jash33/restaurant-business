@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769890569946-d5cabfdd",
+  "trigger": "feature_success",
+  "timestamp": "2026-01-31T20:16:09.946Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "feature-1769884999253-jvnns6nxg",
+  "featureName": "Remove services route and related pages",
+  "error": "Feature completed in 201s",
+  "passes": true
+}

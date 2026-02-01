@@ -1,0 +1,31 @@
+{
+  "category": "Uncategorized",
+  "description": "The \"meet our team\" section of the about page is too much. let's remove that.",
+  "title": "Remove team section from about page",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "verified",
+  "id": "feature-1769971748486-3wgupj0sr",
+  "descriptionHistory": [
+    {
+      "description": "The \"meet our team\" section of the about page is too much. let's remove that.",
+      "timestamp": "2026-02-01T18:49:08.499Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-02-01T18:49:08.513Z",
+  "updatedAt": "2026-02-01T18:50:06.546Z",
+  "justFinishedAt": "2026-02-01T18:50:06.546Z"
+}

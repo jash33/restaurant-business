@@ -90,7 +90,7 @@ export const BANNER_EVENTS: BannerEvent[] = [
     priority: 'medium',
     title: 'Live Jazz Every Friday',
     description: 'Join us for live jazz music from 7-10 PM. No cover charge.',
-    linkUrl: '/private-events',
+    linkUrl: '/contact',
     linkText: 'Learn More',
     startDate: '2025-01-01',
     endDate: '2025-12-31',
