@@ -64,7 +64,7 @@ export const seoConfig: SEOConfig = {
   defaultLocale: 'en_US',
 
   // Default Social Sharing Image
-  defaultImage: '/images/og-default.jpg', // Create this image (1200x630 recommended)
+  defaultImage: '/restaurant-business/images/og-default.jpg', // Create this image (1200x630 recommended)
   defaultImageAlt: `${restaurantSchema.name} - ${restaurantSchema.slogan}`,
 
   // Twitter Configuration

@@ -103,11 +103,11 @@ export const restaurantSchema: RestaurantSchema = {
   },
 
   // === Images ===
-  logo: '/images/logo.png',
+  logo: '/restaurant-business/images/logo.png',
   image: [
-    '/images/restaurant-exterior.jpg',
-    '/images/restaurant-interior.jpg',
-    '/images/signature-dish.jpg',
+    '/restaurant-business/images/restaurant-exterior.jpg',
+    '/restaurant-business/images/restaurant-interior.jpg',
+    '/restaurant-business/images/signature-dish.jpg',
   ],
 
   // === Social Media Profiles ===

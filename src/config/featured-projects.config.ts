@@ -25,7 +25,7 @@ export const FEATURED_PROJECTS: Project[] = [
     title: 'Signature Dishes',
     description: 'Discover the culinary creations that define our restaurant. From our slow-braised short ribs to our hand-crafted pasta, each signature dish is prepared with locally sourced ingredients and time-honored techniques passed down through generations.',
     thumbnail: {
-      src: '/portfolio/signature-dishes.svg',
+      src: '/restaurant-business/portfolio/signature-dishes.svg',
       alt: 'Elegant plating of our signature dishes featuring chef-crafted entrees and appetizers',
       width: 600,
       height: 400,
@@ -40,7 +40,7 @@ export const FEATURED_PROJECTS: Project[] = [
     featured: true,
     completedDate: '2025-01-15',
     links: [
-      { text: 'View Full Menu', href: '/menu', type: 'live-site' },
+      { text: 'View Full Menu', href: '/restaurant-business/menu', type: 'live-site' },
     ],
   },
   {
@@ -48,7 +48,7 @@ export const FEATURED_PROJECTS: Project[] = [
     title: 'Catering & Events',
     description: 'From intimate dinner parties to grand corporate galas, our catering team brings the full restaurant experience to your venue. Custom menus, professional service, and unforgettable presentations for events of 20 to 500 guests.',
     thumbnail: {
-      src: '/portfolio/catering-events.svg',
+      src: '/restaurant-business/portfolio/catering-events.svg',
       alt: 'Beautifully arranged catering spread for a corporate event with elegant table settings and gourmet dishes',
       width: 600,
       height: 400,
@@ -63,8 +63,8 @@ export const FEATURED_PROJECTS: Project[] = [
     featured: true,
     completedDate: '2025-01-10',
     links: [
-      { text: 'Plan Your Event', href: '/catering', type: 'live-site' },
-      { text: 'View Gallery', href: '/gallery', type: 'case-study' },
+      { text: 'Plan Your Event', href: '/restaurant-business/catering', type: 'live-site' },
+      { text: 'View Gallery', href: '/restaurant-business/gallery', type: 'case-study' },
     ],
   },
   {
@@ -72,7 +72,7 @@ export const FEATURED_PROJECTS: Project[] = [
     title: 'Seasonal Menus',
     description: 'Our menu evolves with the seasons, celebrating the freshest ingredients at their peak. Each quarter, our chef curates a special tasting menu that showcases seasonal produce from local Texas farms and artisan suppliers.',
     thumbnail: {
-      src: '/portfolio/seasonal-menus.svg',
+      src: '/restaurant-business/portfolio/seasonal-menus.svg',
       alt: 'Seasonal menu featuring fresh spring vegetables, summer fruits, autumn harvest, and winter comfort dishes',
       width: 600,
       height: 400,
@@ -87,7 +87,7 @@ export const FEATURED_PROJECTS: Project[] = [
     featured: true,
     completedDate: '2025-01-05',
     links: [
-      { text: 'See Current Specials', href: '/menu#specials', type: 'live-site' },
+      { text: 'See Current Specials', href: '/restaurant-business/menu#specials', type: 'live-site' },
     ],
   },
 ];
@@ -107,7 +107,7 @@ export const FEATURED_PROJECTS_CONFIG = {
   viewAllText: 'Explore Our Menu',
 
   /** URL for the "View All" call-to-action button */
-  viewAllHref: '/menu',
+  viewAllHref: '/restaurant-business/menu',
 
   /** Section ID for anchor linking */
   id: 'featured-showcases',

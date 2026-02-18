@@ -81,22 +81,22 @@ export const googleBusinessConfig: GoogleBusinessConfig = {
   // Add photos that represent your restaurant well
   photos: [
     {
-      url: '/images/google-business/restaurant-exterior.jpg',
+      url: '/restaurant-business/images/google-business/restaurant-exterior.jpg',
       alt: 'The Main Street Bistro exterior with warm evening lighting',
       category: 'exterior',
     },
     {
-      url: '/images/google-business/dining-room.jpg',
+      url: '/restaurant-business/images/google-business/dining-room.jpg',
       alt: 'Elegant dining room with ambient lighting',
       category: 'interior',
     },
     {
-      url: '/images/google-business/signature-steak.jpg',
+      url: '/restaurant-business/images/google-business/signature-steak.jpg',
       alt: 'Our signature ribeye steak with seasonal vegetables',
       category: 'food',
     },
     {
-      url: '/images/google-business/craft-cocktails.jpg',
+      url: '/restaurant-business/images/google-business/craft-cocktails.jpg',
       alt: 'Handcrafted cocktails at the bar',
       category: 'food',
     },

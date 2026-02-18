@@ -67,7 +67,7 @@ export const INSTAGRAM_PROFILE = {
 export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   {
     id: 'fallback-1',
-    mediaUrl: '/images/food/pasta-dish.svg',
+    mediaUrl: '/restaurant-business/images/food/pasta-dish.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Fresh homemade pasta with our signature tomato sauce',
     mediaType: 'IMAGE',
@@ -76,7 +76,7 @@ export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   },
   {
     id: 'fallback-2',
-    mediaUrl: '/images/food/steak-dinner.svg',
+    mediaUrl: '/restaurant-business/images/food/steak-dinner.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Our perfectly grilled prime ribeye steak',
     mediaType: 'IMAGE',
@@ -85,7 +85,7 @@ export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   },
   {
     id: 'fallback-3',
-    mediaUrl: '/images/food/dessert-cake.svg',
+    mediaUrl: '/restaurant-business/images/food/dessert-cake.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Decadent chocolate mousse to end your evening',
     mediaType: 'IMAGE',
@@ -94,7 +94,7 @@ export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   },
   {
     id: 'fallback-4',
-    mediaUrl: '/images/food/pasta-dish.svg',
+    mediaUrl: '/restaurant-business/images/food/pasta-dish.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Warm ambiance for your special occasions',
     mediaType: 'IMAGE',
@@ -103,7 +103,7 @@ export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   },
   {
     id: 'fallback-5',
-    mediaUrl: '/images/food/steak-dinner.svg',
+    mediaUrl: '/restaurant-business/images/food/steak-dinner.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Craft cocktails at our beautifully designed bar',
     mediaType: 'IMAGE',
@@ -112,7 +112,7 @@ export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
   },
   {
     id: 'fallback-6',
-    mediaUrl: '/images/food/dessert-cake.svg',
+    mediaUrl: '/restaurant-business/images/food/dessert-cake.svg',
     permalink: INSTAGRAM_PROFILE.profileUrl,
     caption: 'Fresh seasonal ingredients, prepared with love',
     mediaType: 'IMAGE',

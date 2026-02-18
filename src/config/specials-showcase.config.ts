@@ -39,7 +39,7 @@ export const SPECIALS: Special[] = [
     description: 'All pasta dishes 20% off every Monday. Choose from our house-made favorites.',
     longDescription: 'Every Monday, enjoy 20% off all our house-made pasta dishes. From classic spaghetti carbonara to our signature lobster ravioli, treat yourself to authentic Italian flavors at a special price.',
     image: {
-      src: '/images/food/pasta-dish.svg',
+      src: '/restaurant-business/images/food/pasta-dish.svg',
       alt: 'Delicious house-made pasta with fresh ingredients',
       width: 800,
       height: 600,
@@ -61,7 +61,7 @@ export const SPECIALS: Special[] = [
     description: 'Three signature tacos with premium fillings plus a margarita for one great price.',
     longDescription: 'Get three of our signature tacos with your choice of premium fillings, paired with a classic margarita. Choose from carne asada, carnitas, grilled fish, or vegetarian options.',
     image: {
-      src: '/images/food/steak-dinner.svg',
+      src: '/restaurant-business/images/food/steak-dinner.svg',
       alt: 'Fresh tacos with colorful toppings and lime',
       width: 800,
       height: 600,
@@ -83,7 +83,7 @@ export const SPECIALS: Special[] = [
     description: 'Half-price bottles from our curated wine selection with any entree purchase.',
     longDescription: 'Discover new favorites from our carefully curated wine list. Every Wednesday, enjoy half-price bottles when you purchase any entree. Ask your server about our sommelier recommendations.',
     image: {
-      src: '/images/food/dessert-cake.svg',
+      src: '/restaurant-business/images/food/dessert-cake.svg',
       alt: 'Elegant wine glasses with red wine',
       width: 800,
       height: 600,
@@ -104,7 +104,7 @@ export const SPECIALS: Special[] = [
     description: 'Premium 12oz ribeye with two sides and a glass of house red.',
     longDescription: 'Indulge in our dry-aged 12oz ribeye steak, cooked to perfection and served with your choice of two sides and a glass of our house red wine. Available every Thursday.',
     image: {
-      src: '/images/food/steak-dinner.svg',
+      src: '/restaurant-business/images/food/steak-dinner.svg',
       alt: 'Perfectly grilled ribeye steak with sides',
       width: 800,
       height: 600,
@@ -130,7 +130,7 @@ export const SPECIALS: Special[] = [
     description: 'Unlimited brunch favorites with bottomless mimosas. Saturday & Sunday 10am-2pm.',
     longDescription: 'Join us for our legendary weekend brunch buffet featuring made-to-order omelets, fresh pastries, carving station, and so much more. Includes bottomless mimosas or Bloody Marys.',
     image: {
-      src: '/images/food/pasta-dish.svg',
+      src: '/restaurant-business/images/food/pasta-dish.svg',
       alt: 'Lavish brunch spread with eggs, pastries, and fresh fruit',
       width: 800,
       height: 600,
@@ -145,7 +145,7 @@ export const SPECIALS: Special[] = [
     price: createSpecialPrice(3299),
     active: true,
     sortOrder: 5,
-    link: '/contact',
+    link: '/restaurant-business/contact',
     linkText: 'Reserve Your Table',
     tags: ['brunch', 'weekend', 'buffet'],
   },
@@ -159,7 +159,7 @@ export const SPECIALS: Special[] = [
     description: 'A five-course journey featuring the freshest seasonal ingredients from local farms.',
     longDescription: 'Experience the flavors of spring with our exclusive five-course tasting menu. Each dish showcases the season\'s finest ingredients, sourced from local farms and prepared with care by our culinary team.',
     image: {
-      src: '/images/food/dessert-cake.svg',
+      src: '/restaurant-business/images/food/dessert-cake.svg',
       alt: 'Elegant plated course from the seasonal tasting menu',
       width: 800,
       height: 600,
@@ -172,7 +172,7 @@ export const SPECIALS: Special[] = [
     price: createSpecialPrice(8500),
     active: true,
     sortOrder: 6,
-    link: '/menu#tasting',
+    link: '/restaurant-business/menu#tasting',
     linkText: 'View Full Menu',
     tags: ['tasting-menu', 'seasonal', 'fine-dining'],
   },
@@ -182,7 +182,7 @@ export const SPECIALS: Special[] = [
     description: 'Half-price appetizers and $5 well drinks. Monday-Friday 4-6pm.',
     longDescription: 'Unwind after work with our fantastic happy hour specials. Enjoy half-price appetizers and $5 well drinks every weekday from 4-6pm. Perfect for catching up with friends or colleagues.',
     image: {
-      src: '/images/food/pasta-dish.svg',
+      src: '/restaurant-business/images/food/pasta-dish.svg',
       alt: 'Appetizer platter with drinks at the bar',
       width: 800,
       height: 600,
@@ -204,7 +204,7 @@ export const SPECIALS: Special[] = [
     description: 'Family-style dinner for 4 with appetizer, two entrees, sides, and dessert.',
     longDescription: 'Bring the family together for our Sunday Feast special. This family-style meal includes a shared appetizer, choice of two entrees, family-size portions of sides, and a dessert to share. Perfect for making memories.',
     image: {
-      src: '/images/food/steak-dinner.svg',
+      src: '/restaurant-business/images/food/steak-dinner.svg',
       alt: 'Family gathering around a table full of delicious food',
       width: 800,
       height: 600,
@@ -219,7 +219,7 @@ export const SPECIALS: Special[] = [
     price: createSpecialPrice(7999, 9999),
     active: true,
     sortOrder: 8,
-    link: '/contact',
+    link: '/restaurant-business/contact',
     linkText: 'Book Now',
     tags: ['family', 'dinner', 'value'],
   },
@@ -251,7 +251,7 @@ export const DEFAULT_SHOWCASE_CONFIG: SpecialsShowcaseConfig = {
 export const SPECIALS_SEO = {
   title: 'Specials & Promotions | Our Restaurant',
   description: 'Discover our rotating specials, limited-time offers, and daily promotions. From Taco Tuesday to Weekend Brunch, find the perfect deal for any occasion.',
-  ogImage: '/images/food/pasta-dish.svg',
+  ogImage: '/restaurant-business/images/food/pasta-dish.svg',
 };
 
 // ============================================================================
