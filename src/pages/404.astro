@@ -26,17 +26,17 @@ const searchParams = Astro.url.searchParams;
 
 // Navigation links for quick access
 const quickLinks = [
-  { href: '/', label: 'Homepage', description: 'Return to our main page' },
-  { href: '/menu', label: 'Menu', description: 'View our menu' },
-  { href: '/contact', label: 'Contact Us', description: 'Get in touch with our team' },
-  { href: '/about', label: 'About Us', description: 'Learn more about our company' },
+  { href: '/restaurant-business/', label: 'Homepage', description: 'Return to our main page' },
+  { href: '/restaurant-business/menu', label: 'Menu', description: 'View our menu' },
+  { href: '/restaurant-business/contact', label: 'Contact Us', description: 'Get in touch with our team' },
+  { href: '/restaurant-business/about', label: 'About Us', description: 'Learn more about our company' },
 ];
 
 // Popular/suggested pages
 const popularPages = [
-  { href: '/menu', label: 'Our Menu' },
-  { href: '/portfolio', label: 'Our Work' },
-  { href: '/contact', label: 'Request a Quote' },
+  { href: '/restaurant-business/menu', label: 'Our Menu' },
+  { href: '/restaurant-business/portfolio', label: 'Our Work' },
+  { href: '/restaurant-business/contact', label: 'Request a Quote' },
 ];
 
 // Helper function to get contextual suggestions based on URL pattern
@@ -47,35 +47,35 @@ function getContextualSuggestion(path: string): { message: string; suggestedLink
   if (pathLower.includes('service') || pathLower.includes('pricing') || pathLower.includes('plan')) {
     return {
       message: 'Looking for our menu?',
-      suggestedLink: { href: '/menu', label: 'View Our Menu' }
+      suggestedLink: { href: '/restaurant-business/menu', label: 'View Our Menu' }
     };
   }
 
   if (pathLower.includes('portfolio') || pathLower.includes('project') || pathLower.includes('work') || pathLower.includes('case')) {
     return {
       message: 'Want to see our work?',
-      suggestedLink: { href: '/portfolio', label: 'View Our Portfolio' }
+      suggestedLink: { href: '/restaurant-business/portfolio', label: 'View Our Portfolio' }
     };
   }
 
   if (pathLower.includes('contact') || pathLower.includes('quote') || pathLower.includes('inquiry') || pathLower.includes('email')) {
     return {
       message: 'Need to get in touch?',
-      suggestedLink: { href: '/contact', label: 'Contact Us' }
+      suggestedLink: { href: '/restaurant-business/contact', label: 'Contact Us' }
     };
   }
 
   if (pathLower.includes('about') || pathLower.includes('team') || pathLower.includes('company') || pathLower.includes('who')) {
     return {
       message: 'Want to learn more about us?',
-      suggestedLink: { href: '/about', label: 'About Our Company' }
+      suggestedLink: { href: '/restaurant-business/about', label: 'About Our Company' }
     };
   }
 
   if (pathLower.includes('blog') || pathLower.includes('article') || pathLower.includes('news') || pathLower.includes('post')) {
     return {
       message: 'Looking for articles or news?',
-      suggestedLink: { href: '/', label: 'Visit Our Homepage' }
+      suggestedLink: { href: '/restaurant-business/', label: 'Visit Our Homepage' }
     };
   }
 
@@ -150,7 +150,7 @@ const icons = {
         <div class="error-page__actions">
           <Button
             text="Go to Homepage"
-            href="/"
+            href="/restaurant-business/"
             variant="primary"
             size="large"
           >
@@ -158,7 +158,7 @@ const icons = {
           </Button>
           <Button
             text="Contact Support"
-            href="/contact"
+            href="/restaurant-business/contact"
             variant="secondary"
             size="large"
           />
@@ -238,7 +238,7 @@ const icons = {
       <div class="error-page__help">
         <p class="error-page__help-text">
           Still can't find what you're looking for?
-          <a href="/contact" class="error-page__help-link">Contact us</a> and we'll help you find it.
+          <a href="/restaurant-business/contact" class="error-page__help-link">Contact us</a> and we'll help you find it.
         </p>
       </div>
     </div>

@@ -33,18 +33,18 @@ const { currentPath = '/', transparentOnTop = true } = Astro.props;
 
 // Navigation links configuration
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/menu', label: 'Menu' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/restaurant-business/', label: 'Home' },
+  { href: '/restaurant-business/menu', label: 'Menu' },
+  { href: '/restaurant-business/gallery', label: 'Gallery' },
+  { href: '/restaurant-business/about', label: 'About' },
+  { href: '/restaurant-business/contact', label: 'Contact' },
 ];
 ---
 
 <header class={`header ${transparentOnTop ? 'header--transparent-top' : ''}`} role="banner" data-transparent-top={transparentOnTop}>
   <div class="header__container">
     <!-- Logo/Brand -->
-    <a href="/" class="header__logo" aria-label="The Main Street Bistro - Go to homepage">
+    <a href="/restaurant-business/" class="header__logo" aria-label="The Main Street Bistro - Go to homepage">
       <span class="header__logo-icon" aria-hidden="true">✦</span>
       <span class="header__logo-text">
         <span class="header__logo-main">Main Street</span>
@@ -71,7 +71,7 @@ const navLinks = [
 
     <!-- Theme Toggle (Desktop) -->
     <div class="header__actions">
-      <a href="/contact" class="header__reserve-btn">Reserve a Table</a>
+      <a href="/restaurant-business/contact" class="header__reserve-btn">Reserve a Table</a>
       <ThemeToggle class="header__theme-toggle" />
     </div>
 
@@ -115,7 +115,7 @@ const navLinks = [
 
       <!-- Mobile Reserve Link -->
       <div class="header__mobile-reserve" style={`--item-index: ${navLinks.length}`}>
-        <a href="/contact" class="header__mobile-reserve-link">Reserve a Table</a>
+        <a href="/restaurant-business/contact" class="header__mobile-reserve-link">Reserve a Table</a>
       </div>
 
       <!-- Mobile Theme Toggle Section -->
