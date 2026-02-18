@@ -118,24 +118,12 @@ export const restaurantSchema: RestaurantSchema = {
     'https://www.tripadvisor.com/Restaurant-Main_Street_Bistro',
   ],
 
-  // === Service Area ===
-  areaServed: [
-    {
-      type: 'City',
-      name: 'Houston',
-      addressLocality: 'Houston',
-      addressRegion: 'TX',
-      addressCountry: 'US',
-    },
-  ],
-
   // === Contact Point ===
   contactPoint: {
     telephone: '+1-713-555-0123',
     email: 'reservations@mainstreetbistro.com',
     contactType: 'reservations',
     availableLanguage: ['English', 'Spanish'],
-    areaServed: ['Houston', 'Greater Houston Area'],
   },
 
   // === Business Details ===

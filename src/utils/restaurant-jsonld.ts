@@ -11,7 +11,6 @@
 import type { RestaurantSchema, AmenityFeature } from '../types/restaurant-schema';
 import type {
   OpeningHoursSpecification,
-  ServiceArea,
   ContactPoint,
   AggregateRating,
   PostalAddress,
@@ -58,68 +57,6 @@ function generateOpeningHours(specs: OpeningHoursSpecification[]): object[] {
     validFrom: spec.validFrom,
     validThrough: spec.validThrough,
   }));
-}
-
-/**
- * Generate schema.org ServiceArea/GeoShape objects
- */
-function generateAreaServed(
-  areas: ServiceArea | ServiceArea[] | string | string[]
-): object | object[] | string | string[] | undefined {
-  if (typeof areas === 'string') {
-    return areas;
-  }
-  if (Array.isArray(areas)) {
-    if (areas.length === 0) return undefined;
-    if (typeof areas[0] === 'string') {
-      return areas as string[];
-    }
-    return (areas as ServiceArea[]).map((area) => generateSingleAreaServed(area));
-  }
-  return generateSingleAreaServed(areas as ServiceArea);
-}
-
-function generateSingleAreaServed(area: ServiceArea): object {
-  switch (area.type) {
-    case 'GeoCircle':
-      return cleanObject({
-        '@type': 'GeoCircle',
-        geoMidpoint: area.geoMidpoint
-          ? {
-              '@type': 'GeoCoordinates',
-              latitude: area.geoMidpoint.latitude,
-              longitude: area.geoMidpoint.longitude,
-            }
-          : undefined,
-        geoRadius: area.geoRadius,
-      });
-    case 'City':
-      return cleanObject({
-        '@type': 'City',
-        name: area.name,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: area.addressLocality,
-          addressRegion: area.addressRegion,
-          addressCountry: area.addressCountry,
-        },
-      });
-    case 'State':
-      return cleanObject({
-        '@type': 'State',
-        name: area.name || area.addressRegion,
-        address: {
-          '@type': 'PostalAddress',
-          addressRegion: area.addressRegion,
-          addressCountry: area.addressCountry,
-        },
-      });
-    default:
-      return cleanObject({
-        '@type': 'AdministrativeArea',
-        name: area.name,
-      });
-  }
 }
 
 /**
@@ -221,7 +158,6 @@ export function generateRestaurantSchema(
     // === Location & Address ===
     address: schema.address ? generatePostalAddress(schema.address) : undefined,
     geo: schema.geo ? generateGeoCoordinates(schema.geo) : undefined,
-    areaServed: schema.areaServed ? generateAreaServed(schema.areaServed) : undefined,
 
     // === Opening Hours ===
     openingHoursSpecification: schema.openingHoursSpecification

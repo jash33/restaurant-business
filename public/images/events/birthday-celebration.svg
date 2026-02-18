@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="partyWallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7b1fa2"/>
+      <stop offset="100%" style="stop-color:#4a148c"/>
+    </linearGradient>
+    <linearGradient id="partyFloorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5d4037"/>
+      <stop offset="100%" style="stop-color:#3e2723"/>
+    </linearGradient>
+    <radialGradient id="discoGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#fff;stop-opacity:0"/>
+    </radialGradient>
+    <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff"/>
+      <stop offset="100%" style="stop-color:#f5f5f5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ceiling -->
+  <rect width="800" height="100" fill="#311b92"/>
+
+  <!-- Wall -->
+  <rect x="0" y="100" width="800" height="300" fill="url(#partyWallGrad)"/>
+
+  <!-- Floor -->
+  <rect x="0" y="400" width="800" height="200" fill="url(#partyFloorGrad)"/>
+
+  <!-- Disco ball -->
+  <circle cx="400" cy="80" r="40" fill="#bdbdbd"/>
+  <rect x="397" y="0" width="6" height="40" fill="#757575"/>
+  <!-- Mirror facets -->
+  <rect x="375" y="55" width="10" height="10" fill="#fff" opacity="0.9"/>
+  <rect x="390" y="50" width="8" height="8" fill="#e0e0e0"/>
+  <rect x="405" y="55" width="10" height="10" fill="#fff" opacity="0.9"/>
+  <rect x="420" y="50" width="8" height="8" fill="#e0e0e0"/>
+  <rect x="380" y="70" width="8" height="8" fill="#e0e0e0"/>
+  <rect x="395" y="75" width="10" height="10" fill="#fff" opacity="0.9"/>
+  <rect x="410" y="70" width="8" height="8" fill="#e0e0e0"/>
+  <rect x="365" y="65" width="8" height="8" fill="#fff" opacity="0.8"/>
+  <rect x="425" y="65" width="8" height="8" fill="#fff" opacity="0.8"/>
+  <rect x="375" y="85" width="8" height="8" fill="#e0e0e0"/>
+  <rect x="400" y="90" width="10" height="10" fill="#fff" opacity="0.9"/>
+  <rect x="415" y="85" width="8" height="8" fill="#e0e0e0"/>
+
+  <!-- Light beams from disco ball -->
+  <line x1="400" y1="120" x2="100" y2="350" stroke="#e1bee7" stroke-width="3" opacity="0.3"/>
+  <line x1="400" y1="120" x2="250" y2="400" stroke="#bbdefb" stroke-width="3" opacity="0.3"/>
+  <line x1="400" y1="120" x2="550" y2="400" stroke="#c8e6c9" stroke-width="3" opacity="0.3"/>
+  <line x1="400" y1="120" x2="700" y2="350" stroke="#fff9c4" stroke-width="3" opacity="0.3"/>
+
+  <!-- Banner: HAPPY BIRTHDAY -->
+  <path d="M100 150 Q200 130 300 150 Q400 170 500 150 Q600 130 700 150" stroke="#ff4081" stroke-width="3" fill="none"/>
+  <rect x="200" y="140" width="400" height="50" fill="#ff4081" rx="5"/>
+  <text x="400" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#fff">HAPPY BIRTHDAY!</text>
+
+  <!-- Balloons - left cluster -->
+  <ellipse cx="80" cy="200" rx="35" ry="45" fill="#f44336"/>
+  <path d="M80 245 L85 260 L75 260" fill="#f44336"/>
+  <line x1="80" y1="260" x2="80" y2="320" stroke="#666" stroke-width="1"/>
+
+  <ellipse cx="120" cy="180" rx="35" ry="45" fill="#2196f3"/>
+  <path d="M120 225 L125 240 L115 240" fill="#2196f3"/>
+  <line x1="120" y1="240" x2="100" y2="320" stroke="#666" stroke-width="1"/>
+
+  <ellipse cx="60" cy="160" rx="30" ry="40" fill="#ffeb3b"/>
+  <path d="M60 200 L65 215 L55 215" fill="#ffeb3b"/>
+  <line x1="60" y1="215" x2="80" y2="320" stroke="#666" stroke-width="1"/>
+
+  <!-- Balloons - right cluster -->
+  <ellipse cx="720" cy="200" rx="35" ry="45" fill="#4caf50"/>
+  <path d="M720 245 L725 260 L715 260" fill="#4caf50"/>
+  <line x1="720" y1="260" x2="720" y2="320" stroke="#666" stroke-width="1"/>
+
+  <ellipse cx="680" cy="180" rx="35" ry="45" fill="#e91e63"/>
+  <path d="M680 225 L685 240 L675 240" fill="#e91e63"/>
+  <line x1="680" y1="240" x2="700" y2="320" stroke="#666" stroke-width="1"/>
+
+  <ellipse cx="740" cy="160" rx="30" ry="40" fill="#9c27b0"/>
+  <path d="M740 200 L745 215 L735 215" fill="#9c27b0"/>
+  <line x1="740" y1="215" x2="720" y2="320" stroke="#666" stroke-width="1"/>
+
+  <!-- Streamers -->
+  <path d="M0 200 Q50 220 100 200 Q150 180 200 200 Q250 220 300 200" stroke="#ff9800" stroke-width="4" fill="none"/>
+  <path d="M500 200 Q550 180 600 200 Q650 220 700 200 Q750 180 800 200" stroke="#00bcd4" stroke-width="4" fill="none"/>
+
+  <!-- Party table -->
+  <rect x="200" y="350" width="400" height="150" rx="10" fill="#e91e63"/>
+  <rect x="210" y="360" width="380" height="130" fill="#f06292"/>
+
+  <!-- Birthday cake (large, center) -->
+  <rect x="340" y="280" width="120" height="70" fill="url(#cakeGrad)" stroke="#f8bbd9" stroke-width="3"/>
+  <rect x="355" y="250" width="90" height="30" fill="url(#cakeGrad)" stroke="#f8bbd9" stroke-width="3"/>
+  <rect x="375" y="220" width="50" height="30" fill="url(#cakeGrad)" stroke="#f8bbd9" stroke-width="3"/>
+
+  <!-- Cake decorations -->
+  <path d="M345 340 Q360 325 375 340 Q390 355 405 340 Q420 325 435 340 Q450 355 455 340" stroke="#e91e63" stroke-width="3" fill="none"/>
+  <path d="M360 270 Q375 260 390 270 Q405 280 420 270 Q435 260 440 270" stroke="#e91e63" stroke-width="2" fill="none"/>
+
+  <!-- Candles -->
+  <rect x="385" y="200" width="6" height="20" fill="#ff9800"/>
+  <ellipse cx="388" cy="195" rx="4" ry="6" fill="#ffeb3b"/>
+  <circle cx="388" cy="192" r="8" fill="url(#discoGlow)"/>
+
+  <rect x="400" y="200" width="6" height="20" fill="#2196f3"/>
+  <ellipse cx="403" cy="195" rx="4" ry="6" fill="#ffeb3b"/>
+  <circle cx="403" cy="192" r="8" fill="url(#discoGlow)"/>
+
+  <rect x="415" y="200" width="6" height="20" fill="#4caf50"/>
+  <ellipse cx="418" cy="195" rx="4" ry="6" fill="#ffeb3b"/>
+  <circle cx="418" cy="192" r="8" fill="url(#discoGlow)"/>
+
+  <!-- Presents on table -->
+  <rect x="230" y="380" width="60" height="50" fill="#2196f3"/>
+  <rect x="230" y="400" width="60" height="5" fill="#ffeb3b"/>
+  <rect x="255" y="380" width="5" height="50" fill="#ffeb3b"/>
+  <path d="M235 380 Q260 365 285 380" stroke="#ffeb3b" stroke-width="3" fill="none"/>
+
+  <rect x="510" y="385" width="50" height="45" fill="#4caf50"/>
+  <rect x="510" y="402" width="50" height="5" fill="#f44336"/>
+  <rect x="530" y="385" width="5" height="45" fill="#f44336"/>
+  <path d="M515 385 Q535 370 555 385" stroke="#f44336" stroke-width="3" fill="none"/>
+
+  <!-- Party plates -->
+  <ellipse cx="280" cy="450" rx="35" ry="20" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>
+  <ellipse cx="400" cy="440" rx="40" ry="22" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>
+  <ellipse cx="520" cy="450" rx="35" ry="20" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>
+
+  <!-- Confetti scattered -->
+  <rect x="150" y="300" width="8" height="8" fill="#ff4081" transform="rotate(30 154 304)"/>
+  <rect x="250" y="280" width="6" height="6" fill="#00bcd4" transform="rotate(-20 253 283)"/>
+  <rect x="550" y="290" width="7" height="7" fill="#ffeb3b" transform="rotate(45 553 293)"/>
+  <rect x="650" y="310" width="8" height="8" fill="#4caf50" transform="rotate(-30 654 314)"/>
+  <circle cx="180" cy="350" r="4" fill="#9c27b0"/>
+  <circle cx="620" cy="340" r="5" fill="#ff9800"/>
+  <circle cx="350" cy="250" r="4" fill="#2196f3"/>
+  <circle cx="450" cy="260" r="3" fill="#e91e63"/>
+
+  <!-- Party hats on chairs -->
+  <polygon points="120,480 140,420 160,480" fill="#ff9800" stroke="#ffeb3b" stroke-width="2"/>
+  <circle cx="140" cy="420" r="8" fill="#e91e63"/>
+
+  <polygon points="640,480 660,420 680,480" fill="#9c27b0" stroke="#00bcd4" stroke-width="2"/>
+  <circle cx="660" cy="420" r="8" fill="#ffeb3b"/>
+
+  <!-- Chairs -->
+  <rect x="100" y="480" width="80" height="60" rx="5" fill="#5d4037"/>
+  <rect x="620" y="480" width="80" height="60" rx="5" fill="#5d4037"/>
+
+  <!-- Text label -->
+  <text x="400" y="580" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#f8bbd9">Birthday Celebration</text>
+</svg>

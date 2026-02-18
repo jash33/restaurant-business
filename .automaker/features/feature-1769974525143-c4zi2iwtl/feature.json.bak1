@@ -5,33 +5,27 @@
   "images": [],
   "imagePaths": [
     {
-      "id": "img-1769974427917-rukmf8zi9",
-      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-33-47-714Z-1769974427908.png",
-      "filename": "pasted-image-2026-02-01T19-33-47-714Z.png",
+      "id": "img-1769975439912-6jspg5nlb",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\homepage-1769975439908.png",
+      "filename": "homepage.png",
       "mimeType": "image/png"
     },
     {
-      "id": "img-1769974440299-dq2ks7mrl",
-      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-00-262Z-1769974440294.png",
-      "filename": "pasted-image-2026-02-01T19-34-00-262Z.png",
+      "id": "img-1769975445724-e2xurkddy",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-55-724Z-1769974495771-1769975445722.png",
+      "filename": "pasted-image-2026-02-01T19-34-55-724Z-1769974495771.png",
       "mimeType": "image/png"
     },
     {
-      "id": "img-1769974463207-zk05w1tl6",
-      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-23-162Z-1769974463200.png",
-      "filename": "pasted-image-2026-02-01T19-34-23-162Z.png",
+      "id": "img-1769975445737-woamjujkp",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-23-162Z-1769974463200-1769975445735.png",
+      "filename": "pasted-image-2026-02-01T19-34-23-162Z-1769974463200.png",
       "mimeType": "image/png"
     },
     {
-      "id": "img-1769974485300-c4xk8ggft",
-      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-45-256Z-1769974485296.png",
-      "filename": "pasted-image-2026-02-01T19-34-45-256Z.png",
-      "mimeType": "image/png"
-    },
-    {
-      "id": "img-1769974495775-kpxhzqww2",
-      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-55-724Z-1769974495771.png",
-      "filename": "pasted-image-2026-02-01T19-34-55-724Z.png",
+      "id": "img-1769975445744-twa1wazio",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1769974525143-c4zi2iwtl\\images\\pasted-image-2026-02-01T19-34-45-256Z-1769974485296-1769975445742.png",
+      "filename": "pasted-image-2026-02-01T19-34-45-256Z-1769974485296.png",
       "mimeType": "image/png"
     }
   ],
@@ -42,12 +36,12 @@
   "reasoningEffort": "none",
   "branchName": "main",
   "priority": 2,
-  "planningMode": "skip",
+  "planningMode": "full",
   "requirePlanApproval": false,
   "dependencies": [],
-  "workMode": "current",
+  "workMode": "custom",
   "titleGenerating": false,
-  "status": "in_progress",
+  "status": "waiting_approval",
   "id": "feature-1769974525143-c4zi2iwtl",
   "descriptionHistory": [
     {
@@ -56,6 +50,7 @@
       "source": "initial"
     }
   ],
-  "startedAt": "2026-02-01T19:37:33.172Z",
-  "updatedAt": "2026-02-01T19:37:33.307Z"
+  "startedAt": "2026-02-01T19:50:48.372Z",
+  "updatedAt": "2026-02-01T19:59:37.477Z",
+  "justFinishedAt": "2026-02-01T19:59:37.477Z"
 }

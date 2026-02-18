@@ -1,0 +1,29 @@
+{
+  "category": "Uncategorized",
+  "description": "\"service areas\" is not a normal feature for a resturaunt site.",
+  "title": "",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1770521480847-yr4wb0e1f",
+  "descriptionHistory": [
+    {
+      "description": "\"service areas\" is not a normal feature for a resturaunt site.",
+      "timestamp": "2026-02-08T03:31:20.860Z",
+      "source": "initial"
+    }
+  ],
+  "updatedAt": "2026-02-08T03:39:45.924Z"
+}

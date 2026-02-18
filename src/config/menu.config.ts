@@ -38,7 +38,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/appetizers/crispy-calamari.jpg',
+      src: 'https://images.unsplash.com/photo-1604909052743-94e838986d24?w=600&h=400&fit=crop',
       alt: 'Crispy calamari served with marinara sauce',
       width: 600,
       height: 400,
@@ -67,7 +67,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 2,
     image: {
-      src: '/menu/appetizers/bruschetta-trio.jpg',
+      src: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&h=400&fit=crop',
       alt: 'Trio of bruschetta on toasted ciabatta',
       width: 600,
       height: 400,
@@ -86,6 +86,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: ['milk'],
     available: true,
     sortOrder: 3,
+    image: {
+      src: 'https://images.unsplash.com/photo-1576506295286-5cda18df43e7?w=600&h=400&fit=crop',
+      alt: 'Creamy spinach artichoke dip with tortilla chips',
+      width: 600,
+      height: 400,
+    },
     prepTime: 15,
   },
 
@@ -103,7 +109,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/soups/french-onion-soup.jpg',
+      src: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&h=400&fit=crop',
       alt: 'French onion soup with melted cheese',
       width: 600,
       height: 400,
@@ -159,6 +165,12 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     featured: true,
     sortOrder: 2,
+    image: {
+      src: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&h=400&fit=crop',
+      alt: 'Classic Caesar salad with croutons and parmesan',
+      width: 600,
+      height: 400,
+    },
     prepTime: 10,
   },
   {
@@ -173,6 +185,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: [],
     available: true,
     sortOrder: 3,
+    image: {
+      src: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop',
+      alt: 'Fresh garden salad with mixed vegetables',
+      width: 600,
+      height: 400,
+    },
     prepTime: 8,
   },
 
@@ -193,7 +211,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/mains/grilled-salmon.jpg',
+      src: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&h=400&fit=crop',
       alt: 'Grilled salmon with vegetables',
       width: 600,
       height: 400,
@@ -270,7 +288,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/mains/filet-mignon.jpg',
+      src: 'https://images.unsplash.com/photo-1558030006-450675393462?w=600&h=400&fit=crop',
       alt: 'Filet mignon with mashed potatoes',
       width: 600,
       height: 400,
@@ -295,7 +313,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 2,
     image: {
-      src: '/menu/mains/chicken-parmesan.jpg',
+      src: 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=600&h=400&fit=crop',
       alt: 'Chicken parmesan over linguine',
       width: 600,
       height: 400,
@@ -316,6 +334,12 @@ export const MENU_ITEMS: MenuItem[] = [
     seasonal: true,
     seasonAvailable: 'Spring/Summer',
     sortOrder: 3,
+    image: {
+      src: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&h=400&fit=crop',
+      alt: 'Creamy vegetable risotto with fresh herbs',
+      width: 600,
+      height: 400,
+    },
     prepTime: 25,
   },
 
@@ -332,6 +356,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: ['wheat', 'eggs', 'milk'],
     available: true,
     sortOrder: 1,
+    image: {
+      src: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&h=400&fit=crop',
+      alt: 'Spaghetti carbonara with pancetta and egg',
+      width: 600,
+      height: 400,
+    },
     prepTime: 18,
   },
   {
@@ -347,6 +377,12 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'medium',
     available: true,
     sortOrder: 2,
+    image: {
+      src: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&h=400&fit=crop',
+      alt: 'Penne arrabbiata in spicy tomato sauce',
+      width: 600,
+      height: 400,
+    },
     prepTime: 15,
   },
 
@@ -389,7 +425,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/sandwiches/classic-burger.jpg',
+      src: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop',
       alt: 'Classic burger with fries',
       width: 600,
       height: 400,
@@ -409,6 +445,12 @@ export const MENU_ITEMS: MenuItem[] = [
     preparationStyle: 'grilled',
     available: true,
     sortOrder: 2,
+    image: {
+      src: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?w=600&h=400&fit=crop',
+      alt: 'Grilled chicken sandwich on ciabatta',
+      width: 600,
+      height: 400,
+    },
     prepTime: 15,
   },
 
@@ -427,7 +469,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/desserts/tiramisu.jpg',
+      src: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&h=400&fit=crop',
       alt: 'Classic tiramisu',
       width: 600,
       height: 400,
@@ -448,7 +490,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 2,
     image: {
-      src: '/menu/desserts/chocolate-lava-cake.jpg',
+      src: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&h=400&fit=crop',
       alt: 'Chocolate lava cake with ice cream',
       width: 600,
       height: 400,
@@ -471,6 +513,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: ['milk', 'eggs'],
     available: true,
     sortOrder: 3,
+    image: {
+      src: 'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&h=400&fit=crop',
+      alt: 'Crème brûlée with caramelized sugar top',
+      width: 600,
+      height: 400,
+    },
     prepTime: 5,
   },
 
@@ -487,6 +535,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: [],
     available: true,
     sortOrder: 1,
+    image: {
+      src: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600&h=400&fit=crop',
+      alt: 'Fresh-squeezed lemonade with mint',
+      width: 600,
+      height: 400,
+    },
     prepTime: 3,
   },
   {
@@ -501,6 +555,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: [],
     available: true,
     sortOrder: 2,
+    image: {
+      src: 'https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=600&h=400&fit=crop',
+      alt: 'Southern sweet iced tea',
+      width: 600,
+      height: 400,
+    },
     prepTime: 2,
   },
 
@@ -517,6 +577,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allergens: ['wheat', 'milk'],
     available: true,
     sortOrder: 1,
+    image: {
+      src: 'https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=600&h=400&fit=crop',
+      alt: 'Creamy mac and cheese for kids',
+      width: 600,
+      height: 400,
+    },
     prepTime: 10,
   },
   {
@@ -532,6 +598,12 @@ export const MENU_ITEMS: MenuItem[] = [
     preparationStyle: 'fried',
     available: true,
     sortOrder: 2,
+    image: {
+      src: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=600&h=400&fit=crop',
+      alt: 'Crispy chicken tenders with fries',
+      width: 600,
+      height: 400,
+    },
     prepTime: 12,
   },
 
@@ -568,7 +640,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 1,
     image: {
-      src: '/menu/brunch/eggs-benedict.jpg',
+      src: 'https://images.unsplash.com/photo-1608039829572-f56e0f6e8f18?w=600&h=400&fit=crop',
       alt: 'Eggs Benedict with hollandaise',
       width: 600,
       height: 400,
@@ -605,7 +677,7 @@ export const MENU_ITEMS: MenuItem[] = [
     available: true,
     sortOrder: 2,
     image: {
-      src: '/menu/brunch/avocado-toast.jpg',
+      src: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=600&h=400&fit=crop',
       alt: 'Avocado toast with toppings',
       width: 600,
       height: 400,

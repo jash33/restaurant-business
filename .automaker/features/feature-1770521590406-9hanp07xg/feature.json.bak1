@@ -1,0 +1,30 @@
+{
+  "category": "Uncategorized",
+  "description": "the homepage has a maroonish colored \"reserve your table\" button. This doesn't vibe with the rest of the theme, which is mostly blues and whites.\n\n",
+  "title": "",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "waiting_approval",
+  "id": "feature-1770521590406-9hanp07xg",
+  "descriptionHistory": [
+    {
+      "description": "the homepage has a maroonish colored \"reserve your table\" button. This doesn't vibe with the rest of the theme, which is mostly blues and whites.\n\n",
+      "timestamp": "2026-02-08T03:33:10.418Z",
+      "source": "initial"
+    }
+  ],
+  "updatedAt": "2026-02-08T03:46:57.444Z",
+  "justFinishedAt": "2026-02-08T03:46:57.444Z"
+}

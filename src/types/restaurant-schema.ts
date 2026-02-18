@@ -8,7 +8,6 @@ import type {
   PostalAddress,
   GeoCoordinates,
   OpeningHoursSpecification,
-  ServiceArea,
   ContactPoint,
   AggregateRating,
   PriceRange,
@@ -79,8 +78,6 @@ export interface RestaurantSchema {
   address?: PostalAddress;
   /** GPS coordinates */
   geo?: GeoCoordinates;
-  /** Geographic area served */
-  areaServed?: ServiceArea | ServiceArea[] | string | string[];
 
   // === Operating Hours (from LocalBusiness) ===
   /** Structured opening hours specification */

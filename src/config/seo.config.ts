@@ -26,7 +26,6 @@ export const localBusinessSchema: LocalBusinessSchema = {
   email: restaurantSchema.email,
   address: restaurantSchema.address,
   geo: restaurantSchema.geo,
-  areaServed: restaurantSchema.areaServed,
   openingHoursSpecification: restaurantSchema.openingHoursSpecification,
   openingHours: restaurantSchema.openingHours,
   logo: restaurantSchema.logo,

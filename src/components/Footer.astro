@@ -1,7 +1,7 @@
 ---
 /**
  * Footer Component
- * Global footer displaying contact information, service areas,
+ * Global footer displaying contact information,
  * social media links, and copyright information.
  *
  * @example
@@ -38,37 +38,13 @@ interface Props {
   companyName?: string;
   /** Social media links (optional) */
   socialLinks?: SocialLink[];
-  /** Service areas to display */
-  serviceAreas?: string[];
 }
-
-// Derive default service areas from restaurant config
-const defaultServiceAreas: string[] = (() => {
-  // Prefer contactPoint.areaServed (simple string array)
-  const contactAreas = restaurantSchema.contactPoint?.areaServed;
-  if (Array.isArray(contactAreas) && contactAreas.length > 0) {
-    return contactAreas.filter((a): a is string => typeof a === 'string');
-  }
-  // Fallback: extract names from areaServed schema objects
-  const areaServed = restaurantSchema.areaServed;
-  if (Array.isArray(areaServed)) {
-    return areaServed
-      .map((a) => (typeof a === 'string' ? a : a.name))
-      .filter((name): name is string => !!name);
-  }
-  if (typeof areaServed === 'string') return [areaServed];
-  if (areaServed && typeof areaServed === 'object' && 'name' in areaServed) {
-    return areaServed.name ? [areaServed.name] : [];
-  }
-  return [];
-})();
 
 const {
   phone = seoConfig.organization?.contactPoint?.telephone,
   email = seoConfig.organization?.contactPoint?.email,
   companyName = restaurantSchema.name || seoConfig.siteName,
   socialLinks = [],
-  serviceAreas = defaultServiceAreas,
 } = Astro.props;
 
 // Get the current year dynamically
@@ -124,6 +100,12 @@ const platformNames: Record<SocialPlatform, string> = {
               </a>
             </p>
           )}
+          <p class="footer__contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="footer__icon" aria-hidden="true">
+              <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            </svg>
+            <span>1234 Main Street, Houston, TX 77002</span>
+          </p>
           {!phone && !email && (
             <p class="footer__contact-item footer__contact-item--placeholder">
               Contact information coming soon
@@ -132,14 +114,18 @@ const platformNames: Record<SocialPlatform, string> = {
         </address>
       </section>
 
-      <!-- Service Areas Section -->
-      <section class="footer__section footer__service-areas" aria-labelledby="footer-areas-heading">
-        <h2 id="footer-areas-heading" class="footer__heading">Service Areas</h2>
-        <ul class="footer__areas-list" role="list">
-          {serviceAreas.map((area) => (
-            <li class="footer__area-item">{area}</li>
-          ))}
-        </ul>
+      <!-- Quick Links Section -->
+      <section class="footer__section footer__links" aria-labelledby="footer-links-heading">
+        <h2 id="footer-links-heading" class="footer__heading">Quick Links</h2>
+        <nav aria-label="Footer navigation">
+          <ul class="footer__links-list" role="list">
+            <li><a href="/menu" class="footer__link">Our Menu</a></li>
+            <li><a href="/contact" class="footer__link">Reservations</a></li>
+            <li><a href="/about" class="footer__link">Our Story</a></li>
+            <li><a href="/gallery" class="footer__link">Gallery</a></li>
+            <li><a href="/catering" class="footer__link">Catering</a></li>
+          </ul>
+        </nav>
       </section>
 
       <!-- Social Media Section (conditionally rendered) -->
@@ -339,8 +325,8 @@ const platformNames: Record<SocialPlatform, string> = {
     border-radius: var(--radius-sm);
   }
 
-  /* Service Areas Section */
-  .footer__areas-list {
+  /* Quick Links Section */
+  .footer__links-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -349,23 +335,16 @@ const platformNames: Record<SocialPlatform, string> = {
     gap: var(--spacing-2);
   }
 
-  .footer__area-item {
-    color: var(--color-primary-100);
-    font-size: var(--font-size-base);
-    padding-left: var(--spacing-4);
-    position: relative;
+  .footer__links-list li {
+    margin: 0;
   }
 
-  .footer__area-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    background-color: var(--color-primary-400);
-    border-radius: var(--radius-full);
+  .footer__links-list .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: var(--color-primary-100);
+    font-size: var(--font-size-base);
   }
 
   /* Social Media Section */
@@ -516,12 +495,6 @@ const platformNames: Record<SocialPlatform, string> = {
     .footer__content {
       grid-template-columns: repeat(3, 1fr);
     }
-
-    .footer__areas-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-2) var(--spacing-6);
-    }
   }
 
   /* Large Desktop (1280px) */
@@ -555,7 +528,6 @@ const platformNames: Record<SocialPlatform, string> = {
 
     .footer__link,
     .footer__contact-item,
-    .footer__area-item,
     .footer__copyright {
       color: var(--color-text-primary);
     }

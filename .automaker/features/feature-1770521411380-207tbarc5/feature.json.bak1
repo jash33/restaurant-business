@@ -1,0 +1,30 @@
+{
+  "category": "Uncategorized",
+  "description": "the top navbar on the home page looks generic. can we fix that?",
+  "title": "",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "waiting_approval",
+  "id": "feature-1770521411380-207tbarc5",
+  "descriptionHistory": [
+    {
+      "description": "the top navbar on the home page looks generic. can we fix that?",
+      "timestamp": "2026-02-08T03:30:11.393Z",
+      "source": "initial"
+    }
+  ],
+  "updatedAt": "2026-02-08T03:44:08.295Z",
+  "justFinishedAt": "2026-02-08T03:44:08.295Z"
+}

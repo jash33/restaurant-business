@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="seaPlateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f5f5"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
+    </linearGradient>
+    <linearGradient id="shrimpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff8a65"/>
+      <stop offset="100%" style="stop-color:#e64a19"/>
+    </linearGradient>
+    <linearGradient id="lobsterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d32f2f"/>
+      <stop offset="100%" style="stop-color:#b71c1c"/>
+    </linearGradient>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e3f2fd"/>
+      <stop offset="100%" style="stop-color:#bbdefb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#1a237e"/>
+
+  <!-- Table surface -->
+  <rect x="0" y="400" width="800" height="200" fill="#37474f"/>
+
+  <!-- Large serving platter shadow -->
+  <ellipse cx="410" cy="360" rx="280" ry="70" fill="rgba(0,0,0,0.3)"/>
+
+  <!-- Crushed ice bed -->
+  <ellipse cx="400" cy="300" rx="280" ry="160" fill="url(#iceGrad)"/>
+  <ellipse cx="400" cy="290" rx="260" ry="145" fill="#e1f5fe"/>
+
+  <!-- Ice texture -->
+  <circle cx="250" cy="280" r="15" fill="#fff" opacity="0.5"/>
+  <circle cx="350" cy="320" r="12" fill="#fff" opacity="0.4"/>
+  <circle cx="450" cy="260" r="18" fill="#fff" opacity="0.5"/>
+  <circle cx="530" cy="300" r="14" fill="#fff" opacity="0.4"/>
+  <circle cx="300" cy="350" r="10" fill="#fff" opacity="0.5"/>
+  <circle cx="500" cy="360" r="12" fill="#fff" opacity="0.4"/>
+
+  <!-- Lobster tail (center) -->
+  <ellipse cx="400" cy="280" rx="80" ry="45" fill="url(#lobsterGrad)"/>
+  <path d="M330 280 Q340 260 360 270 Q380 280 400 270 Q420 260 440 270 Q460 280 470 280" stroke="#b71c1c" stroke-width="3" fill="none"/>
+  <path d="M340 290 Q360 280 380 290 Q400 300 420 290 Q440 280 460 290" stroke="#c62828" stroke-width="2" fill="none"/>
+
+  <!-- Shrimp arranged around -->
+  <!-- Shrimp 1 -->
+  <path d="M200 250 Q180 230 200 210 Q230 200 250 220 Q260 240 250 260 Q230 270 200 250" fill="url(#shrimpGrad)"/>
+  <circle cx="195" cy="215" r="4" fill="#333"/>
+
+  <!-- Shrimp 2 -->
+  <path d="M550 230 Q580 210 600 230 Q610 260 590 280 Q560 290 540 270 Q530 250 550 230" fill="url(#shrimpGrad)"/>
+  <circle cx="595" cy="235" r="4" fill="#333"/>
+
+  <!-- Shrimp 3 -->
+  <path d="M280 360 Q260 340 280 320 Q310 310 330 330 Q340 350 330 370 Q310 380 280 360" fill="url(#shrimpGrad)"/>
+  <circle cx="275" cy="325" r="4" fill="#333"/>
+
+  <!-- Shrimp 4 -->
+  <path d="M500 370 Q530 350 550 370 Q560 400 540 410 Q510 420 490 400 Q480 380 500 370" fill="url(#shrimpGrad)"/>
+  <circle cx="545" cy="375" r="4" fill="#333"/>
+
+  <!-- Shrimp 5 -->
+  <path d="M160 310 Q140 290 160 270 Q190 260 210 280 Q220 300 210 320 Q190 330 160 310" fill="url(#shrimpGrad)"/>
+  <circle cx="155" cy="275" r="4" fill="#333"/>
+
+  <!-- Shrimp 6 -->
+  <path d="M600 310 Q630 290 650 310 Q660 340 640 360 Q610 370 590 350 Q580 330 600 310" fill="url(#shrimpGrad)"/>
+  <circle cx="645" cy="315" r="4" fill="#333"/>
+
+  <!-- Oysters -->
+  <ellipse cx="350" cy="200" rx="30" ry="18" fill="#78909c"/>
+  <ellipse cx="350" cy="198" rx="25" ry="14" fill="#eceff1"/>
+  <ellipse cx="350" cy="196" rx="18" ry="10" fill="#b0bec5"/>
+
+  <ellipse cx="450" cy="380" rx="30" ry="18" fill="#78909c"/>
+  <ellipse cx="450" cy="378" rx="25" ry="14" fill="#eceff1"/>
+  <ellipse cx="450" cy="376" rx="18" ry="10" fill="#b0bec5"/>
+
+  <ellipse cx="250" cy="400" rx="28" ry="16" fill="#78909c"/>
+  <ellipse cx="250" cy="398" rx="23" ry="12" fill="#eceff1"/>
+  <ellipse cx="250" cy="396" rx="16" ry="8" fill="#b0bec5"/>
+
+  <!-- Lemon wedges -->
+  <path d="M600 400 L640 380 L640 420 Z" fill="#ffeb3b"/>
+  <path d="M605 400 L630 388 L630 412 Z" fill="#fff59d"/>
+
+  <path d="M180 380 L220 360 L220 400 Z" fill="#ffeb3b"/>
+  <path d="M185 380 L210 368 L210 392 Z" fill="#fff59d"/>
+
+  <!-- Parsley garnish -->
+  <ellipse cx="400" cy="340" rx="20" ry="12" fill="#2e7d32"/>
+  <ellipse cx="420" cy="335" rx="15" ry="10" fill="#388e3c"/>
+  <ellipse cx="385" cy="338" rx="12" ry="8" fill="#43a047"/>
+
+  <!-- Cocktail sauce cup -->
+  <ellipse cx="400" cy="180" rx="25" ry="15" fill="#4e342e"/>
+  <ellipse cx="400" cy="178" rx="22" ry="12" fill="#c62828"/>
+
+  <!-- Mignonette cup -->
+  <ellipse cx="320" cy="410" rx="20" ry="12" fill="#4e342e"/>
+  <ellipse cx="320" cy="408" rx="17" ry="9" fill="#f5f5dc"/>
+
+  <!-- Ambient cool lighting -->
+  <rect width="800" height="600" fill="#1565c0" opacity="0.05"/>
+
+  <!-- Text label -->
+  <text x="400" y="560" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#e3f2fd" opacity="0.9">Fresh Seafood Platter</text>
+</svg>

@@ -1,0 +1,122 @@
+{
+  "category": "Uncategorized",
+  "description": "the menu route has unreadable text, and also looks kind a bit generic. the dietary key section is good though. \n\nCan we actually find some stock photos for the menu/gallery?\n\nThe download pdf button should be visible without having to scroll first before it appears\n\n",
+  "title": "",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "full",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "custom",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1770521705880-sqr6lnlij",
+  "descriptionHistory": [
+    {
+      "description": "the menu route has unreadable text, and also looks kind of generic and bad. the dietary key section is good though. \n\nCan we actually find some stock photos for the menu/gallery?\n\n",
+      "timestamp": "2026-02-08T03:35:05.896Z",
+      "source": "initial"
+    },
+    {
+      "description": "the menu route has unreadable text, and also looks kind a bit generic. the dietary key section is good though. \n\nCan we actually find some stock photos for the menu/gallery?\n\n",
+      "timestamp": "2026-02-08T03:35:38.229Z",
+      "source": "edit"
+    },
+    {
+      "description": "the menu route has unreadable text, and also looks kind a bit generic. the dietary key section is good though. \n\nCan we actually find some stock photos for the menu/gallery?\n\nThe download pdf button should be visible without having to scroll first before it appears\n\n",
+      "timestamp": "2026-02-08T03:36:08.987Z",
+      "source": "edit"
+    }
+  ],
+  "updatedAt": "2026-02-08T04:13:01.672Z",
+  "planSpec": {
+    "status": "approved",
+    "version": 1,
+    "reviewedByUser": false,
+    "content": "🔧 Tool: Glob\nInput: {\n  \"pattern\": \"**/*.{tsx,ts,css,scss}\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"menu|Menu\",\n  \"glob\": \"*.{tsx,ts}\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"download.*pdf|PDF|pdf\",\n  \"glob\": \"*.{tsx,ts}\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"src/**/*.{tsx,ts,css,scss}\"\n}\n\n🔧 Tool: Grep\nInput: {\n  \"pattern\": \"menu\",\n  \"glob\": \"src/**/*.tsx\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"src/**/*.astro\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"src/pages/**/*\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\menu.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\pages\\\\gallery.astro\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\menu.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\config\\\\gallery.config.ts\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\styles\\\\variables.css\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\MenuCategorySection.astro\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"public/images/**/*\"\n}\n\n🔧 Tool: Read\nInput: {\n  \"file_path\": \"C:\\\\Users\\\\James\\\\Repos\\\\restaurant-business\\\\src\\\\components\\\\MenuItem.astro\"\n}\n\n🔧 Tool: Glob\nInput: {\n  \"pattern\": \"public/**/*.{jpg,jpeg,png,webp}\"\n}\nNow I have a good understanding of the codebase. Let me generate the specification:\n\n---\n\n# Comprehensive Specification: Menu Page Enhancement & Gallery Stock Photos\n\n## 1. Problem Statement\n\nThe restaurant menu page has unreadable text (likely contrast or typography issues in certain sections), and the overall design appears too generic despite a good dietary key section. Additionally, the menu and gallery pages need stock photos to replace placeholder SVG images. The \"Download PDF\" button requires scrolling to become visible, which reduces discoverability and user experience.\n\n## 2. User Story\n\nAs a **restaurant website visitor**, I want **the menu page to have readable text, visually appealing design, real food photography, and an immediately visible download button**, so that **I can easily browse the menu, see appetizing food images, and quickly access the PDF version without scrolling**.\n\n## 3. Acceptance Criteria\n\n### Happy Path\n- **GIVEN** a user visits the menu page, **WHEN** the page loads, **THEN** all text is readable with proper contrast ratios (WCAG AA: 4.5:1 for normal text, 3:1 for large text)\n- **GIVEN** a user views the menu header, **WHEN** the page loads, **THEN** the Download PDF button is visible without scrolling (part of hero section)\n- **GIVEN** a user browses the menu, **WHEN** viewing menu categories, **THEN** they see high-quality stock food photography instead of SVG placeholders\n- **GIVEN** a user visits the gallery page, **WHEN** the page loads, **THEN** real stock photos are displayed in all categories (interior, exterior, food, events)\n\n### Edge Cases\n- **GIVEN** a user is on a mobile device, **WHEN** viewing the menu header, **THEN** the Download PDF button remains visible and accessible\n- **GIVEN** a user has dark mode enabled, **WHEN** viewing the menu, **THEN** text remains readable with appropriate contrast\n\n### Error Handling\n- **GIVEN** a stock photo fails to load, **WHEN** viewing the page, **THEN** a fallback placeholder or graceful error state is shown\n- **GIVEN** a user clicks Download PDF, **WHEN** the print view loads, **THEN** the layout remains clean and functional\n\n## 4. Technical Context\n\n| Aspect | Value |\n|--------|-------|\n| Affected Files | `src/pages/menu.astro`, `src/pages/gallery.astro`, `src/config/gallery.config.ts`, `src/config/menu.config.ts`, `public/images/` |\n| Dependencies | Unsplash/Pexels free stock photos (royalty-free) |\n| Constraints | Must maintain WCAG 2.1 AA compliance; images should be optimized for web (WebP/JPG) |\n| Patterns to Follow | Existing CSS variable system in `variables.css`, BEM naming, responsive design patterns |\n\n## 5. Non-Goals\n\n- **NOT** redesigning the entire website aesthetic\n- **NOT** adding new menu item functionality or filters\n- **NOT** changing the dietary key section (explicitly stated as \"good\")\n- **NOT** implementing image CDN or advanced image optimization pipeline\n- **NOT** adding lightbox functionality to menu images (gallery already has this)\n\n## 6. Implementation Tasks\n\n```tasks\n## Phase 1: Text Readability & Header Improvements\n\n- [ ] T001: Fix menu header text contrast by adjusting subtitle and hours colors to ensure WCAG AA compliance | File: src/pages/menu.astro\n- [ ] T002: Move Download PDF button into the hero/header section so it's visible without scrolling | File: src/pages/menu.astro\n- [ ] T003: Enhance menu section heading typography with better font pairing and spacing | File: src/pages/menu.astro\n- [ ] T004: Improve menu item name and description contrast in light and dark modes | File: src/components/MenuItem.astro\n\n## Phase 2: Stock Photography Integration\n\n- [ ] T005: Download and add restaurant stock photos to public/images folder (food, interior, exterior, events) | File: public/images/stock/\n- [ ] T006: Update gallery.config.ts to use new stock photos instead of SVG placeholders | File: src/config/gallery.config.ts\n- [ ] T007: Update menu.config.ts to add stock photo URLs for menu item images | File: src/config/menu.config.ts\n\n## Phase 3: Visual Polish & Verification\n\n- [ ] T008: Add subtle visual enhancements to menu page header (gradient refinement, decorative elements) | File: src/pages/menu.astro\n- [ ] T009: Ensure responsive behavior of new Download PDF button placement on mobile | File: src/pages/menu.astro\n- [ ] T010: Verify all changes work correctly in dark mode | File: src/pages/menu.astro\n```\n\n## 7. Success Metrics\n\n| Metric | Target |\n|--------|--------|\n| Text Contrast Ratio | All text meets WCAG AA (4.5:1 for body, 3:1 for large) |\n| PDF Button Visibility | Button visible in viewport on page load (above fold) |\n| Stock Photos | 10+ high-quality photos added (at least 5 food, 3 interior, 2 exterior) |\n| Page Load Performance | No significant increase in LCP (< 2.5s) |\n| Mobile Responsiveness | All changes function correctly on mobile viewports |\n\n## 8. Risks & Mitigations\n\n| Risk | Mitigation |\n|------|------------|\n| Stock photo licensing issues | Use only Unsplash/Pexels (CC0/royalty-free) with proper attribution if required |\n| Large image files impacting performance | Optimize images (WebP format, appropriate sizing, lazy loading) |\n| Moving PDF button breaks existing functionality | Keep all existing button functionality, only change position/styling |\n| Dark mode contrast issues after changes | Test all color changes against dark mode variables |\n| Layout shift from new button position | Use fixed header height or proper spacing to prevent CLS |\n\n---",
+    "generatedAt": "2026-02-08T03:48:06.856Z",
+    "tasks": [
+      {
+        "id": "T001",
+        "description": "Fix menu header text contrast by adjusting subtitle and hours colors to ensure WCAG AA compliance",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 1: Text Readability & Header Improvements",
+        "status": "pending"
+      },
+      {
+        "id": "T002",
+        "description": "Move Download PDF button into the hero/header section so it's visible without scrolling",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 1: Text Readability & Header Improvements",
+        "status": "pending"
+      },
+      {
+        "id": "T003",
+        "description": "Enhance menu section heading typography with better font pairing and spacing",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 1: Text Readability & Header Improvements",
+        "status": "pending"
+      },
+      {
+        "id": "T004",
+        "description": "Improve menu item name and description contrast in light and dark modes",
+        "filePath": "src/components/MenuItem.astro",
+        "phase": "Phase 1: Text Readability & Header Improvements",
+        "status": "pending"
+      },
+      {
+        "id": "T005",
+        "description": "Download and add restaurant stock photos to public/images folder (food, interior, exterior, events)",
+        "filePath": "public/images/stock/",
+        "phase": "Phase 2: Stock Photography Integration",
+        "status": "pending"
+      },
+      {
+        "id": "T006",
+        "description": "Update gallery.config.ts to use new stock photos instead of SVG placeholders",
+        "filePath": "src/config/gallery.config.ts",
+        "phase": "Phase 2: Stock Photography Integration",
+        "status": "pending"
+      },
+      {
+        "id": "T007",
+        "description": "Update menu.config.ts to add stock photo URLs for menu item images",
+        "filePath": "src/config/menu.config.ts",
+        "phase": "Phase 2: Stock Photography Integration",
+        "status": "pending"
+      },
+      {
+        "id": "T008",
+        "description": "Add subtle visual enhancements to menu page header (gradient refinement, decorative elements)",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 3: Visual Polish & Verification",
+        "status": "pending"
+      },
+      {
+        "id": "T009",
+        "description": "Ensure responsive behavior of new Download PDF button placement on mobile",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 3: Visual Polish & Verification",
+        "status": "pending"
+      },
+      {
+        "id": "T010",
+        "description": "Verify all changes work correctly in dark mode",
+        "filePath": "src/pages/menu.astro",
+        "phase": "Phase 3: Visual Polish & Verification",
+        "status": "pending"
+      }
+    ],
+    "tasksTotal": 10,
+    "tasksCompleted": 9,
+    "approvedAt": "2026-02-08T03:48:06.861Z",
+    "currentTaskId": "T010"
+  }
+}

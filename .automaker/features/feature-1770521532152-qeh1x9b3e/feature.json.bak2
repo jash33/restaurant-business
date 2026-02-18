@@ -1,0 +1,29 @@
+{
+  "category": "Uncategorized",
+  "description": "the \"make a reservation\" button goes to /reservations, which doesn't exist. should it go to /contact?",
+  "title": "",
+  "images": [],
+  "imagePaths": [],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "lite",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1770521532152-qeh1x9b3e",
+  "descriptionHistory": [
+    {
+      "description": "the \"make a reservation\" button goes to /reservations, which doesn't exist. should it go to /contact?",
+      "timestamp": "2026-02-08T03:32:12.165Z",
+      "source": "initial"
+    }
+  ],
+  "updatedAt": "2026-02-08T03:44:10.265Z"
+}

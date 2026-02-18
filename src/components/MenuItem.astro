@@ -311,6 +311,18 @@ const displayDescription = showFullDescription ? description : (shortDescription
     color: var(--color-text-primary);
     margin: 0;
     line-height: var(--line-height-tight);
+    /* Enhanced contrast for menu item names */
+    text-shadow: none;
+  }
+
+  /* Light mode: Ensure strong contrast for menu item names */
+  :global(html:not([data-theme="dark"])) .menu-item__name {
+    color: #0f172a; /* Darker than default --color-text-primary for better contrast */
+  }
+
+  /* Dark mode: Ensure bright, high-contrast names */
+  :global(html[data-theme="dark"]) .menu-item__name {
+    color: #ffffff; /* Pure white for maximum contrast in dark mode */
   }
 
   /* =================================================================
@@ -344,6 +356,16 @@ const displayDescription = showFullDescription ? description : (shortDescription
     margin-left: var(--spacing-1);
   }
 
+  /* Light mode: Improved price unit contrast */
+  :global(html:not([data-theme="dark"])) .menu-item__price-unit {
+    color: #4b5563; /* Darker gray for better readability */
+  }
+
+  /* Dark mode: Brighter price unit text */
+  :global(html[data-theme="dark"]) .menu-item__price-unit {
+    color: #cbd5e1; /* Lighter for dark mode visibility */
+  }
+
   /* =================================================================
    * DESCRIPTION STYLES
    * ================================================================= */
@@ -353,6 +375,16 @@ const displayDescription = showFullDescription ? description : (shortDescription
     color: var(--color-text-secondary);
     line-height: var(--line-height-relaxed);
     margin: 0;
+  }
+
+  /* Light mode: Improved description contrast for better readability */
+  :global(html:not([data-theme="dark"])) .menu-item__description {
+    color: #374151; /* Darker gray for better contrast (WCAG AA: ~10:1) */
+  }
+
+  /* Dark mode: Brighter description text for improved visibility */
+  :global(html[data-theme="dark"]) .menu-item__description {
+    color: #e2e8f0; /* Lighter gray for better contrast against dark backgrounds */
   }
 
   /* =================================================================
@@ -416,6 +448,8 @@ const displayDescription = showFullDescription ? description : (shortDescription
     margin-top: var(--spacing-1);
   }
 
+  /* =================================================================
+   * ITEM VARIANT STYLES
    * ================================================================= */
 
   /* Featured Item */
@@ -501,11 +535,31 @@ const displayDescription = showFullDescription ? description : (shortDescription
     font-weight: var(--font-weight-bold);
   }
 
+  /* Light mode: Ensure signature item names have excellent contrast */
+  :global(html:not([data-theme="dark"])) .menu-item--signature .menu-item__name {
+    color: var(--color-primary-700); /* Darker primary for better contrast */
+  }
+
+  /* Dark mode: Brighter signature item names */
+  :global(html[data-theme="dark"]) .menu-item--signature .menu-item__name {
+    color: var(--color-primary-300); /* Lighter primary for dark backgrounds */
+  }
+
   /* Signature Item Description */
   .menu-item--signature .menu-item__description {
     font-size: var(--font-size-base);
     color: var(--color-text-primary);
     line-height: var(--line-height-relaxed);
+  }
+
+  /* Light mode: Signature description with high contrast */
+  :global(html:not([data-theme="dark"])) .menu-item--signature .menu-item__description {
+    color: #1f2937; /* Very dark gray for maximum readability */
+  }
+
+  /* Dark mode: Bright signature description */
+  :global(html[data-theme="dark"]) .menu-item--signature .menu-item__description {
+    color: #f1f5f9; /* Near-white for excellent contrast */
   }
 
   /* =================================================================
@@ -609,10 +663,30 @@ const displayDescription = showFullDescription ? description : (shortDescription
     line-height: var(--line-height-relaxed);
   }
 
+  /* Light mode: Improved chef story text contrast */
+  :global(html:not([data-theme="dark"])) .menu-item__chef-story-text {
+    color: #4b5563; /* Darker for better readability */
+  }
+
+  /* Dark mode: Brighter chef story text */
+  :global(html[data-theme="dark"]) .menu-item__chef-story-text {
+    color: #d1d5db; /* Lighter gray for dark mode */
+  }
+
   .menu-item__chef-story-label {
     font-style: normal;
     font-weight: var(--font-weight-semibold);
     color: var(--color-primary);
+  }
+
+  /* Light mode: Stronger chef story label contrast */
+  :global(html:not([data-theme="dark"])) .menu-item__chef-story-label {
+    color: var(--color-primary-700); /* Darker primary for better contrast */
+  }
+
+  /* Dark mode: Brighter chef story label */
+  :global(html[data-theme="dark"]) .menu-item__chef-story-label {
+    color: var(--color-primary-300); /* Lighter primary for visibility */
   }
 
   /* =================================================================
@@ -693,8 +767,7 @@ const displayDescription = showFullDescription ? description : (shortDescription
    * HIGH CONTRAST MODE
    * ================================================================= */
   @media (forced-colors: active) {
-    .menu-item__badge,
-
+    .menu-item__badge {
       border: 2px solid currentColor;
     }
 
@@ -789,7 +862,7 @@ const displayDescription = showFullDescription ? description : (shortDescription
       gap: var(--spacing-1);
     }
 
-
+    .menu-item__dietary-tags [role="listitem"] {
       font-size: 8pt;
       min-width: 20px;
       height: 16px;

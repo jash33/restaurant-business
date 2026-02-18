@@ -2,6 +2,213 @@
   "version": 1,
   "events": [
     {
+      "id": "evt-1770524055907-14c435ce",
+      "trigger": "auto_mode_complete",
+      "timestamp": "2026-02-08T04:14:15.907Z"
+    },
+    {
+      "id": "evt-1770524054125-5199b131",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T04:14:14.125Z",
+      "featureName": "",
+      "featureId": "feature-1770521705880-sqr6lnlij"
+    },
+    {
+      "id": "evt-1770522854254-198eaed1",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:54:14.254Z",
+      "featureName": "Fix invisible top navbar text display",
+      "featureId": "feature-1770522583819-4d7urj7xr"
+    },
+    {
+      "id": "evt-1770522617554-ff59c280",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:50:17.554Z",
+      "featureName": "",
+      "featureId": "feature-1770521627166-vixu9t0gf"
+    },
+    {
+      "id": "evt-1770522583835-ba37fac3",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:49:43.835Z",
+      "featureId": "feature-1770522583819-4d7urj7xr"
+    },
+    {
+      "id": "evt-1770522417457-19ded97c",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:46:57.457Z",
+      "featureName": "",
+      "featureId": "feature-1770521590406-9hanp07xg"
+    },
+    {
+      "id": "evt-1770522377041-5c85cbe9",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:46:17.041Z",
+      "featureName": "",
+      "featureId": "feature-1770521532152-qeh1x9b3e"
+    },
+    {
+      "id": "evt-1770522352538-7566faa7",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:45:52.538Z",
+      "featureName": "",
+      "featureId": "feature-1770521480847-yr4wb0e1f"
+    },
+    {
+      "id": "evt-1770522248332-36f8503e",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:44:08.332Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521984652-2c9d87cf",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-08T03:39:44.652Z",
+      "featureName": "",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521830475-f347bc74",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:10.475Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521829122-f176cb2b",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:09.122Z",
+      "featureName": "",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521826942-b755973d",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:06.942Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521824772-3100c23a",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:04.772Z",
+      "featureName": "",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521822711-b100501c",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:02.711Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521820693-46566a2f",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:37:00.693Z",
+      "featureName": "",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521817978-d3e2d24f",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:36:57.978Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521816912-37527006",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:36:56.912Z",
+      "featureName": "",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521814255-91e9c0a5",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-08T03:36:54.255Z",
+      "featureName": "",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1770521705898-a95caf7c",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:35:05.898Z",
+      "featureId": "feature-1770521705880-sqr6lnlij"
+    },
+    {
+      "id": "evt-1770521627182-8aa1a47f",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:33:47.182Z",
+      "featureId": "feature-1770521627166-vixu9t0gf"
+    },
+    {
+      "id": "evt-1770521590420-5d516679",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:33:10.420Z",
+      "featureId": "feature-1770521590406-9hanp07xg"
+    },
+    {
+      "id": "evt-1770521532168-23f032d8",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:32:12.168Z",
+      "featureId": "feature-1770521532152-qeh1x9b3e"
+    },
+    {
+      "id": "evt-1770521480862-fb8d1065",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:31:20.862Z",
+      "featureId": "feature-1770521480847-yr4wb0e1f"
+    },
+    {
+      "id": "evt-1770521458993-3340b53e",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:30:58.993Z",
+      "featureId": "feature-1770521458976-qubh0ga5u"
+    },
+    {
+      "id": "evt-1770521411396-08188dbe",
+      "trigger": "feature_created",
+      "timestamp": "2026-02-08T03:30:11.396Z",
+      "featureId": "feature-1770521411380-207tbarc5"
+    },
+    {
+      "id": "evt-1769975977522-49520829",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-01T19:59:37.522Z",
+      "featureName": "Transform restaurant website into professional revenue-focused design",
+      "featureId": "feature-1769974525143-c4zi2iwtl"
+    },
+    {
+      "id": "evt-1769975417205-ee28da11",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-01T19:50:17.205Z",
+      "featureName": "Transform restaurant website into professional revenue-focused design",
+      "featureId": "feature-1769974525143-c4zi2iwtl"
+    },
+    {
+      "id": "evt-1769975385617-d7d5f4ec",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-01T19:49:45.617Z",
+      "featureName": "Transform restaurant website into professional revenue-focused design",
+      "featureId": "feature-1769974525143-c4zi2iwtl"
+    },
+    {
+      "id": "evt-1769975243499-94443614",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-01T19:47:23.499Z",
+      "featureName": "Transform restaurant website into professional revenue-focused design",
+      "featureId": "feature-1769974525143-c4zi2iwtl"
+    },
+    {
+      "id": "evt-1769974716897-43f7461d",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-01T19:38:36.897Z",
+      "featureName": "Transform restaurant website into professional revenue-focused design",
+      "featureId": "feature-1769974525143-c4zi2iwtl"
+    },
+    {
       "id": "evt-1769974663861-1f0333ca",
       "trigger": "feature_error",
       "timestamp": "2026-02-01T19:37:43.861Z",
@@ -6769,223 +6976,6 @@
       "id": "evt-1769448949824-e0d91182",
       "trigger": "feature_error",
       "timestamp": "2026-01-26T17:35:49.824Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448942921-01eae7d0",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:42.921Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448935705-0cb316a9",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:35.705Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448928244-32639d9a",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:28.244Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448921202-88ac13b1",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:21.202Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448914138-23ca33f4",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:14.138Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448906875-d2fae9cd",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:35:06.875Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448899534-44ca0562",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:59.534Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448892295-4ff7edd9",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:52.295Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448885549-25f781b5",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:45.549Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448878088-73fd95b9",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:38.088Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448870982-fc5e52bc",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:30.982Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448864375-d236c103",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:24.375Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448856539-85a86bb6",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:16.539Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448849401-710b3b65",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:09.401Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448842478-cf5ec9ad",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:34:02.478Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448835250-d2212122",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:55.250Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448827947-1b70d053",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:47.947Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448820720-4debaf18",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:40.720Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448813397-d8174972",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:33.397Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448807221-52d7c80b",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:27.221Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448799264-7030ac62",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:19.264Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448792267-59f78b04",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:12.267Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448785603-0c68b849",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:33:05.603Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448777818-305cc7a1",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:57.818Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448770572-881fb992",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:50.572Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448763285-cff54626",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:43.285Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448756532-4a2eb3e7",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:36.532Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448749055-1e23da71",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:29.055Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448741607-5bcc1e47",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:21.607Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448734009-1a44d61c",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:14.009Z",
-      "featureName": "Google Business Profile Integration",
-      "featureId": "google-business-integration"
-    },
-    {
-      "id": "evt-1769448728059-7a1eafac",
-      "trigger": "feature_error",
-      "timestamp": "2026-01-26T17:32:08.059Z",
       "featureName": "Google Business Profile Integration",
       "featureId": "google-business-integration"
     }

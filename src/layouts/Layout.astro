@@ -39,6 +39,8 @@ interface Props extends Partial<SEOProps> {
   bodyClass?: string;
   /** Disable analytics for this page */
   disableAnalytics?: boolean;
+  /** Enable transparent header that becomes solid on scroll (for hero pages) */
+  transparentHeader?: boolean;
 }
 
 const {
@@ -47,6 +49,7 @@ const {
   bodyClass = '',
   lang = seoConfig.defaultLang,
   disableAnalytics = false,
+  transparentHeader = false,
   ...seoProps
 } = Astro.props;
 
@@ -151,7 +154,7 @@ const cuisineTheme = CUISINE_THEME_CONFIG.activeTheme;
 		<a href="#main-content" class="skip-link">Skip to main content</a>
 		<!-- Special Events Banner (holiday hours, announcements, etc.) -->
 		<SpecialEventsBanner position="top" />
-		<Header currentPath={Astro.url.pathname} />
+		<Header currentPath={Astro.url.pathname} transparentOnTop={transparentHeader} />
 		<div id="main-content">
 			<slot />
 		</div>
@@ -229,5 +232,30 @@ const cuisineTheme = CUISINE_THEME_CONFIG.activeTheme;
 
 	#main-content {
 		flex: 1 0 auto;
+	}
+
+	/* Skip link for accessibility */
+	.skip-link {
+		position: fixed;
+		top: -100%;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 9999;
+		padding: var(--spacing-3) var(--spacing-6);
+		background-color: var(--color-burgundy, #722f37);
+		color: var(--color-cream, #fffbeb);
+		font-family: var(--font-body);
+		font-size: var(--font-size-sm);
+		font-weight: var(--font-weight-semibold);
+		text-decoration: none;
+		border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+		box-shadow: var(--shadow-lg);
+		transition: top 0.2s ease;
+	}
+
+	.skip-link:focus {
+		top: 0;
+		outline: 2px solid var(--color-gold, #c4a77d);
+		outline-offset: 2px;
 	}
 </style>

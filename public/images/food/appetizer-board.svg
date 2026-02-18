@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="boardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6d4c41"/>
+      <stop offset="100%" style="stop-color:#4e342e"/>
+    </linearGradient>
+    <linearGradient id="cheeseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff8e1"/>
+      <stop offset="100%" style="stop-color:#ffecb3"/>
+    </linearGradient>
+    <linearGradient id="brieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff"/>
+      <stop offset="100%" style="stop-color:#f5f5f5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#263238"/>
+
+  <!-- Marble counter -->
+  <rect x="0" y="380" width="800" height="220" fill="#eceff1"/>
+  <line x1="50" y1="420" x2="100" y2="480" stroke="#cfd8dc" stroke-width="2" opacity="0.5"/>
+  <line x1="200" y1="400" x2="280" y2="520" stroke="#cfd8dc" stroke-width="3" opacity="0.4"/>
+  <line x1="500" y1="390" x2="600" y2="550" stroke="#cfd8dc" stroke-width="2" opacity="0.5"/>
+  <line x1="700" y1="410" x2="780" y2="530" stroke="#cfd8dc" stroke-width="3" opacity="0.4"/>
+
+  <!-- Wooden board -->
+  <ellipse cx="400" cy="300" rx="300" ry="180" fill="url(#boardGrad)"/>
+  <ellipse cx="400" cy="295" rx="280" ry="165" fill="#5d4037"/>
+
+  <!-- Wood grain texture -->
+  <path d="M150 280 Q300 270 450 290 Q550 300 650 280" stroke="#4e342e" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M170 320 Q300 310 450 330 Q550 340 630 320" stroke="#4e342e" stroke-width="2" fill="none" opacity="0.3"/>
+
+  <!-- Brie cheese wheel -->
+  <ellipse cx="250" cy="250" rx="60" ry="35" fill="url(#brieGrad)"/>
+  <ellipse cx="250" cy="248" rx="55" ry="32" fill="#fafafa"/>
+  <!-- Cut slice -->
+  <path d="M250 248 L290 220 L310 260 Z" fill="#fff8e1"/>
+  <path d="M255 250 L285 228 L300 258 Z" fill="#fff"/>
+
+  <!-- Aged cheddar -->
+  <rect x="380" y="200" width="80" height="60" fill="url(#cheeseGrad)" transform="rotate(-10 420 230)"/>
+  <rect x="385" y="205" width="70" height="50" fill="#ffca28" transform="rotate(-10 420 230)"/>
+
+  <!-- Blue cheese -->
+  <ellipse cx="520" cy="280" rx="45" ry="30" fill="#e3f2fd"/>
+  <circle cx="510" cy="275" r="5" fill="#1565c0" opacity="0.6"/>
+  <circle cx="530" cy="285" r="4" fill="#1565c0" opacity="0.5"/>
+  <circle cx="515" cy="290" r="3" fill="#1565c0" opacity="0.6"/>
+  <circle cx="525" cy="270" r="4" fill="#1565c0" opacity="0.5"/>
+
+  <!-- Prosciutto rolls -->
+  <ellipse cx="180" cy="340" rx="30" ry="15" fill="#d32f2f"/>
+  <ellipse cx="180" cy="338" rx="25" ry="12" fill="#e57373"/>
+  <ellipse cx="210" cy="355" rx="30" ry="15" fill="#c62828"/>
+  <ellipse cx="210" cy="353" rx="25" ry="12" fill="#ef5350"/>
+  <ellipse cx="240" cy="365" rx="28" ry="14" fill="#d32f2f"/>
+  <ellipse cx="240" cy="363" rx="23" ry="11" fill="#e57373"/>
+
+  <!-- Salami slices -->
+  <circle cx="340" cy="330" r="20" fill="#b71c1c"/>
+  <circle cx="340" cy="330" r="15" fill="#c62828"/>
+  <circle cx="335" cy="325" r="2" fill="#fff" opacity="0.6"/>
+  <circle cx="345" cy="335" r="2" fill="#fff" opacity="0.6"/>
+
+  <circle cx="370" cy="345" r="20" fill="#b71c1c"/>
+  <circle cx="370" cy="345" r="15" fill="#c62828"/>
+  <circle cx="365" cy="340" r="2" fill="#fff" opacity="0.6"/>
+  <circle cx="375" cy="350" r="2" fill="#fff" opacity="0.6"/>
+
+  <!-- Olives -->
+  <ellipse cx="450" cy="350" rx="12" ry="10" fill="#33691e"/>
+  <ellipse cx="435" cy="360" rx="12" ry="10" fill="#2e7d32"/>
+  <ellipse cx="465" cy="365" rx="12" ry="10" fill="#1b5e20"/>
+  <ellipse cx="480" cy="355" rx="11" ry="9" fill="#33691e"/>
+  <!-- Pimentos -->
+  <ellipse cx="450" cy="350" rx="4" ry="3" fill="#d32f2f"/>
+  <ellipse cx="465" cy="365" rx="4" ry="3" fill="#d32f2f"/>
+
+  <!-- Grapes cluster -->
+  <circle cx="560" cy="340" r="12" fill="#7b1fa2"/>
+  <circle cx="580" cy="335" r="12" fill="#8e24aa"/>
+  <circle cx="570" cy="355" r="12" fill="#6a1b9a"/>
+  <circle cx="590" cy="350" r="11" fill="#7b1fa2"/>
+  <circle cx="600" cy="340" r="10" fill="#8e24aa"/>
+  <circle cx="550" cy="355" r="10" fill="#6a1b9a"/>
+
+  <!-- Crackers -->
+  <rect x="280" cy="380" width="40" height="30" fill="#d7ccc8" rx="2"/>
+  <rect x="285" cy="385" width="30" height="20" fill="#efebe9"/>
+  <circle cx="295" cy="392" r="2" fill="#bcaaa4"/>
+  <circle cx="305" cy="395" r="2" fill="#bcaaa4"/>
+
+  <rect x="330" cy="385" width="40" height="30" fill="#d7ccc8" rx="2"/>
+  <rect x="335" cy="390" width="30" height="20" fill="#efebe9"/>
+
+  <!-- Honey dipper -->
+  <rect x="610" y="260" width="8" height="60" fill="#8d6e63"/>
+  <ellipse cx="614" cy="255" rx="12" ry="8" fill="#ff8f00"/>
+  <path d="M605 252 L608 265 L620 265 L623 252" fill="#ffa000"/>
+
+  <!-- Small honey pool -->
+  <ellipse cx="580" cy="310" rx="25" ry="12" fill="#ff8f00" opacity="0.7"/>
+  <ellipse cx="580" cy="308" rx="20" ry="8" fill="#ffb300" opacity="0.8"/>
+
+  <!-- Fresh figs -->
+  <ellipse cx="150" cy="280" rx="18" ry="22" fill="#4a148c"/>
+  <path d="M150 258 L150 250 L155 250" stroke="#2e7d32" stroke-width="2" fill="none"/>
+
+  <ellipse cx="130" cy="300" rx="16" ry="20" fill="#6a1b9a"/>
+  <path d="M130 280 L130 273 L135 273" stroke="#2e7d32" stroke-width="2" fill="none"/>
+
+  <!-- Rosemary sprig -->
+  <line x1="500" y1="220" x2="580" y2="190" stroke="#5d4037" stroke-width="2"/>
+  <ellipse cx="510" cy="217" rx="8" ry="3" fill="#2e7d32" transform="rotate(-20 510 217)"/>
+  <ellipse cx="525" cy="212" rx="8" ry="3" fill="#388e3c" transform="rotate(-20 525 212)"/>
+  <ellipse cx="540" cy="206" rx="8" ry="3" fill="#2e7d32" transform="rotate(-20 540 206)"/>
+  <ellipse cx="555" cy="200" rx="8" ry="3" fill="#388e3c" transform="rotate(-20 555 200)"/>
+  <ellipse cx="570" cy="194" rx="7" ry="3" fill="#2e7d32" transform="rotate(-20 570 194)"/>
+
+  <!-- Warm ambient lighting -->
+  <rect width="800" height="600" fill="#ff6f00" opacity="0.06"/>
+
+  <!-- Text label -->
+  <text x="400" y="560" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#efebe9" opacity="0.9">Artisan Cheese &amp; Charcuterie</text>
+</svg>

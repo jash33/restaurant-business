@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="ceilingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0e6"/>
+      <stop offset="100%" style="stop-color:#e8e0d0"/>
+    </linearGradient>
+    <linearGradient id="woodPanelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5d4037"/>
+      <stop offset="50%" style="stop-color:#6d4c41"/>
+      <stop offset="100%" style="stop-color:#5d4037"/>
+    </linearGradient>
+    <linearGradient id="tableWoodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8d6e63"/>
+      <stop offset="100%" style="stop-color:#6d4c41"/>
+    </linearGradient>
+    <radialGradient id="chandelierGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffeaa7;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#ffeaa7;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Ceiling -->
+  <rect width="800" height="120" fill="url(#ceilingGrad)"/>
+
+  <!-- Wall panels -->
+  <rect x="0" y="120" width="800" height="300" fill="url(#woodPanelGrad)"/>
+
+  <!-- Panel details -->
+  <rect x="30" y="140" width="150" height="250" fill="none" stroke="#4a3228" stroke-width="3"/>
+  <rect x="210" y="140" width="150" height="250" fill="none" stroke="#4a3228" stroke-width="3"/>
+  <rect x="440" y="140" width="150" height="250" fill="none" stroke="#4a3228" stroke-width="3"/>
+  <rect x="620" y="140" width="150" height="250" fill="none" stroke="#4a3228" stroke-width="3"/>
+
+  <!-- Floor -->
+  <rect x="0" y="420" width="800" height="180" fill="#3e2723"/>
+
+  <!-- Carpet/rug -->
+  <rect x="100" y="440" width="600" height="140" fill="#8b0000" opacity="0.8"/>
+  <rect x="110" y="450" width="580" height="120" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.5"/>
+  <rect x="130" y="470" width="540" height="80" fill="none" stroke="#ffd700" stroke-width="1" opacity="0.3"/>
+
+  <!-- Large chandelier -->
+  <rect x="375" y="0" width="50" height="40" fill="#8b7355"/>
+  <ellipse cx="400" cy="60" rx="100" ry="35" fill="#2c2c2c"/>
+  <ellipse cx="400" cy="65" rx="90" ry="30" fill="#3d3d3d"/>
+  <!-- Crystal drops -->
+  <line x1="320" y1="65" x2="320" y2="90" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="320" cy="95" r="5" fill="#ffeaa7"/>
+  <line x1="350" y1="70" x2="350" y2="100" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="350" cy="105" r="6" fill="#ffeaa7"/>
+  <line x1="380" y1="75" x2="380" y2="110" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="380" cy="115" r="5" fill="#ffeaa7"/>
+  <line x1="400" y1="78" x2="400" y2="115" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="400" cy="120" r="7" fill="#ffeaa7"/>
+  <line x1="420" y1="75" x2="420" y2="110" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="420" cy="115" r="5" fill="#ffeaa7"/>
+  <line x1="450" y1="70" x2="450" y2="100" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="450" cy="105" r="6" fill="#ffeaa7"/>
+  <line x1="480" y1="65" x2="480" y2="90" stroke="#ffd700" stroke-width="2"/>
+  <circle cx="480" cy="95" r="5" fill="#ffeaa7"/>
+  <!-- Glow effect -->
+  <ellipse cx="400" cy="90" rx="150" ry="80" fill="url(#chandelierGlow)"/>
+
+  <!-- Long dining table -->
+  <rect x="150" y="320" width="500" height="180" rx="10" fill="url(#tableWoodGrad)" stroke="#4a3228" stroke-width="3"/>
+
+  <!-- Table runner -->
+  <rect x="200" y="320" width="400" height="180" fill="#f5f5dc" opacity="0.3"/>
+  <rect x="380" y="320" width="40" height="180" fill="#8b0000" opacity="0.6"/>
+
+  <!-- Place settings - left side -->
+  <ellipse cx="220" cy="380" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="220" cy="380" rx="28" ry="20" fill="none" stroke="#ccc" stroke-width="1"/>
+  <ellipse cx="320" cy="380" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="320" cy="380" rx="28" ry="20" fill="none" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Place settings - right side -->
+  <ellipse cx="480" cy="380" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="480" cy="380" rx="28" ry="20" fill="none" stroke="#ccc" stroke-width="1"/>
+  <ellipse cx="580" cy="380" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="580" cy="380" rx="28" ry="20" fill="none" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Place settings - far side -->
+  <ellipse cx="270" cy="450" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="400" cy="450" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <ellipse cx="530" cy="450" rx="35" ry="25" fill="#fff" stroke="#ddd" stroke-width="1"/>
+
+  <!-- Wine glasses -->
+  <path d="M250 360 L250 370 L245 375 L255 375" stroke="#999" stroke-width="1" fill="none"/>
+  <ellipse cx="250" cy="355" rx="8" ry="5" fill="none" stroke="#999" stroke-width="1"/>
+  <path d="M350 360 L350 370 L345 375 L355 375" stroke="#999" stroke-width="1" fill="none"/>
+  <ellipse cx="350" cy="355" rx="8" ry="5" fill="none" stroke="#999" stroke-width="1"/>
+  <path d="M450 360 L450 370 L445 375 L455 375" stroke="#999" stroke-width="1" fill="none"/>
+  <ellipse cx="450" cy="355" rx="8" ry="5" fill="none" stroke="#999" stroke-width="1"/>
+  <path d="M550 360 L550 370 L545 375 L555 375" stroke="#999" stroke-width="1" fill="none"/>
+  <ellipse cx="550" cy="355" rx="8" ry="5" fill="none" stroke="#999" stroke-width="1"/>
+
+  <!-- Centerpiece flowers -->
+  <ellipse cx="400" cy="400" rx="30" ry="20" fill="#2e7d32"/>
+  <circle cx="390" cy="390" r="8" fill="#e91e63"/>
+  <circle cx="410" cy="385" r="10" fill="#9c27b0"/>
+  <circle cx="400" cy="395" r="7" fill="#f44336"/>
+  <circle cx="385" cy="400" r="6" fill="#ff9800"/>
+  <circle cx="415" cy="398" r="8" fill="#e91e63"/>
+
+  <!-- Ambient warm lighting -->
+  <rect width="800" height="600" fill="#ffd700" opacity="0.06"/>
+
+  <!-- Text label -->
+  <text x="400" y="575" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#d4c4a8" opacity="0.9">Private Dining Room</text>
+</svg>

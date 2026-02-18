@@ -1,0 +1,35 @@
+{
+  "category": "Uncategorized",
+  "description": "top navbar text is now invisible\n\n",
+  "title": "Fix invisible top navbar text display",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1770522581421-ob1hclyqf",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1770522583819-4d7urj7xr\\images\\pasted-image-2026-02-08T03-49-41-406Z-1770522581419.png",
+      "filename": "pasted-image-2026-02-08T03-49-41-406Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "backlog",
+  "id": "feature-1770522583819-4d7urj7xr",
+  "descriptionHistory": [
+    {
+      "description": "top navbar text is now invisible\n\n",
+      "timestamp": "2026-02-08T03:49:43.833Z",
+      "source": "initial"
+    }
+  ]
+}

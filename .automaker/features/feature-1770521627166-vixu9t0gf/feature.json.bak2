@@ -1,0 +1,36 @@
+{
+  "category": "Uncategorized",
+  "description": "the style of this section looks techy and not like a resturaunt site.",
+  "title": "",
+  "images": [],
+  "imagePaths": [
+    {
+      "id": "img-1770521616814-vb06szx84",
+      "path": "C:\\Users\\James\\Repos\\restaurant-business\\.automaker\\features\\feature-1770521627166-vixu9t0gf\\images\\pasted-image-2026-02-08T03-33-36-805Z-1770521616813.png",
+      "filename": "pasted-image-2026-02-08T03-33-36-805Z.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "textFilePaths": [],
+  "skipTests": true,
+  "model": "claude-opus",
+  "thinkingLevel": "none",
+  "reasoningEffort": "none",
+  "branchName": "main",
+  "priority": 2,
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "dependencies": [],
+  "workMode": "current",
+  "titleGenerating": false,
+  "status": "in_progress",
+  "id": "feature-1770521627166-vixu9t0gf",
+  "descriptionHistory": [
+    {
+      "description": "the style of this section looks techy and not like a resturaunt site.",
+      "timestamp": "2026-02-08T03:33:47.180Z",
+      "source": "initial"
+    }
+  ],
+  "updatedAt": "2026-02-08T03:46:20.599Z"
+}

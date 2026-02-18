@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769975243499-94443614",
+  "trigger": "feature_error",
+  "timestamp": "2026-02-01T19:47:23.499Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "feature-1769974525143-c4zi2iwtl",
+  "featureName": "Transform restaurant website into professional revenue-focused design",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

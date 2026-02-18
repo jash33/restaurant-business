@@ -132,18 +132,6 @@ export interface GeoCoordinates {
   longitude: number;
 }
 
-/** Service area definition */
-export interface ServiceArea {
-  type: 'GeoCircle' | 'PostalCode' | 'City' | 'State' | 'AdministrativeArea';
-  geoMidpoint?: GeoCoordinates;
-  geoRadius?: number;
-  name?: string;
-  addressLocality?: string;
-  addressRegion?: string;
-  postalCode?: string | string[];
-  addressCountry?: string;
-}
-
 /** Aggregate rating for reviews */
 export interface AggregateRating {
   ratingValue: number;
@@ -222,7 +210,6 @@ export interface LocalBusinessSchema {
   sameAs?: string[];
   address?: PostalAddress;
   geo?: GeoCoordinates;
-  areaServed?: ServiceArea | ServiceArea[] | string | string[];
   openingHoursSpecification?: OpeningHoursSpecification[];
   openingHours?: string | string[];
   priceRange?: PriceRange;

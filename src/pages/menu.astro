@@ -57,10 +57,37 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
   </slot>
 
   <main class="menu-page" id="menu-page">
-    <!-- Page Header -->
+    <!-- Page Header / Hero Section -->
     <header class="menu-page__header">
+      <!-- Decorative texture overlay -->
+      <div class="menu-page__header-texture" aria-hidden="true"></div>
+      <!-- Decorative corner flourishes -->
+      <div class="menu-page__header-flourish menu-page__header-flourish--top-left" aria-hidden="true">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 78C2 78 2 40 40 40C40 40 40 2 78 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 70C10 70 10 45 35 45C35 45 35 20 60 20" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="menu-page__header-flourish menu-page__header-flourish--top-right" aria-hidden="true">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M78 78C78 78 78 40 40 40C40 40 40 2 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M70 70C70 70 70 45 45 45C45 45 45 20 20 20" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
       <div class="menu-page__header-content">
+        <!-- Decorative line above title -->
+        <div class="menu-page__title-ornament" aria-hidden="true">
+          <span class="menu-page__title-ornament-line"></span>
+          <span class="menu-page__title-ornament-diamond"></span>
+          <span class="menu-page__title-ornament-line"></span>
+        </div>
         <h1 class="menu-page__title">Our Menu</h1>
+        <!-- Decorative line below title -->
+        <div class="menu-page__title-ornament menu-page__title-ornament--bottom" aria-hidden="true">
+          <span class="menu-page__title-ornament-line"></span>
+          <span class="menu-page__title-ornament-diamond"></span>
+          <span class="menu-page__title-ornament-line"></span>
+        </div>
         <p class="menu-page__subtitle">
           Experience culinary excellence with our carefully crafted dishes,
           featuring fresh ingredients and time-honored recipes.
@@ -69,6 +96,109 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
           <span class="menu-page__hours-label">Dinner Hours:</span>
           <span class="menu-page__hours-time">{DINNER_MENU.availableHours}</span>
         </p>
+
+        <!-- PDF Download Button in Hero - visible without scrolling -->
+        <div class="menu-page__header-actions">
+          <div class="menu-page__dropdown menu-page__dropdown--hero" id="pdf-dropdown-hero">
+            <button
+              type="button"
+              class="menu-page__action-btn menu-page__action-btn--hero"
+              id="pdf-dropdown-btn-hero"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="pdf-dropdown-menu-hero"
+              aria-label="Download menu as PDF"
+            >
+              <svg
+                class="menu-page__action-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7,10 12,15 17,10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span class="menu-page__action-text">Download PDF</span>
+              <svg
+                class="menu-page__dropdown-arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <polyline points="6,9 12,15 18,9" />
+              </svg>
+            </button>
+            <ul
+              class="menu-page__dropdown-menu"
+              id="pdf-dropdown-menu-hero"
+              role="menu"
+              aria-labelledby="pdf-dropdown-btn-hero"
+            >
+              <li role="none">
+                <a
+                  href="/menu-print?type=dinner"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Dinner Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=lunch"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Lunch Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=brunch"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Brunch Menu
+                </a>
+              </li>
+              <li role="none">
+                <a
+                  href="/menu-print?type=kids"
+                  target="_blank"
+                  role="menuitem"
+                  class="menu-page__dropdown-item"
+                >
+                  Kids Menu
+                </a>
+              </li>
+              <li role="none" class="menu-page__dropdown-divider"></li>
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  class="menu-page__dropdown-item menu-page__dropdown-item--action"
+                  id="print-current-btn-hero"
+                >
+                  Print Current Page
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -272,12 +402,18 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
 </Layout>
 
 <script>
-  // PDF Download Dropdown functionality
-  function initPDFDropdown() {
-    const dropdown = document.getElementById('pdf-dropdown');
-    const dropdownBtn = document.getElementById('pdf-dropdown-btn');
-    const dropdownMenu = document.getElementById('pdf-dropdown-menu');
-    const printCurrentBtn = document.getElementById('print-current-btn');
+  // Generic PDF Download Dropdown functionality
+  // Supports multiple dropdown instances (hero and nav bar)
+  function initPDFDropdownInstance(
+    dropdownId: string,
+    btnId: string,
+    menuId: string,
+    printBtnId: string
+  ) {
+    const dropdown = document.getElementById(dropdownId);
+    const dropdownBtn = document.getElementById(btnId);
+    const dropdownMenu = document.getElementById(menuId);
+    const printCurrentBtn = document.getElementById(printBtnId);
 
     if (!dropdown || !dropdownBtn || !dropdownMenu) return;
 
@@ -356,6 +492,25 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
         toggleDropdown(false);
       });
     });
+  }
+
+  // Initialize both dropdown instances
+  function initPDFDropdown() {
+    // Hero dropdown (visible immediately without scrolling)
+    initPDFDropdownInstance(
+      'pdf-dropdown-hero',
+      'pdf-dropdown-btn-hero',
+      'pdf-dropdown-menu-hero',
+      'print-current-btn-hero'
+    );
+
+    // Nav bar dropdown (visible when scrolling)
+    initPDFDropdownInstance(
+      'pdf-dropdown',
+      'pdf-dropdown-btn',
+      'pdf-dropdown-menu',
+      'print-current-btn'
+    );
   }
 
   // Legacy print button support (fallback)
@@ -467,52 +622,263 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
    * HEADER STYLES
    * ================================================================= */
   .menu-page__header {
+    position: relative;
+    overflow: hidden;
+    /* Refined multi-stop gradient with warm transitions */
     background: linear-gradient(
-      135deg,
+      145deg,
       var(--color-burgundy) 0%,
-      var(--color-espresso) 100%
+      color-mix(in srgb, var(--color-burgundy) 70%, var(--color-charcoal) 30%) 35%,
+      color-mix(in srgb, var(--color-burgundy) 40%, var(--color-charcoal) 60%) 65%,
+      var(--color-charcoal) 100%
     );
     padding: var(--spacing-16) var(--spacing-4);
     text-align: center;
     color: var(--color-cream);
   }
 
+  /* Subtle vignette and warm glow overlay */
+  .menu-page__header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      /* Warm glow from center */
+      radial-gradient(
+        ellipse 80% 60% at 50% 40%,
+        rgba(196, 167, 125, 0.08) 0%,
+        transparent 60%
+      ),
+      /* Soft vignette edges */
+      radial-gradient(
+        ellipse at center,
+        transparent 40%,
+        rgba(26, 20, 18, 0.15) 80%,
+        rgba(26, 20, 18, 0.3) 100%
+      );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Decorative bottom border accent */
+  .menu-page__header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-gold) 20%,
+      var(--color-gold) 50%,
+      var(--color-gold) 80%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    z-index: 2;
+  }
+
+  /* Subtle texture overlay for tactile warmth */
+  .menu-page__header-texture {
+    position: absolute;
+    inset: 0;
+    background-image: var(--texture-linen);
+    background-size: 200px 200px;
+    opacity: var(--texture-opacity-subtle);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Decorative corner flourishes */
+  .menu-page__header-flourish {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    color: var(--color-gold);
+    opacity: 0.4;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .menu-page__header-flourish svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .menu-page__header-flourish--top-left {
+    top: var(--spacing-4);
+    left: var(--spacing-4);
+  }
+
+  .menu-page__header-flourish--top-right {
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+  }
+
   .menu-page__header-content {
+    position: relative;
     max-width: var(--container-3xl);
     margin: 0 auto;
+    z-index: 3;
+  }
+
+  /* Title ornament decorations */
+  .menu-page__title-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .menu-page__title-ornament--bottom {
+    margin-bottom: 0;
+    margin-top: var(--spacing-4);
+  }
+
+  .menu-page__title-ornament-line {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-gold) 100%
+    );
+    opacity: 0.6;
+  }
+
+  .menu-page__title-ornament--bottom .menu-page__title-ornament-line:first-child {
+    background: linear-gradient(
+      90deg,
+      var(--color-gold) 0%,
+      transparent 100%
+    );
+  }
+
+  .menu-page__title-ornament--bottom .menu-page__title-ornament-line:last-child {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-gold) 100%
+    );
+  }
+
+  .menu-page__title-ornament-diamond {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-gold);
+    transform: rotate(45deg);
+    opacity: 0.7;
+    flex-shrink: 0;
   }
 
   .menu-page__title {
     font-family: var(--font-display);
     font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
-    margin: 0 0 var(--spacing-4);
+    margin: 0;
     line-height: var(--line-height-tight);
     color: var(--color-cream);
+    /* Subtle text shadow for depth */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: var(--letter-spacing-wide);
   }
 
   .menu-page__subtitle {
     font-family: var(--font-body);
     font-size: var(--font-size-lg);
     max-width: 36rem;
-    margin: 0 auto var(--spacing-6);
+    margin: var(--spacing-6) auto var(--spacing-6);
     line-height: var(--line-height-relaxed);
     color: var(--color-cream-light);
-    opacity: 0.9;
+    /* Subtle text shadow for readability */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   }
 
   .menu-page__hours {
     font-family: var(--font-body);
     font-size: var(--font-size-md);
     margin: 0;
+    color: var(--color-cream-light);
   }
 
   .menu-page__hours-label {
-    opacity: 0.8;
+    color: var(--color-cream-light);
   }
 
   .menu-page__hours-time {
     font-weight: var(--font-weight-semibold);
+    color: var(--color-cream);
+  }
+
+  /* Header Actions - Download PDF in Hero */
+  .menu-page__header-actions {
+    margin-top: var(--spacing-6);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* On very small screens, reduce top margin */
+  @media screen and (max-width: 479px) {
+    .menu-page__header-actions {
+      margin-top: var(--spacing-5);
+    }
+  }
+
+  .menu-page__dropdown--hero {
+    position: relative;
+  }
+
+  .menu-page__action-btn--hero {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-burgundy);
+    background-color: var(--color-cream);
+    border: 2px solid var(--color-cream);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-150) var(--ease-in-out),
+      color var(--duration-150) var(--ease-in-out),
+      transform var(--duration-150) var(--ease-in-out),
+      box-shadow var(--duration-150) var(--ease-in-out);
+    box-shadow: var(--shadow-md);
+  }
+
+  .menu-page__action-btn--hero:hover,
+  .menu-page__action-btn--hero:focus {
+    background-color: transparent;
+    color: var(--color-cream);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    outline: none;
+  }
+
+  .menu-page__action-btn--hero:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-cream), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  }
+
+  .menu-page__action-btn--hero:active {
+    transform: translateY(0);
+  }
+
+  /* Hero dropdown menu positioning */
+  .menu-page__dropdown--hero .menu-page__dropdown-menu {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(-0.5rem);
+  }
+
+  .menu-page__dropdown--hero.menu-page__dropdown--open .menu-page__dropdown-menu {
+    transform: translateX(-50%) translateY(0);
   }
 
   /* =================================================================
@@ -726,6 +1092,46 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
     white-space: nowrap;
   }
 
+  /* Mobile-specific dropdown enhancements */
+  @media screen and (max-width: 639px) {
+    /* Ensure dropdown menus don't overflow viewport on mobile */
+    .menu-page__dropdown-menu {
+      min-width: 170px;
+      max-width: calc(100vw - var(--spacing-8));
+    }
+
+    /* Hero dropdown - center on mobile */
+    .menu-page__dropdown--hero .menu-page__dropdown-menu {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%) translateY(-0.5rem);
+    }
+
+    .menu-page__dropdown--hero.menu-page__dropdown--open .menu-page__dropdown-menu {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Nav bar dropdown - ensure proper positioning */
+    .menu-page__dropdown:not(.menu-page__dropdown--hero) .menu-page__dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+
+    /* Larger touch targets for dropdown items on mobile */
+    .menu-page__dropdown-item {
+      padding: var(--spacing-3) var(--spacing-4);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Improve tap target for nav bar action button */
+    .menu-page__action-btn--print {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
   /* =================================================================
    * DIETARY LEGEND STYLES
    * ================================================================= */
@@ -869,6 +1275,71 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
    * RESPONSIVE STYLES
    * ================================================================= */
 
+  /* Mobile-first: Small screens (base styles above, enhancements below) */
+
+  /* Extra small screens - ensure touch-friendly buttons */
+  @media screen and (max-width: 359px) {
+    .menu-page__action-btn--hero {
+      padding: var(--spacing-3) var(--spacing-4);
+      font-size: var(--font-size-sm);
+    }
+
+    .menu-page__action-btn--hero .menu-page__action-text {
+      display: none;
+    }
+
+    .menu-page__action-btn--hero .menu-page__action-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-page__dropdown--hero .menu-page__dropdown-menu {
+      min-width: 160px;
+      left: 50%;
+      right: auto;
+    }
+  }
+
+  /* Small mobile (360px - 479px) */
+  @media screen and (min-width: 360px) and (max-width: 479px) {
+    .menu-page__action-btn--hero {
+      padding: var(--spacing-2-5) var(--spacing-4);
+      font-size: var(--font-size-sm);
+      gap: var(--spacing-1-5);
+    }
+
+    .menu-page__action-btn--hero .menu-page__action-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .menu-page__dropdown-arrow {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Nav bar actions - stack or adjust */
+    .menu-page__actions {
+      width: 100%;
+    }
+
+    .menu-page__action-btn--print {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* Mobile landscape / larger phones (480px - 639px) */
+  @media screen and (min-width: 480px) and (max-width: 639px) {
+    .menu-page__action-btn--hero {
+      padding: var(--spacing-3) var(--spacing-5);
+    }
+
+    .menu-page__dropdown--hero .menu-page__dropdown-menu {
+      min-width: 180px;
+    }
+  }
+
   /* Tablet (640px) */
   @media screen and (min-width: 640px) {
     .menu-page__header {
@@ -877,6 +1348,26 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
 
     .menu-page__title {
       font-size: var(--font-size-5xl);
+    }
+
+    .menu-page__header-flourish {
+      width: 80px;
+      height: 80px;
+      opacity: 0.5;
+    }
+
+    .menu-page__header-flourish--top-left {
+      top: var(--spacing-6);
+      left: var(--spacing-6);
+    }
+
+    .menu-page__header-flourish--top-right {
+      top: var(--spacing-6);
+      right: var(--spacing-6);
+    }
+
+    .menu-page__title-ornament-line {
+      width: 70px;
     }
 
     .menu-page__nav-container {
@@ -911,6 +1402,31 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
     .menu-page__subtitle {
       font-size: var(--font-size-xl);
     }
+
+    .menu-page__header-flourish {
+      width: 100px;
+      height: 100px;
+      opacity: 0.55;
+    }
+
+    .menu-page__header-flourish--top-left {
+      top: var(--spacing-8);
+      left: var(--spacing-8);
+    }
+
+    .menu-page__header-flourish--top-right {
+      top: var(--spacing-8);
+      right: var(--spacing-8);
+    }
+
+    .menu-page__title-ornament-line {
+      width: 90px;
+    }
+
+    .menu-page__title-ornament-diamond {
+      width: 10px;
+      height: 10px;
+    }
   }
 
   /* =================================================================
@@ -919,8 +1435,14 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
   @media (prefers-reduced-motion: reduce) {
     .menu-page__nav-link,
     .menu-page__action-btn,
+    .menu-page__action-btn--hero,
     .menu-page__back-to-top-link {
       transition: none;
+    }
+
+    .menu-page__action-btn--hero:hover,
+    .menu-page__action-btn--hero:focus {
+      transform: none;
     }
   }
 
@@ -929,10 +1451,44 @@ const menuSchema: MenuSchema = buildMenuSchemaFromData(DINNER_MENU, seoConfig.si
    * ================================================================= */
   :global(html[data-theme="dark"]) .menu-page__header {
     background: linear-gradient(
-      135deg,
-      var(--color-espresso) 0%,
-      #1a1a1a 100%
+      145deg,
+      color-mix(in srgb, var(--color-burgundy) 60%, #0a0a0a 40%) 0%,
+      color-mix(in srgb, var(--color-charcoal) 70%, #0a0a0a 30%) 50%,
+      #0a0a0a 100%
     );
+  }
+
+  :global(html[data-theme="dark"]) .menu-page__header::before {
+    background:
+      /* Warm glow from center - more subtle in dark mode */
+      radial-gradient(
+        ellipse 80% 60% at 50% 40%,
+        rgba(196, 167, 125, 0.05) 0%,
+        transparent 60%
+      ),
+      /* Deeper vignette edges */
+      radial-gradient(
+        ellipse at center,
+        transparent 35%,
+        rgba(0, 0, 0, 0.2) 75%,
+        rgba(0, 0, 0, 0.4) 100%
+      );
+  }
+
+  :global(html[data-theme="dark"]) .menu-page__header::after {
+    opacity: 0.4;
+  }
+
+  :global(html[data-theme="dark"]) .menu-page__header-flourish {
+    opacity: 0.3;
+  }
+
+  :global(html[data-theme="dark"]) .menu-page__title-ornament-line {
+    opacity: 0.4;
+  }
+
+  :global(html[data-theme="dark"]) .menu-page__title-ornament-diamond {
+    opacity: 0.5;
   }
 
   /* =================================================================

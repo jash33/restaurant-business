@@ -1,9 +1,12 @@
 ---
 /**
  * Global Header Component
- * Primary navigation header with responsive mobile menu functionality.
+ * Elegant restaurant-branded navigation header with warm, sophisticated styling.
  *
  * Features:
+ * - Transparent-to-solid scroll effect (glass-morphism on scroll)
+ * - Warm restaurant branding (burgundy, cream, gold accents)
+ * - Elegant display typography matching hero section
  * - Sticky positioning (remains visible during scroll)
  * - Responsive hamburger menu for mobile (≤768px)
  * - Full accessibility support (ARIA labels, keyboard navigation)
@@ -22,9 +25,11 @@ import ThemeToggle from './ThemeToggle.astro';
 interface Props {
   /** Current page path for active link styling (e.g., "/", "/about") */
   currentPath?: string;
+  /** Whether header starts transparent (for hero pages) */
+  transparentOnTop?: boolean;
 }
 
-const { currentPath = '/' } = Astro.props;
+const { currentPath = '/', transparentOnTop = true } = Astro.props;
 
 // Navigation links configuration
 const navLinks = [
@@ -36,11 +41,15 @@ const navLinks = [
 ];
 ---
 
-<header class="header" role="banner">
+<header class={`header ${transparentOnTop ? 'header--transparent-top' : ''}`} role="banner" data-transparent-top={transparentOnTop}>
   <div class="header__container">
     <!-- Logo/Brand -->
     <a href="/" class="header__logo" aria-label="The Main Street Bistro - Go to homepage">
-      <span class="header__logo-text">Main Street Bistro</span>
+      <span class="header__logo-icon" aria-hidden="true">✦</span>
+      <span class="header__logo-text">
+        <span class="header__logo-main">Main Street</span>
+        <span class="header__logo-sub">Bistro</span>
+      </span>
     </a>
 
     <!-- Desktop Navigation -->
@@ -62,6 +71,7 @@ const navLinks = [
 
     <!-- Theme Toggle (Desktop) -->
     <div class="header__actions">
+      <a href="/contact" class="header__reserve-btn">Reserve a Table</a>
       <ThemeToggle class="header__theme-toggle" />
     </div>
 
@@ -103,8 +113,13 @@ const navLinks = [
         ))}
       </ul>
 
+      <!-- Mobile Reserve Link -->
+      <div class="header__mobile-reserve" style={`--item-index: ${navLinks.length}`}>
+        <a href="/contact" class="header__mobile-reserve-link">Reserve a Table</a>
+      </div>
+
       <!-- Mobile Theme Toggle Section -->
-      <div class="header__mobile-actions" style={`--item-index: ${navLinks.length}`}>
+      <div class="header__mobile-actions" style={`--item-index: ${navLinks.length + 1}`}>
         <div class="header__mobile-theme-toggle">
           <span class="header__mobile-theme-label">Theme</span>
           <ThemeToggle class="header__theme-toggle--mobile" />
@@ -117,6 +132,7 @@ const navLinks = [
 <style>
   /* =================================================================
    * HEADER COMPONENT STYLES
+   * Elegant restaurant-branded navigation with warm color palette
    * =================================================================
    */
 
@@ -129,6 +145,156 @@ const navLinks = [
     background-color: var(--color-background);
     border-bottom: 1px solid var(--color-border);
     box-shadow: var(--shadow-sm);
+    transition: background-color var(--animation-duration-normal) var(--ease-smooth),
+                border-color var(--animation-duration-normal) var(--ease-smooth),
+                box-shadow var(--animation-duration-normal) var(--ease-smooth),
+                backdrop-filter var(--animation-duration-normal) var(--ease-smooth);
+  }
+
+  /* Transparent state for hero pages (before scroll) */
+  .header--transparent-top.header--at-top {
+    background-color: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Initial state: header--transparent-top without JS classes should be transparent
+     This prevents FOIT (Flash of Invisible Text) before JavaScript runs */
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) {
+    background-color: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Initial state text colors for transparent header (before JS runs) */
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-icon {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-main {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-sub {
+    color: rgba(255, 251, 235, 0.8);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__nav-link {
+    color: rgba(255, 251, 235, 0.9);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__nav-link--active {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__menu-bar {
+    background-color: var(--color-cream, #fffbeb);
+  }
+
+  .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__reserve-btn {
+    background-color: rgba(255, 251, 235, 0.15);
+    border-color: rgba(255, 251, 235, 0.6);
+    color: var(--color-cream, #fffbeb);
+    box-shadow: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Scrolled state - elegant glass-morphism effect */
+  .header--transparent-top.header--scrolled {
+    background-color: rgba(255, 251, 235, 0.92);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-bottom: 1px solid rgba(114, 47, 55, 0.12);
+    box-shadow: 0 4px 20px -4px rgba(114, 47, 55, 0.15);
+  }
+
+  /* Scrolled state text colors - dark text on cream background */
+  .header--scrolled .header__logo-icon {
+    color: var(--color-burgundy, #722f37);
+  }
+
+  .header--scrolled .header__logo-main {
+    color: var(--color-charcoal, #1a1412);
+  }
+
+  .header--scrolled .header__logo-sub {
+    color: var(--color-burgundy, #722f37);
+  }
+
+  .header--scrolled .header__nav-link {
+    color: var(--color-charcoal, #1a1412);
+  }
+
+  .header--scrolled .header__nav-link:hover {
+    color: var(--color-burgundy, #722f37);
+    background-color: rgba(114, 47, 55, 0.06);
+  }
+
+  .header--scrolled .header__nav-link--active {
+    color: var(--color-burgundy, #722f37);
+  }
+
+  .header--scrolled .header__menu-bar {
+    background-color: var(--color-charcoal, #1a1412);
+  }
+
+  .header--scrolled .header__reserve-btn {
+    background-color: var(--color-burgundy, #722f37);
+    color: var(--color-cream, #fffbeb);
+    border-color: transparent;
+    box-shadow: 0 2px 8px -2px rgba(114, 47, 55, 0.3);
+  }
+
+  .header--scrolled .header__reserve-btn:hover {
+    background-color: var(--color-burgundy-light, #8b3a44);
+    box-shadow: 0 4px 12px -2px rgba(114, 47, 55, 0.4);
+  }
+
+  /* Dark mode scrolled state */
+  :global(html[data-theme="dark"]) .header--transparent-top.header--scrolled {
+    background-color: rgba(26, 20, 18, 0.92);
+    border-bottom-color: rgba(196, 167, 125, 0.15);
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Dark mode scrolled state text colors */
+  :global(html[data-theme="dark"]) .header--scrolled .header__logo-icon {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__logo-main {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__logo-sub {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__nav-link {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__nav-link:hover {
+    color: var(--color-gold, #c4a77d);
+    background-color: rgba(196, 167, 125, 0.1);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__nav-link--active {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__menu-bar {
+    background-color: var(--color-cream, #fffbeb);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__reserve-btn {
+    background-color: var(--color-gold, #c4a77d);
+    color: var(--color-charcoal, #1a1412);
+  }
+
+  :global(html[data-theme="dark"]) .header--scrolled .header__reserve-btn:hover {
+    background-color: var(--color-cream, #fffbeb);
   }
 
   .header__container {
@@ -141,61 +307,127 @@ const navLinks = [
   }
 
   /* -----------------------------------------------------------------
-   * Logo Styles
+   * Logo Styles - Elegant Restaurant Branding
    * ----------------------------------------------------------------- */
 
   .header__logo {
     display: flex;
     align-items: center;
+    gap: var(--spacing-3);
     text-decoration: none;
-    color: var(--color-primary);
-    font-family: var(--font-heading);
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-xl);
-    letter-spacing: var(--letter-spacing-tight);
     min-height: 44px;
     min-width: 44px;
     padding: var(--spacing-1) var(--spacing-2);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     position: relative;
-    transition: color var(--animation-duration-fast) var(--ease-smooth),
-                background-color var(--animation-duration-fast) var(--ease-smooth),
-                transform var(--animation-duration-fast) var(--ease-spring-soft),
-                box-shadow var(--animation-duration-normal) var(--ease-smooth);
+    transition: transform var(--animation-duration-fast) var(--ease-spring-soft),
+                opacity var(--animation-duration-fast) var(--ease-smooth);
   }
 
   .header__logo:hover {
-    color: var(--color-primary-hover);
-    background-color: var(--color-primary-50);
-    transform: scale(1.05);
-    box-shadow: var(--glow-primary-sm);
+    transform: translateY(-1px);
   }
 
   .header__logo:active {
-    transform: scale(0.98);
+    transform: translateY(0);
   }
 
   .header__logo:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 3px;
+    border-radius: var(--radius-lg);
   }
 
+  /* Logo decorative icon */
+  .header__logo-icon {
+    font-size: var(--font-size-xl);
+    color: var(--color-burgundy, #722f37);
+    opacity: 0.9;
+    transition: transform var(--animation-duration-normal) var(--ease-spring-soft),
+                color var(--animation-duration-fast) var(--ease-smooth);
+  }
+
+  .header__logo:hover .header__logo-icon {
+    transform: rotate(15deg) scale(1.1);
+    color: var(--color-gold, #c4a77d);
+  }
+
+  /* Logo text container */
   .header__logo-text {
-    display: block;
-    position: relative;
-    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
   }
 
-  /* Gradient text effect on hover */
-  .header__logo:hover .header__logo-text {
-    background: var(--gradient-accent-mixed);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* Main logo text - "Main Street" */
+  .header__logo-main {
+    font-family: var(--font-display, 'Playfair Display', Georgia, serif);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-charcoal, #1a1412);
+    letter-spacing: var(--letter-spacing-tight);
+    transition: color var(--animation-duration-fast) var(--ease-smooth);
+  }
+
+  /* Sub logo text - "Bistro" */
+  .header__logo-sub {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-burgundy, #722f37);
+    transition: color var(--animation-duration-fast) var(--ease-smooth);
+  }
+
+  .header__logo:hover .header__logo-main {
+    color: var(--color-burgundy, #722f37);
+  }
+
+  .header__logo:hover .header__logo-sub {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  /* Logo colors when header is transparent (at top of page) */
+  .header--at-top .header__logo-icon {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--at-top .header__logo-main {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--at-top .header__logo-sub {
+    color: rgba(255, 251, 235, 0.8);
+  }
+
+  .header--at-top .header__logo:hover .header__logo-icon {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  .header--at-top .header__logo:hover .header__logo-main {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--at-top .header__logo:hover .header__logo-sub {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  /* Dark mode logo colors */
+  :global(html[data-theme="dark"]) .header__logo-main {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  :global(html[data-theme="dark"]) .header__logo-icon {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header__logo:hover .header__logo-main {
+    color: var(--color-gold, #c4a77d);
   }
 
   /* -----------------------------------------------------------------
-   * Desktop Navigation
+   * Desktop Navigation - Elegant Restaurant Styling
    * ----------------------------------------------------------------- */
 
   .header__nav {
@@ -205,7 +437,7 @@ const navLinks = [
   .header__nav-list {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: var(--spacing-1);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -222,8 +454,10 @@ const navLinks = [
     min-height: 44px;
     padding: var(--spacing-2) var(--spacing-4);
     font-family: var(--font-body);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
     color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: var(--radius-md);
@@ -232,51 +466,89 @@ const navLinks = [
                 background-color var(--animation-duration-fast) var(--ease-smooth);
   }
 
-  /* Animated underline element */
+  /* Elegant underline with burgundy/gold gradient */
   .header__nav-link::after {
     content: '';
     position: absolute;
     bottom: var(--spacing-1);
-    left: var(--spacing-4);
-    right: var(--spacing-4);
+    left: 50%;
+    width: 0;
     height: 2px;
-    background: var(--gradient-underline);
+    background: linear-gradient(90deg, var(--color-burgundy, #722f37), var(--color-gold, #c4a77d));
     border-radius: var(--radius-full);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--animation-duration-normal) var(--ease-spring-soft);
+    transform: translateX(-50%);
+    transition: width var(--animation-duration-normal) var(--ease-spring-soft);
   }
 
   .header__nav-link:hover {
-    color: var(--color-primary);
-    background-color: var(--color-primary-50);
+    color: var(--color-burgundy, #722f37);
+    background-color: rgba(114, 47, 55, 0.06);
   }
 
-  /* Underline slides in from left on hover */
+  /* Underline expands from center on hover */
   .header__nav-link:hover::after {
-    transform: scaleX(1);
+    width: calc(100% - var(--spacing-8));
   }
 
   .header__nav-link:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 2px;
   }
 
   /* Active/Current page link styling */
   .header__nav-link--active {
-    color: var(--color-primary);
+    color: var(--color-burgundy, #722f37);
     font-weight: var(--font-weight-semibold);
-    background-color: var(--color-primary-50);
   }
 
-  /* Active link always has the underline visible */
+  /* Active link has permanent underline */
   .header__nav-link--active::after {
-    transform: scaleX(1);
-    background: var(--color-primary);
+    width: calc(100% - var(--spacing-8));
+    background: var(--color-burgundy, #722f37);
+  }
+
+  /* Nav link colors when header is transparent (at top) */
+  .header--at-top .header__nav-link {
+    color: rgba(255, 251, 235, 0.9);
+  }
+
+  .header--at-top .header__nav-link:hover {
+    color: var(--color-cream, #fffbeb);
+    background-color: rgba(255, 251, 235, 0.1);
+  }
+
+  .header--at-top .header__nav-link::after {
+    background: linear-gradient(90deg, var(--color-cream, #fffbeb), var(--color-gold, #c4a77d));
+  }
+
+  .header--at-top .header__nav-link--active {
+    color: var(--color-cream, #fffbeb);
+  }
+
+  .header--at-top .header__nav-link--active::after {
+    background: var(--color-cream, #fffbeb);
+  }
+
+  /* Dark mode nav styling */
+  :global(html[data-theme="dark"]) .header__nav-link {
+    color: var(--color-text-secondary);
+  }
+
+  :global(html[data-theme="dark"]) .header__nav-link:hover {
+    color: var(--color-gold, #c4a77d);
+    background-color: rgba(196, 167, 125, 0.1);
+  }
+
+  :global(html[data-theme="dark"]) .header__nav-link--active {
+    color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header__nav-link--active::after {
+    background: var(--color-gold, #c4a77d);
   }
 
   /* -----------------------------------------------------------------
-   * Mobile Menu Toggle Button
+   * Mobile Menu Toggle Button - Restaurant Styled
    * ----------------------------------------------------------------- */
 
   .header__menu-toggle {
@@ -294,12 +566,12 @@ const navLinks = [
   }
 
   .header__menu-toggle:hover {
-    background-color: var(--color-primary-50);
+    background-color: rgba(114, 47, 55, 0.08);
   }
 
   .header__menu-toggle:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 2px;
   }
 
   /* Hamburger Icon */
@@ -307,24 +579,39 @@ const navLinks = [
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 24px;
-    height: 18px;
+    width: 22px;
+    height: 16px;
   }
 
   .header__menu-bar {
     display: block;
     width: 100%;
     height: 2px;
-    background-color: var(--color-text-primary);
+    background-color: var(--color-charcoal, #1a1412);
     border-radius: var(--radius-full);
     transition: transform var(--duration-300) var(--ease-in-out),
-                opacity var(--duration-300) var(--ease-in-out);
+                opacity var(--duration-300) var(--ease-in-out),
+                background-color var(--duration-150) var(--ease-in-out);
     transform-origin: center;
+  }
+
+  /* Hamburger bars when header is transparent */
+  .header--at-top .header__menu-bar {
+    background-color: var(--color-cream, #fffbeb);
+  }
+
+  .header--at-top .header__menu-toggle:hover {
+    background-color: rgba(255, 251, 235, 0.1);
+  }
+
+  /* Dark mode hamburger */
+  :global(html[data-theme="dark"]) .header__menu-bar {
+    background-color: var(--color-cream, #fffbeb);
   }
 
   /* Hamburger to X transformation when menu is open */
   .header__menu-toggle[aria-expanded="true"] .header__menu-bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
+    transform: translateY(7px) rotate(45deg);
   }
 
   .header__menu-toggle[aria-expanded="true"] .header__menu-bar:nth-child(2) {
@@ -333,11 +620,11 @@ const navLinks = [
   }
 
   .header__menu-toggle[aria-expanded="true"] .header__menu-bar:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
+    transform: translateY(-7px) rotate(-45deg);
   }
 
   /* -----------------------------------------------------------------
-   * Mobile Navigation Menu
+   * Mobile Navigation Menu - Restaurant Styled
    * ----------------------------------------------------------------- */
 
   .header__mobile-nav {
@@ -346,8 +633,8 @@ const navLinks = [
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--color-background);
-    padding: var(--spacing-4) var(--spacing-6);
+    background-color: var(--color-cream, #fffbeb);
+    padding: var(--spacing-6) var(--spacing-6);
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
@@ -356,6 +643,11 @@ const navLinks = [
                 visibility var(--duration-300) var(--ease-in-out);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Dark mode mobile menu background */
+  :global(html[data-theme="dark"]) .header__mobile-nav {
+    background-color: var(--color-charcoal, #1a1412);
   }
 
   .header__mobile-nav[aria-hidden="false"] {
@@ -367,7 +659,7 @@ const navLinks = [
   .header__mobile-nav-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2);
+    gap: var(--spacing-1);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -389,57 +681,205 @@ const navLinks = [
   .header__mobile-nav-link {
     display: flex;
     align-items: center;
-    min-height: 48px;
+    min-height: 52px;
     padding: var(--spacing-3) var(--spacing-4);
-    font-family: var(--font-body);
-    font-size: var(--font-size-lg);
+    font-family: var(--font-display, 'Playfair Display', Georgia, serif);
+    font-size: var(--font-size-xl);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
+    color: var(--color-charcoal, #1a1412);
     text-decoration: none;
     border-radius: var(--radius-lg);
+    border-left: 3px solid transparent;
     transition: color var(--duration-150) var(--ease-in-out),
-                background-color var(--duration-150) var(--ease-in-out);
+                background-color var(--duration-150) var(--ease-in-out),
+                border-color var(--duration-150) var(--ease-in-out);
+  }
+
+  /* Dark mode mobile nav links */
+  :global(html[data-theme="dark"]) .header__mobile-nav-link {
+    color: var(--color-cream, #fffbeb);
   }
 
   .header__mobile-nav-link:hover,
   .header__mobile-nav-link:focus {
-    color: var(--color-primary);
-    background-color: var(--color-primary-50);
+    color: var(--color-burgundy, #722f37);
+    background-color: rgba(114, 47, 55, 0.06);
+    border-left-color: var(--color-gold, #c4a77d);
+  }
+
+  :global(html[data-theme="dark"]) .header__mobile-nav-link:hover,
+  :global(html[data-theme="dark"]) .header__mobile-nav-link:focus {
+    color: var(--color-gold, #c4a77d);
+    background-color: rgba(196, 167, 125, 0.1);
   }
 
   .header__mobile-nav-link:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 2px;
   }
 
   /* Active/Current page link styling for mobile */
   .header__mobile-nav-link--active {
-    color: var(--color-primary);
+    color: var(--color-burgundy, #722f37);
     font-weight: var(--font-weight-semibold);
-    background-color: var(--color-primary-50);
-    border-left: 3px solid var(--color-primary);
+    background-color: rgba(114, 47, 55, 0.08);
+    border-left-color: var(--color-burgundy, #722f37);
+  }
+
+  :global(html[data-theme="dark"]) .header__mobile-nav-link--active {
+    color: var(--color-gold, #c4a77d);
+    background-color: rgba(196, 167, 125, 0.12);
+    border-left-color: var(--color-gold, #c4a77d);
   }
 
   /* -----------------------------------------------------------------
-   * Header Actions (Theme Toggle, etc.)
+   * Header Actions (Reserve Button, Theme Toggle)
    * ----------------------------------------------------------------- */
 
   .header__actions {
     display: none;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: var(--spacing-3);
+  }
+
+  .header__reserve-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: var(--spacing-2) var(--spacing-5);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-cream, #fffbeb);
+    background-color: var(--color-burgundy, #722f37);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    transition: background-color var(--animation-duration-fast) var(--ease-smooth),
+                transform var(--animation-duration-fast) var(--ease-smooth),
+                box-shadow var(--animation-duration-fast) var(--ease-smooth);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px -2px rgba(114, 47, 55, 0.3);
+  }
+
+  .header__reserve-btn:hover {
+    background-color: var(--color-burgundy-light, #8b3a44);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgba(114, 47, 55, 0.4);
+  }
+
+  .header__reserve-btn:active {
+    transform: translateY(0);
+  }
+
+  .header__reserve-btn:focus-visible {
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 2px;
+  }
+
+  /* Reserve button when header is transparent */
+  .header--at-top .header__reserve-btn {
+    background-color: rgba(255, 251, 235, 0.15);
+    border-color: rgba(255, 251, 235, 0.6);
+    color: var(--color-cream, #fffbeb);
+    box-shadow: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .header--at-top .header__reserve-btn:hover {
+    background-color: var(--color-burgundy, #722f37);
+    border-color: var(--color-burgundy, #722f37);
+    box-shadow: 0 4px 12px -2px rgba(114, 47, 55, 0.5);
+  }
+
+  /* Dark mode reserve button */
+  :global(html[data-theme="dark"]) .header__reserve-btn {
+    background-color: var(--color-gold, #c4a77d);
+    color: var(--color-charcoal, #1a1412);
+    box-shadow: 0 2px 8px -2px rgba(196, 167, 125, 0.3);
+  }
+
+  :global(html[data-theme="dark"]) .header__reserve-btn:hover {
+    background-color: var(--color-cream, #fffbeb);
+    box-shadow: 0 4px 12px -2px rgba(196, 167, 125, 0.4);
+  }
+
+  /* Mobile Reserve Section */
+  .header__mobile-reserve {
+    margin-top: var(--spacing-4);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity var(--duration-300) var(--ease-out),
+                transform var(--duration-300) var(--ease-out);
+    transition-delay: calc(var(--item-index) * 50ms);
+  }
+
+  .header__mobile-nav[aria-hidden="false"] .header__mobile-reserve {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .header__mobile-reserve-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-cream, #fffbeb);
+    background-color: var(--color-burgundy, #722f37);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px -2px rgba(114, 47, 55, 0.3);
+    transition: background-color var(--duration-150) var(--ease-in-out),
+                transform var(--duration-150) var(--ease-in-out),
+                box-shadow var(--duration-150) var(--ease-in-out);
+  }
+
+  .header__mobile-reserve-link:hover {
+    background-color: var(--color-burgundy-light, #8b3a44);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -2px rgba(114, 47, 55, 0.4);
+  }
+
+  .header__mobile-reserve-link:active {
+    transform: translateY(0);
+  }
+
+  .header__mobile-reserve-link:focus-visible {
+    outline: 2px solid var(--color-burgundy, #722f37);
+    outline-offset: 2px;
+  }
+
+  /* Dark mode mobile reserve button */
+  :global(html[data-theme="dark"]) .header__mobile-reserve-link {
+    background-color: var(--color-gold, #c4a77d);
+    color: var(--color-charcoal, #1a1412);
+    box-shadow: 0 4px 12px -2px rgba(196, 167, 125, 0.3);
+  }
+
+  :global(html[data-theme="dark"]) .header__mobile-reserve-link:hover {
+    background-color: var(--color-cream, #fffbeb);
   }
 
   /* Mobile Actions Section */
   .header__mobile-actions {
     margin-top: var(--spacing-6);
     padding-top: var(--spacing-4);
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid rgba(114, 47, 55, 0.15);
     opacity: 0;
     transform: translateX(20px);
     transition: opacity var(--duration-300) var(--ease-out),
                 transform var(--duration-300) var(--ease-out);
     transition-delay: calc(var(--item-index) * 50ms);
+  }
+
+  :global(html[data-theme="dark"]) .header__mobile-actions {
+    border-top-color: rgba(196, 167, 125, 0.2);
   }
 
   .header__mobile-nav[aria-hidden="false"] .header__mobile-actions {
@@ -456,9 +896,15 @@ const navLinks = [
 
   .header__mobile-theme-label {
     font-family: var(--font-body);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-text-tertiary);
+  }
+
+  :global(html[data-theme="dark"]) .header__mobile-theme-label {
+    color: rgba(255, 251, 235, 0.6);
   }
 
   /* -----------------------------------------------------------------
@@ -495,7 +941,10 @@ const navLinks = [
     .header__menu-bar,
     .header__mobile-nav,
     .header__mobile-nav-item,
-    .header__mobile-actions {
+    .header__mobile-reserve,
+    .header__mobile-actions,
+    .header__reserve-btn,
+    .header__mobile-reserve-link {
       transition: none;
     }
 
@@ -507,6 +956,13 @@ const navLinks = [
       transform: none;
     }
 
+    .header__reserve-btn:hover,
+    .header__reserve-btn:active,
+    .header__mobile-reserve-link:hover,
+    .header__mobile-reserve-link:active {
+      transform: none;
+    }
+
     /* Still show underline on hover, just without animation */
     .header__nav-link::after {
       transition: none;
@@ -515,6 +971,52 @@ const navLinks = [
 </style>
 
 <script>
+  /**
+   * Header Scroll Effect & Mobile Menu Toggle
+   * Handles transparent-to-solid transition and menu functionality
+   */
+
+  /**
+   * Initialize header scroll transparency effect
+   */
+  function initScrollEffect() {
+    const header = document.querySelector('.header') as HTMLElement | null;
+    if (!header) return;
+
+    // Check if this header should have transparent-at-top behavior
+    const hasTransparentTop = header.dataset.transparentTop === 'true';
+    if (!hasTransparentTop) return;
+
+    let ticking = false;
+    const SCROLL_THRESHOLD = 50;
+
+    function updateHeaderState() {
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      if (scrollY > SCROLL_THRESHOLD) {
+        header.classList.remove('header--at-top');
+        header.classList.add('header--scrolled');
+      } else {
+        header.classList.add('header--at-top');
+        header.classList.remove('header--scrolled');
+      }
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeaderState);
+        ticking = true;
+      }
+    }
+
+    // Initial state
+    updateHeaderState();
+
+    // Listen for scroll
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
   /**
    * Mobile Menu Toggle Functionality
    * Handles menu expansion/collapse, accessibility, and keyboard navigation
@@ -645,9 +1147,17 @@ const navLinks = [
     });
   }
 
+  /**
+   * Initialize all header functionality
+   */
+  function initHeader() {
+    initScrollEffect();
+    initMobileMenu();
+  }
+
   // Initialize on DOM ready
-  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('DOMContentLoaded', initHeader);
 
   // Re-initialize on Astro page transitions (View Transitions API)
-  document.addEventListener('astro:page-load', initMobileMenu);
+  document.addEventListener('astro:page-load', initHeader);
 </script>

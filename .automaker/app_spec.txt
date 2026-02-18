@@ -385,6 +385,16 @@ I attatched a screenshot of the home page as an example - we wouldn&apos;t want 
       <name>Remove signature experiences section from homepage</name>
       <description>the &quot;signature experiences&quot; section on the homepage needs to go</description>
     </feature>
+    <feature>
+      <name>Transform restaurant website into professional revenue-focused design</name>
+      <description>I&apos;d like you to review the whole site, taking screenshots if possible/needed, and make the site more like a clean, sharp, well-made restaurant website. I&apos;d like you to be practical and efficient in terms of the choices about content, imagery, and sections displayed. I&apos;d like the most focus to be given to elements that meet the businesses&apos; bottom line - I want this site to help restaurant owners make money above all else, directly or indirectly. I&apos;ll include a couple screenshots of the existing appearance of the site as of now.
+ 
+This may be a context-intensive task, so please spin up subagents or do whatever you need to do to prevent the context window filling up too much.</description>
+    </feature>
+    <feature>
+      <name>Feature: feature-1770521411380-207tbarc5</name>
+      <description>the top navbar on the home page looks generic. can we fix that?</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

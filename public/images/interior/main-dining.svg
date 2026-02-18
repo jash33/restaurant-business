@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5d4e37"/>
+      <stop offset="100%" style="stop-color:#3d3225"/>
+    </linearGradient>
+    <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b7355"/>
+      <stop offset="100%" style="stop-color:#6b5344"/>
+    </linearGradient>
+    <linearGradient id="tableGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff"/>
+      <stop offset="100%" style="stop-color:#f0f0f0"/>
+    </linearGradient>
+    <radialGradient id="candleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffdd99;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#ffdd99;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Wall -->
+  <rect width="800" height="400" fill="url(#wallGrad)"/>
+
+  <!-- Decorative molding -->
+  <rect x="0" y="380" width="800" height="20" fill="#5d4537"/>
+  <rect x="0" y="100" width="800" height="8" fill="#5d4537"/>
+
+  <!-- Floor -->
+  <polygon points="0,400 800,400 800,600 0,600" fill="url(#floorGrad)"/>
+
+  <!-- Floor pattern -->
+  <line x1="0" y1="450" x2="800" y2="450" stroke="#4d3e27" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="500" x2="800" y2="500" stroke="#4d3e27" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="550" x2="800" y2="550" stroke="#4d3e27" stroke-width="1" opacity="0.3"/>
+
+  <!-- Chandelier -->
+  <rect x="380" y="0" width="40" height="60" fill="#8b7355"/>
+  <ellipse cx="400" cy="80" rx="80" ry="30" fill="#2c2c2c"/>
+  <circle cx="350" cy="90" r="8" fill="#ffd700"/>
+  <circle cx="400" cy="95" r="8" fill="#ffd700"/>
+  <circle cx="450" cy="90" r="8" fill="#ffd700"/>
+  <circle cx="350" cy="90" r="15" fill="url(#candleGlow)"/>
+  <circle cx="400" cy="95" r="15" fill="url(#candleGlow)"/>
+  <circle cx="450" cy="90" r="15" fill="url(#candleGlow)"/>
+
+  <!-- Table 1 (left) -->
+  <ellipse cx="200" cy="480" rx="100" ry="40" fill="url(#tableGrad)" stroke="#ddd" stroke-width="2"/>
+  <rect x="180" y="500" width="10" height="80" fill="#2c2c2c"/>
+  <rect x="210" y="500" width="10" height="80" fill="#2c2c2c"/>
+  <!-- Candle on table -->
+  <rect x="195" y="455" width="10" height="20" fill="#fff"/>
+  <ellipse cx="200" cy="452" rx="8" ry="4" fill="#ffd700"/>
+  <circle cx="200" cy="445" r="12" fill="url(#candleGlow)"/>
+
+  <!-- Table 2 (center) -->
+  <ellipse cx="400" cy="450" rx="120" ry="50" fill="url(#tableGrad)" stroke="#ddd" stroke-width="2"/>
+  <rect x="375" y="480" width="10" height="100" fill="#2c2c2c"/>
+  <rect x="415" y="480" width="10" height="100" fill="#2c2c2c"/>
+  <!-- Candle on table -->
+  <rect x="395" y="420" width="10" height="25" fill="#fff"/>
+  <ellipse cx="400" cy="417" rx="8" ry="4" fill="#ffd700"/>
+  <circle cx="400" cy="408" r="15" fill="url(#candleGlow)"/>
+  <!-- Wine glasses -->
+  <path d="M360 435 L360 445 L355 445 L365 445" stroke="#ccc" stroke-width="2" fill="none"/>
+  <ellipse cx="360" cy="430" rx="8" ry="5" fill="none" stroke="#ccc" stroke-width="1"/>
+  <path d="M440 435 L440 445 L435 445 L445 445" stroke="#ccc" stroke-width="2" fill="none"/>
+  <ellipse cx="440" cy="430" rx="8" ry="5" fill="none" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Table 3 (right) -->
+  <ellipse cx="620" cy="480" rx="100" ry="40" fill="url(#tableGrad)" stroke="#ddd" stroke-width="2"/>
+  <rect x="600" y="500" width="10" height="80" fill="#2c2c2c"/>
+  <rect x="630" y="500" width="10" height="80" fill="#2c2c2c"/>
+  <!-- Candle on table -->
+  <rect x="615" y="455" width="10" height="20" fill="#fff"/>
+  <ellipse cx="620" cy="452" rx="8" ry="4" fill="#ffd700"/>
+  <circle cx="620" cy="445" r="12" fill="url(#candleGlow)"/>
+
+  <!-- Wall art frames -->
+  <rect x="80" y="180" width="120" height="150" fill="#1a1a1a" stroke="#8b7355" stroke-width="5"/>
+  <rect x="90" y="190" width="100" height="130" fill="#3d5c5c"/>
+
+  <rect x="340" y="160" width="120" height="180" fill="#1a1a1a" stroke="#8b7355" stroke-width="5"/>
+  <rect x="350" y="170" width="100" height="160" fill="#4a3c2a"/>
+
+  <rect x="600" y="180" width="120" height="150" fill="#1a1a1a" stroke="#8b7355" stroke-width="5"/>
+  <rect x="610" y="190" width="100" height="130" fill="#3d5c5c"/>
+
+  <!-- Ambient lighting overlay -->
+  <rect width="800" height="600" fill="#ffd700" opacity="0.05"/>
+
+  <!-- Text label -->
+  <text x="400" y="570" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#e0d5c5" opacity="0.9">Main Dining Room</text>
+</svg>

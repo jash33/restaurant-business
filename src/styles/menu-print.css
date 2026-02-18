@@ -80,6 +80,9 @@
   /* Interactive elements */
   .menu-filter-panel,
   .menu-page__back-to-top,
+  .menu-page__header-actions,
+  .menu-page__actions,
+  .menu-page__dropdown,
   .back-to-top,
   .skip-link,
   .cookie-consent,

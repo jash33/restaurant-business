@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769975417205-ee28da11",
+  "trigger": "feature_error",
+  "timestamp": "2026-02-01T19:50:17.205Z",
+  "projectPath": "C:\\Users\\James\\Repos\\restaurant-business",
+  "projectName": "restaurant-business",
+  "featureId": "feature-1769974525143-c4zi2iwtl",
+  "featureName": "Transform restaurant website into professional revenue-focused design",
+  "error": "Operation was cancelled",
+  "errorType": "cancellation"
+}

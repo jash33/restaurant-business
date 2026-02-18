@@ -406,17 +406,17 @@ const overlayStyle = `--overlay-opacity: ${overlayOpacity}; --min-height: ${minH
     animation-delay: var(--animation-delay-4);
   }
 
-  /* Primary CTA - Warm burgundy fill */
+  /* Primary CTA - Blue fill matching site theme */
   .restaurant-hero__cta-group :global(.restaurant-hero__cta--primary) {
-    background-color: var(--color-burgundy, #722f37) !important;
-    border-color: var(--color-burgundy, #722f37) !important;
-    color: var(--color-cream, #fffbeb) !important;
+    background-color: var(--color-primary-500, #365395) !important;
+    border-color: var(--color-primary-500, #365395) !important;
+    color: var(--color-text-inverse, #ffffff) !important;
     box-shadow: var(--shadow-lg), var(--glow-primary-sm);
   }
 
   .restaurant-hero__cta-group :global(.restaurant-hero__cta--primary:hover) {
-    background-color: var(--color-burgundy-light, #8b3a44) !important;
-    border-color: var(--color-burgundy-light, #8b3a44) !important;
+    background-color: var(--color-primary-600, #304b8d) !important;
+    border-color: var(--color-primary-600, #304b8d) !important;
     box-shadow: var(--shadow-xl), var(--glow-primary-md);
     transform: translateY(-2px);
   }
@@ -647,10 +647,10 @@ const overlayStyle = `--overlay-opacity: ${overlayOpacity}; --min-height: ${minH
   }
 
   :global(html[data-theme="dark"]) .restaurant-hero__cta-group :global(.restaurant-hero__cta--primary) {
-    background-color: var(--color-burgundy, #722f37) !important;
+    background-color: var(--color-primary-500, #365395) !important;
   }
 
   :global(html[data-theme="dark"]) .restaurant-hero__cta-group :global(.restaurant-hero__cta--primary:hover) {
-    background-color: var(--color-burgundy-light, #8b3a44) !important;
+    background-color: var(--color-primary-600, #304b8d) !important;
   }
 </style>

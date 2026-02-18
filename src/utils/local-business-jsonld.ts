@@ -7,7 +7,6 @@
 import type {
   LocalBusinessSchema,
   OpeningHoursSpecification,
-  ServiceArea,
   ContactPoint,
   GeoCoordinates,
   AggregateRating,
@@ -54,91 +53,6 @@ function generateOpeningHours(specs: OpeningHoursSpecification[]): object[] {
     validFrom: spec.validFrom,
     validThrough: spec.validThrough,
   }));
-}
-
-/**
- * Generate schema.org ServiceArea/GeoShape objects
- */
-function generateAreaServed(
-  areas: ServiceArea | ServiceArea[] | string | string[]
-): object | object[] | string | string[] {
-  if (typeof areas === 'string') {
-    return areas;
-  }
-  if (Array.isArray(areas)) {
-    if (areas.length === 0) return undefined as unknown as object[];
-    if (typeof areas[0] === 'string') {
-      return areas as string[];
-    }
-    return (areas as ServiceArea[]).map((area) => generateSingleAreaServed(area));
-  }
-  return generateSingleAreaServed(areas as ServiceArea);
-}
-
-function generateSingleAreaServed(area: ServiceArea): object {
-  switch (area.type) {
-    case 'GeoCircle':
-      return {
-        '@type': 'GeoCircle',
-        geoMidpoint: area.geoMidpoint
-          ? {
-              '@type': 'GeoCoordinates',
-              latitude: area.geoMidpoint.latitude,
-              longitude: area.geoMidpoint.longitude,
-            }
-          : undefined,
-        geoRadius: area.geoRadius,
-      };
-    case 'PostalCode':
-      if (Array.isArray(area.postalCode)) {
-        // Return multiple PostalAddress objects for multiple postal codes
-        return {
-          '@type': 'PostalAddress',
-          postalCode: area.postalCode,
-          addressCountry: area.addressCountry,
-        };
-      }
-      return {
-        '@type': 'PostalAddress',
-        postalCode: area.postalCode,
-        addressCountry: area.addressCountry,
-      };
-    case 'City':
-      return {
-        '@type': 'City',
-        name: area.name,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: area.addressLocality,
-          addressRegion: area.addressRegion,
-          addressCountry: area.addressCountry,
-        },
-      };
-    case 'State':
-      return {
-        '@type': 'State',
-        name: area.name || area.addressRegion,
-        address: {
-          '@type': 'PostalAddress',
-          addressRegion: area.addressRegion,
-          addressCountry: area.addressCountry,
-        },
-      };
-    case 'AdministrativeArea':
-    default:
-      return {
-        '@type': 'AdministrativeArea',
-        name: area.name,
-        address: area.addressLocality || area.addressRegion
-          ? {
-              '@type': 'PostalAddress',
-              addressLocality: area.addressLocality,
-              addressRegion: area.addressRegion,
-              addressCountry: area.addressCountry,
-            }
-          : undefined,
-      };
-  }
 }
 
 /**
@@ -218,7 +132,6 @@ export function generateLocalBusinessSchema(
     // === Location & Address ===
     address: schema.address ? generatePostalAddress(schema.address) : undefined,
     geo: schema.geo ? generateGeoCoordinates(schema.geo) : undefined,
-    areaServed: schema.areaServed ? generateAreaServed(schema.areaServed) : undefined,
 
     // === Opening Hours ===
     openingHoursSpecification: schema.openingHoursSpecification
