@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   // IMPORTANT: Set this to your actual production domain
-  site: "https://jash33.github.io", // TODO: Set this to your actual production domain
+  site: "https://jash33.github.io", // TODO: Set this to your actual production domain!
   base: "/restaurant-business",
 
   // Image optimization configuration for food photography
