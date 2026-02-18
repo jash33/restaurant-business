@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nPrefix all internal hrefs with /restaurant-business for GitHub Pages deployment\n\nAll internal navigation links, CTA buttons, and asset references are now\nprefixed with the base path so the site works correctly when deployed to\nhttps://jash33.github.io/restaurant-business/.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(GIT_ASKPASS= GCM_INTERACTIVE=never gh auth:*)"
+    ]
+  }
+}
