@@ -178,9 +178,18 @@ export const TIMELINE_MILESTONES: TimelineMilestone[] = [
 ];
 
 /**
+ * Restaurant Timeline (alias for backward compatibility)
+ */
+export const RESTAURANT_TIMELINE = TIMELINE_MILESTONES;
+
+/**
  * Complete About Page Configuration
  */
-export const ABOUT_CONFIG: AboutPageConfig = {
+export const ABOUT_PAGE_CONFIG = {
+  hero: {
+    title: 'Our Story',
+    subtitle: 'From farmers markets to Houston\'s favorite scoop shop',
+  },
   foundersStory: FOUNDERS_STORY,
   teamMembers: TEAM_MEMBERS,
   sourcingPrinciples: SOURCING_PRINCIPLES,
@@ -188,4 +197,6 @@ export const ABOUT_CONFIG: AboutPageConfig = {
   timelineMilestones: TIMELINE_MILESTONES,
 };
 
-export default ABOUT_CONFIG;
+export const ABOUT_CONFIG = ABOUT_PAGE_CONFIG;
+
+export default ABOUT_PAGE_CONFIG;

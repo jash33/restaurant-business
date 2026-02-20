@@ -332,3 +332,72 @@ export const MENU: Menu = {
 };
 
 export default MENU;
+
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Get menu items filtered by category
+ */
+export function getMenuItemsByCategory(categoryId: string): MenuItem[] {
+  return MENU_ITEMS.filter(item => item.category === categoryId);
+}
+
+/**
+ * Get featured menu items
+ */
+export function getFeaturedItems(): MenuItem[] {
+  return MENU_ITEMS.filter(item => item.featured);
+}
+
+/**
+ * Get menu items by menu type
+ */
+export function getMenuItemsByType(menuType: string): MenuItem[] {
+  return MENU_ITEMS.filter(item => item.menuTypes.includes(menuType));
+}
+
+
+/**
+ * Build menu sections from items and categories
+ */
+export function buildMenuSections(items: MenuItem[], categories: MenuCategory[]): MenuSection[] {
+  return categories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    description: cat.description,
+    items: items.filter(item => item.category === cat.id),
+    sortOrder: cat.sortOrder,
+  }));
+}
+
+/**
+ * Dinner menu (alias for main menu - ice cream shop)
+ */
+export const DINNER_MENU = {
+  sections: MENU_SECTIONS,
+  items: MENU_ITEMS,
+  categories: MENU_CATEGORIES,
+};
+
+/**
+ * Lunch menu (alias for main menu)
+ */
+export const LUNCH_MENU = DINNER_MENU;
+
+/**
+ * Brunch menu (alias for main menu)
+ */
+export const BRUNCH_MENU = DINNER_MENU;
+
+/**
+ * Kids menu (alias for main menu - ice cream is kid-friendly!)
+ */
+export const KIDS_MENU = DINNER_MENU;
+
+/**
+ * Re-export Menu type for convenience
+ */
+export type { Menu, MenuItem, MenuSection, MenuCategory, MenuType } from '../types/menu';
