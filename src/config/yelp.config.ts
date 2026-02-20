@@ -11,7 +11,7 @@
  *
  * To update this data:
  * 1. Visit your Yelp Business Page
- * 2. Copy your Business ID from the URL (e.g., main-street-bistro-houston)
+ * 2. Copy your Business ID from the URL (e.g., htx-creamery-houston)
  * 3. Update the rating and review count from your dashboard
  * 4. Manually curate featured reviews for display (with proper attribution)
  */
@@ -41,18 +41,18 @@ export const YELP_COLORS = {
 export const yelpConfig: YelpConfig = {
   // === Business Identification ===
   // Find your Business ID in your Yelp business page URL
-  businessId: 'main-street-bistro-houston',
+  businessId: 'htx-creamery-houston',
 
   // Business name as displayed on Yelp
   businessName: 'HTX Creamery',
 
   // === Profile URLs ===
   // Main Yelp business page URL
-  profileUrl: 'https://www.yelp.com/biz/main-street-bistro-houston',
+  profileUrl: 'https://www.yelp.com/biz/htx-creamery-houston',
 
   // Direct link to write a review
   // Format: https://www.yelp.com/writeareview/biz/BUSINESS_ID
-  reviewUrl: 'https://www.yelp.com/writeareview/biz/main-street-bistro-houston',
+  reviewUrl: 'https://www.yelp.com/writeareview/biz/htx-creamery-houston',
 
   // === Ratings & Reviews Summary ===
   // Update these values periodically from your Yelp dashboard
@@ -75,7 +75,7 @@ export const yelpConfig: YelpConfig = {
       text: "This place is an absolute gem! The farm-to-table concept really shines through in every dish. We had the seasonal tasting menu and every course was perfectly executed. The wine pairings suggested by our server were spot-on. Already planning our next visit!",
       relativeTimeDescription: '1 week ago',
       time: '2024-01-19T20:00:00Z',
-      reviewUrl: 'https://www.yelp.com/biz/main-street-bistro-houston?hrid=review1',
+      reviewUrl: 'https://www.yelp.com/biz/htx-creamery-houston?hrid=review1',
     },
     {
       authorName: 'Robert C.',
@@ -83,7 +83,7 @@ export const yelpConfig: YelpConfig = {
       text: "Hands down one of the best dining experiences in Houston. The ambiance is upscale but welcoming, and the service was impeccable without being stuffy. The ribeye was cooked exactly to my requested medium-rare, and the truffle mashed potatoes were divine.",
       relativeTimeDescription: '2 weeks ago',
       time: '2024-01-12T19:30:00Z',
-      reviewUrl: 'https://www.yelp.com/biz/main-street-bistro-houston?hrid=review2',
+      reviewUrl: 'https://www.yelp.com/biz/htx-creamery-houston?hrid=review2',
     },
     {
       authorName: 'Lisa M.',
@@ -91,7 +91,7 @@ export const yelpConfig: YelpConfig = {
       text: "Celebrated our anniversary here and it was magical from start to finish. They even prepared a special dessert for us! The octopus appetizer was tender and flavorful, and the duck entree was perfectly crispy. Worth every penny.",
       relativeTimeDescription: '3 weeks ago',
       time: '2024-01-05T18:45:00Z',
-      reviewUrl: 'https://www.yelp.com/biz/main-street-bistro-houston?hrid=review3',
+      reviewUrl: 'https://www.yelp.com/biz/htx-creamery-houston?hrid=review3',
     },
     {
       authorName: 'James H.',
@@ -99,7 +99,7 @@ export const yelpConfig: YelpConfig = {
       text: "Great food and lovely atmosphere. The brunch is particularly impressive - try the eggs benedict with house-cured salmon. Only thing to note: it can get quite busy on weekends, so definitely make a reservation. Staff is friendly and attentive.",
       relativeTimeDescription: '1 month ago',
       time: '2023-12-28T11:30:00Z',
-      reviewUrl: 'https://www.yelp.com/biz/main-street-bistro-houston?hrid=review4',
+      reviewUrl: 'https://www.yelp.com/biz/htx-creamery-houston?hrid=review4',
     },
   ],
 

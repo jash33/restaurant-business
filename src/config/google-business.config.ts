@@ -23,17 +23,17 @@ export const googleBusinessConfig: GoogleBusinessConfig = {
 
   // === Profile URLs ===
   // Main Google Business Profile URL
-  profileUrl: 'https://www.google.com/maps/place/Main+Street+Bistro',
+  profileUrl: 'https://www.google.com/maps/place/HTX+Creamery',
 
   // Direct link to leave a review
   // Format: https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID
   reviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
 
   // Q&A section URL (usually the main profile URL)
-  qnaUrl: 'https://www.google.com/maps/place/Main+Street+Bistro#questions',
+  qnaUrl: 'https://www.google.com/maps/place/HTX+Creamery#questions',
 
   // Photos section URL
-  photosUrl: 'https://www.google.com/maps/place/Main+Street+Bistro#photos',
+  photosUrl: 'https://www.google.com/maps/place/HTX+Creamery#photos',
 
   // === Business Information ===
   businessName: 'HTX Creamery',

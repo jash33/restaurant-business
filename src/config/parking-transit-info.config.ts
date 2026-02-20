@@ -274,7 +274,7 @@ export const FIRST_TIME_VISITOR_TIPS: FirstTimeVisitorTip[] = [
     id: 'tip-dress-code',
     category: 'general',
     title: 'Casual Dress Code',
-    content: 'We\'re a casual neighborhood bistro - come as you are! Smart casual is appreciated for special occasions but jeans are always welcome.',
+    content: 'We\'re a casual neighborhood creamery - come as you are! Smart casual is appreciated for special occasions but jeans are always welcome.',
     priority: 7,
   },
   {
