@@ -166,17 +166,17 @@ const navLinks = [
     box-shadow: none;
   }
 
-  /* Initial state text colors for transparent header (before JS runs) */
+  /* Initial state text colors for transparent header (before JS runs) - use dark for safety */
   .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-icon {
-    color: var(--color-cream, #fffbeb);
+    color: #1a1412;
   }
 
   .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-main {
-    color: var(--color-cream, #fffbeb);
+    color: #1a1412;
   }
 
   .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__logo-sub {
-    color: rgba(255, 251, 235, 0.8);
+    color: #5b3a3c;
   }
 
   .header--transparent-top:not(.header--at-top):not(.header--scrolled) .header__nav-link {
@@ -359,24 +359,24 @@ const navLinks = [
     line-height: 1.1;
   }
 
-  /* Main logo text - "Main Street" */
+  /* Main logo text - "HTX" */
   .header__logo-main {
     font-family: var(--font-display, 'Playfair Display', Georgia, serif);
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
-    color: var(--color-charcoal, #1a1412);
+    color: #1a1412; /* Dark charcoal - always visible on light backgrounds */
     letter-spacing: var(--letter-spacing-tight);
     transition: color var(--animation-duration-fast) var(--ease-smooth);
   }
 
-  /* Sub logo text - "Bistro" */
+  /* Sub logo text - "Creamery" */
   .header__logo-sub {
     font-family: var(--font-body);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-widest);
-    color: var(--color-burgundy, #722f37);
+    color: #5b3a3c; /* Dark burgundy/brown - visible on cream */
     transition: color var(--animation-duration-fast) var(--ease-smooth);
   }
 
