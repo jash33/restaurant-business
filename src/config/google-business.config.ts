@@ -36,7 +36,7 @@ export const googleBusinessConfig: GoogleBusinessConfig = {
   photosUrl: 'https://www.google.com/maps/place/Main+Street+Bistro#photos',
 
   // === Business Information ===
-  businessName: 'The Main Street Bistro',
+  businessName: 'HTX Creamery',
 
   // === Ratings & Reviews Summary ===
   // Update these values periodically from your Google Business dashboard
@@ -82,7 +82,7 @@ export const googleBusinessConfig: GoogleBusinessConfig = {
   photos: [
     {
       url: '/restaurant-business/images/google-business/restaurant-exterior.jpg',
-      alt: 'The Main Street Bistro exterior with warm evening lighting',
+      alt: 'HTX Creamery exterior with warm evening lighting',
       category: 'exterior',
     },
     {

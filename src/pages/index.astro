@@ -7,14 +7,14 @@ import ContactCTA from '../components/ContactCTA.astro';
 import { restaurantSchema } from '../config/restaurant.config';
 
 /**
- * Homepage - The Main Street Bistro
- * Streamlined landing page focused on maximum revenue impact: menu showcase, social proof, and conversion.
+ * Homepage - HTX Creamery
+ * Streamlined landing page for Houston's favorite ice cream shop.
  */
 ---
 
 <Layout
-	title="The Main Street Bistro | Award-Winning Houston Restaurant"
-	description="Award-winning American bistro in downtown Houston serving contemporary cuisine with locally-sourced ingredients. Signature steaks, fresh seafood, craft cocktails, private dining, and catering services."
+	title="HTX Creamery | Handcrafted Ice Cream in Houston"
+	description="Houston's favorite neighborhood ice cream shop serving handcrafted small-batch ice cream, artisan sundaes, and classic shakes. Made fresh daily in the Energy Corridor."
 	noTitleTemplate
 	transparentHeader={true}
 	openGraph={{
@@ -25,63 +25,63 @@ import { restaurantSchema } from '../config/restaurant.config';
 	<main>
 		<!-- Hero Section -->
 		<RestaurantHeroSection
-			restaurantName="The Main Street Bistro"
-			tagline="Award-Winning American Cuisine in Downtown Houston"
+			restaurantName="HTX Creamery"
+			tagline="Handcrafted Ice Cream, Scooped with Love in Houston"
 			backgroundImage={{
-				src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80",
-				alt: "Beautifully plated contemporary American cuisine at The Main Street Bistro",
-				position: "center 40%"
+				src: "/restaurant-business/images/hero-icecream-display.jpg",
+				alt: "Colorful display of handcrafted ice cream flavors at HTX Creamery",
+				position: "center 60%"
 			}}
 			primaryCTA={{
-				text: "Reserve Your Table",
-				href: "/restaurant-business/contact",
+				text: "See Our Flavors",
+				href: "/restaurant-business/menu",
 			}}
 			secondaryCTA={{
-				text: "View Our Menu",
-				href: "/restaurant-business/menu",
+				text: "Find Us",
+				href: "/restaurant-business/contact",
 			}}
 			hoursBadge={{
 				show: true,
 				statusText: "Open Now",
-				hoursText: "11am - 10pm",
+				hoursText: "12pm - 9pm",
 				isOpen: true
 			}}
 			warmGradient={true}
-			moodyLighting={true}
-			overlayOpacity={0.6}
+			moodyLighting={false}
+			overlayOpacity={0.4}
 		/>
 
 		<!-- Menu Preview Section -->
 		<MenuPreviewSection
 			id="menu-preview"
-			heading="Featured Menu Items"
-			subheading="Discover our signature dishes crafted with passion and the finest ingredients."
+			heading="Today's Flavors"
+			subheading="Small-batch, handcrafted ice cream made fresh daily with locally-sourced ingredients."
 			layout="masonry"
 			itemsToShow={6}
-			viewAllText="View Full Menu"
+			viewAllText="See All Flavors"
 			viewAllHref="/restaurant-business/menu"
 		/>
 
 		<!-- Google Business Profile / Reviews Section -->
 		<GoogleBusinessProfile
 			id="reviews"
-			heading="What Our Guests Are Saying"
-			subheading="See why Houston food lovers rate us 4.7 stars on Google"
+			heading="What Our Customers Say"
+			subheading="See why Houston families rate us 4.9 stars on Google"
 			showReviewCTA={true}
 			maxReviews={4}
 		/>
 
 		<!-- Contact CTA Section -->
 		<ContactCTA
-			headline="Reserve Your Table Tonight"
-			supportingText="Join us for an unforgettable dining experience. Whether it's a special occasion or a weeknight out, we have a table waiting for you."
+			headline="Life's Too Short for Bad Ice Cream"
+			supportingText="Stop by for a scoop (or three) of happiness. We're open seven days a week in the Energy Corridor — bring the whole family!"
 			primaryCTA={{
-				text: "Make a Reservation",
+				text: "Get Directions",
 				href: "/restaurant-business/contact",
 			}}
 			secondaryCTA={{
-				text: "Call Us: (713) 555-0123",
-				href: "tel:+1-713-555-0123",
+				text: "Call Us: (832) 555-CONE",
+				href: "tel:+1-832-555-2663",
 			}}
 		/>
 	</main>

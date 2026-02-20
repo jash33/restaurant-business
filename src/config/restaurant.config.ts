@@ -14,8 +14,8 @@ import { BUSINESS_ADDRESS, COORDINATES, LOCATION_CONFIG } from './location.confi
 function convertHoursToSchema() {
   return REGULAR_HOURS.filter(day => day.isOpen).map(day => ({
     dayOfWeek: day.day as 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday',
-    opens: day.hours?.[0]?.open || '11:00',
-    closes: day.hours?.[0]?.close || '22:00',
+    opens: day.hours?.[0]?.open || '12:00',
+    closes: day.hours?.[0]?.close || '21:00',
   }));
 }
 
@@ -26,21 +26,21 @@ function convertHoursToSchema() {
  */
 export const restaurantSchema: RestaurantSchema = {
   // === Business Type (Restaurant inherits from FoodEstablishment and LocalBusiness) ===
-  type: 'Restaurant',
+  type: 'IceCreamShop',
 
   // === Business Identity ===
-  name: 'The Main Street Bistro',
-  legalName: 'Main Street Bistro LLC',
-  alternateName: 'Main Street Bistro Houston',
-  description: 'Award-winning American bistro in downtown Houston serving contemporary cuisine with locally-sourced ingredients. Known for our signature steaks, fresh seafood, and craft cocktails in an elegant yet relaxed atmosphere.',
-  slogan: 'Where Houston Comes to Dine',
+  name: 'HTX Creamery',
+  legalName: 'HTX Creamery LLC',
+  alternateName: 'HTX Creamery Houston',
+  description: 'Houston\'s favorite neighborhood ice cream shop serving handcrafted small-batch ice cream, artisan sundaes, and classic shakes. Made fresh daily with locally-sourced ingredients in the Energy Corridor.',
+  slogan: 'Scooped with Love in Houston',
 
   // === URLs ===
-  url: 'https://mainstreetbistro.com',
+  url: 'https://htxcreamery.com',
 
   // === Contact Information ===
-  telephone: '+1-713-555-0123',
-  email: 'info@mainstreetbistro.com',
+  telephone: '+1-832-555-CONE',
+  email: 'hello@htxcreamery.com',
 
   // === Location & Address ===
   address: {
@@ -58,30 +58,28 @@ export const restaurantSchema: RestaurantSchema = {
   // === Operating Hours ===
   openingHoursSpecification: convertHoursToSchema(),
   openingHours: [
-    'Su 10:00-21:00',
-    'Mo-Th 11:00-22:00',
-    'Fr 11:00-23:00',
-    'Sa 10:00-23:00',
+    'Su-Th 12:00-21:00',
+    'Fr-Sa 12:00-22:00',
   ],
 
   // === Restaurant-Specific Properties ===
   servesCuisine: [
+    'Ice Cream',
+    'Desserts',
+    'Frozen Treats',
     'American',
-    'Contemporary',
-    'Steakhouse',
-    'Seafood',
   ],
 
   // === Menu Information ===
-  hasMenu: 'https://mainstreetbistro.com/menu',
-  menu: 'https://mainstreetbistro.com/menu',
+  hasMenu: 'https://htxcreamery.com/menu',
+  menu: 'https://htxcreamery.com/menu',
 
   // === Reservations ===
-  acceptsReservations: true,
-  reservationsUrl: 'https://mainstreetbistro.com/reservations',
+  acceptsReservations: false,
+  reservationsUrl: undefined,
 
   // === Price Range ($ to $$$$) ===
-  priceRange: '$$$',
+  priceRange: '$$',
 
   // === Payment Options ===
   currenciesAccepted: 'USD',
@@ -95,42 +93,41 @@ export const restaurantSchema: RestaurantSchema = {
 
   // === Aggregate Rating (from reviews) ===
   aggregateRating: {
-    ratingValue: 4.7,
+    ratingValue: 4.9,
     bestRating: 5,
     worstRating: 1,
-    ratingCount: 847,
-    reviewCount: 312,
+    ratingCount: 523,
+    reviewCount: 189,
   },
 
   // === Images ===
   logo: '/restaurant-business/images/logo.png',
   image: [
-    '/restaurant-business/images/restaurant-exterior.jpg',
-    '/restaurant-business/images/restaurant-interior.jpg',
-    '/restaurant-business/images/signature-dish.jpg',
+    '/restaurant-business/images/hero-icecream-display.jpg',
+    '/restaurant-business/images/icecream-scoops.jpg',
+    '/restaurant-business/images/icecream-cone.jpg',
   ],
 
   // === Social Media Profiles ===
   sameAs: [
-    'https://www.facebook.com/mainstreetbistro',
-    'https://www.instagram.com/mainstreetbistro',
-    'https://www.yelp.com/biz/main-street-bistro-houston',
-    'https://www.tripadvisor.com/Restaurant-Main_Street_Bistro',
+    'https://www.facebook.com/htxcreamery',
+    'https://www.instagram.com/htxcreamery',
+    'https://www.yelp.com/biz/htx-creamery-houston',
   ],
 
   // === Contact Point ===
   contactPoint: {
-    telephone: '+1-713-555-0123',
-    email: 'reservations@mainstreetbistro.com',
-    contactType: 'reservations',
+    telephone: '+1-832-555-2663',
+    email: 'hello@htxcreamery.com',
+    contactType: 'customer service',
     availableLanguage: ['English', 'Spanish'],
   },
 
   // === Business Details ===
-  foundingDate: '2015-03-15',
+  foundingDate: '2019-06-01',
   numberOfEmployees: {
-    minValue: 25,
-    maxValue: 40,
+    minValue: 8,
+    maxValue: 15,
   },
 
   // === Additional Features ===
@@ -139,38 +136,38 @@ export const restaurantSchema: RestaurantSchema = {
 
   // === Expertise & Knowledge ===
   knowsAbout: [
-    'Fine Dining',
-    'American Cuisine',
-    'Craft Cocktails',
-    'Wine Pairing',
-    'Private Dining',
-    'Catering Services',
-    'Farm-to-Table',
-    'Sustainable Sourcing',
+    'Artisan Ice Cream',
+    'Small-Batch Production',
+    'Handcrafted Desserts',
+    'Local Ingredients',
+    'Custom Cakes',
+    'Catering',
+    'Birthday Parties',
+    'Event Hosting',
   ],
   knowsLanguage: ['English', 'Spanish'],
 
   // === Services Offered ===
   makesOffer: [
-    'Lunch Service',
-    'Dinner Service',
-    'Weekend Brunch',
-    'Private Dining',
+    'Ice Cream Scoops',
+    'Sundaes',
+    'Milkshakes',
+    'Ice Cream Cakes',
+    'Waffle Cones',
+    'Pints To-Go',
     'Catering',
-    'Event Hosting',
-    'Wine Dinners',
-    'Chef\'s Tasting Menu',
+    'Birthday Party Packages',
   ],
 
   // === Amenities ===
   amenityFeature: [
-    { name: 'Private Dining Room', value: true },
+    { name: 'Indoor Seating', value: true },
     { name: 'Outdoor Patio', value: true },
-    { name: 'Full Bar', value: true },
+    { name: 'Kid Friendly', value: true },
     { name: 'Wheelchair Accessible', value: true },
     { name: 'Free Parking', value: true },
-    { name: 'Valet Parking', value: true },
     { name: 'Wi-Fi', value: true },
+    { name: 'Dog Friendly Patio', value: true },
   ],
 };
 

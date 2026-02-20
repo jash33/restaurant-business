@@ -43,7 +43,7 @@ export const PARKING_TIPS: ParkingTip[] = [
     description: 'Complimentary parking in our private lot behind the restaurant.',
     tips: [
       'Enter from Commerce Street, one block south of Main Street',
-      'Look for the "Main Street Bistro Parking" sign',
+      'Look for the "HTX Creamery Parking" sign',
       'Tell the host your parking spot number for validation',
       'Lot is well-lit and monitored by security cameras',
     ],
@@ -295,7 +295,7 @@ export const RIDESHARE_INFO: RideshareInfo = {
   description: 'Easy rideshare drop-off and pickup at our main entrance.',
   dropOffLocation: 'Main entrance at 1234 Main Street - look for the green awning',
   tips: [
-    'Set your destination to "Main Street Bistro, 1234 Main Street, Houston"',
+    'Set your destination to "HTX Creamery, 1234 Main Street, Houston"',
     'Drop-off is directly at the front entrance on Main Street',
     'For pickup, wait under the covered awning outside our entrance',
     'Our address is easy to find - we\'re between Commerce and Preston Streets',

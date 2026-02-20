@@ -44,7 +44,7 @@ export const yelpConfig: YelpConfig = {
   businessId: 'main-street-bistro-houston',
 
   // Business name as displayed on Yelp
-  businessName: 'The Main Street Bistro',
+  businessName: 'HTX Creamery',
 
   // === Profile URLs ===
   // Main Yelp business page URL
